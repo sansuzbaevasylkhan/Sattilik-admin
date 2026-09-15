@@ -1,0 +1,35 @@
+{
+  "cli": {
+    "version": ">= 16.0.0",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "preview": {
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk",
+        "autoIncrement": true
+      },
+      "env": {
+        "EXPO_PUBLIC_SUPABASE_URL": "https://yqwtxwxgsvhapqasfmud.supabase.co",
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "sb_publishable_FB_z-mN3nWC7w_nQqkQUYA__rKDVdu1",
+        "EXPO_PUBLIC_TELEGRAM_BOT_USERNAME": "sattiliktaxiappcodebot",
+        "EXPO_PUBLIC_MAPTILER_API_KEY": "BYNBFfu5ppp7eJN00P72"
+      }
+    },
+    "production": {
+      "distribution": "store",
+      "android": {
+        "buildType": "app-bundle",
+        "autoIncrement": true,
+        "gradleCommand": ":app:assembleRelease"
+      },
+      "env": {
+        "EXPO_PUBLIC_SUPABASE_URL": "https://yqwtxwxgsvhapqasfmud.supabase.co",
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "sb_publishable_FB_z-mN3nWC7w_nQqkQUYA__rKDVdu1",
+        "EXPO_PUBLIC_TELEGRAM_BOT_USERNAME": "sattiliktaxiappcodebot",
+        "EXPO_PUBLIC_MAPTILER_API_KEY": "BYNBFfu5ppp7eJN00P72"
+      }
+    }
+  }
+}

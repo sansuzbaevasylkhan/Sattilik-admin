@@ -1,0 +1,64 @@
+# EAS Build uses .easignore to determine which files to exclude from the build archive.
+# Since the git repo root is C:\Users\Admin, we need to be very aggressive about exclusions
+# to prevent Windows system files (AppData, Cookies, etc.) from being uploaded.
+
+# Windows system files & directories
+AppData/
+Application Data/
+Cookies/
+Local Settings/
+NetHood/
+PrintHood/
+Recent/
+SendTo/
+Start Menu/
+Templates/
+"главное меню/"
+"Мои документы/"
+"Шаблоны/"
+ntuser.*
+NTUSER.*
+
+# macOS
+.DS_Store
+*.pem
+
+# Node / Expo
+node_modules/
+.expo/
+dist/
+web-build/
+.expo-shared/
+*.tsbuildinfo
+expo-env.d.ts
+
+# Native
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# Metro
+.metro-health-check*
+
+# Debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# Env files
+.env*.local
+.env
+
+# Other project at repo root (not our app)
+"../Mansur Doroma/"
+
+# Other unnecessary files
+*.log
+.vscode/
+.idea/
+
+# Separate Next.js admin project (not part of the Expo app build)
+askdrv-admin/

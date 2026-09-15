@@ -1,0 +1,28 @@
+export const menuDrawer = {
+  kk: {
+    defaultUserName: 'Қолданушы',
+    roleDriver: 'Жүргізуші',
+    rolePassenger: 'Жолаушы',
+    menuPayment: 'Төлем жүйесі',
+    menuHistory: 'Тапсырыстар тарихы',
+    menuGuide: 'ASKDRV гид',
+    menuSettings: 'Баптаулар',
+    socialLabel: 'Біздің әлеуметтік желілеріміз!',
+    socialInstagram: 'Instagram',
+    socialTelegram: 'Telegram',
+    socialAskdrv: 'ASKDRV',
+  },
+  ru: {
+    defaultUserName: 'Пользователь',
+    roleDriver: 'Водитель',
+    rolePassenger: 'Пассажир',
+    menuPayment: 'Способ оплаты',
+    menuHistory: 'История заказов',
+    menuGuide: 'Гид ASKDRV',
+    menuSettings: 'Настройки',
+    socialLabel: 'Наши социальные сети!',
+    socialInstagram: 'Instagram',
+    socialTelegram: 'Telegram',
+    socialAskdrv: 'ASKDRV',
+  },
+};

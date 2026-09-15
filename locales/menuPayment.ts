@@ -1,0 +1,28 @@
+export const menuPayment = {
+  kk: {
+    headerTitle: 'Төлем жүйесі',
+    balanceLabel: 'Баланс',
+    cardsTitle: 'Карталар',
+    addButton: 'Қосу',
+    emptyText: 'Карталар жоқ',
+    emptySubtext: 'Жаңа карта қосыңыз',
+    methodsTitle: 'Төлем тәсілдері',
+    methodCash: 'Қолма-қол ақша',
+    methodQr: 'QR код',
+    payFareButton: 'Жүргізуге жол ақысын төлеу',
+    driverFareButton: 'Жолаушы төлеген жол ақысы',
+  },
+  ru: {
+    headerTitle: 'Платёжная система',
+    balanceLabel: 'Баланс',
+    cardsTitle: 'Карты',
+    addButton: 'Добавить',
+    emptyText: 'Карт нет',
+    emptySubtext: 'Добавьте новую карту',
+    methodsTitle: 'Способы оплаты',
+    methodCash: 'Наличные',
+    methodQr: 'QR-код',
+    payFareButton: 'Оплатить водителю поездку',
+    driverFareButton: 'Оплаты от пассажиров',
+  },
+};

@@ -1,0 +1,26 @@
+export const menuSettings = {
+  kk: {
+    settingsTitle: 'Баптаулар',
+    sectionNotifications: 'ХАБАРЛАНДЫРУЛАР',
+    notifications: 'Push хабарламалар',
+    sound: 'Дыбыс',
+    sectionApp: 'ҚОЛДАНБА',
+    language: 'Тіл',
+    privacy: 'Құпиялылық',
+    theme: 'Тақырып',
+    logout: 'Шығу',
+    bannerTitle: 'Хабарлама келді',
+  },
+  ru: {
+    settingsTitle: 'Настройки',
+    sectionNotifications: 'УВЕДОМЛЕНИЯ',
+    notifications: 'Push уведомления',
+    sound: 'Звук',
+    sectionApp: 'ПРИЛОЖЕНИЕ',
+    language: 'Язык',
+    privacy: 'Конфиденциальность',
+    theme: 'Тема',
+    logout: 'Выйти',
+    bannerTitle: 'Пришло уведомление',
+  },
+};
