@@ -15,7 +15,7 @@ import {
   ScrollView,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { MapPin, Navigation, Menu, DollarSign, Clock, CheckCircle } from 'lucide-react-native';
+import { MapPin, Navigation, Menu, DollarSign, Clock, CheckCircle, Share2 } from 'lucide-react-native';
 import { router } from 'expo-router';
 import MenuDrawer from '@/components/MenuDrawer';
 import { getUser } from '@/store/userStore';
@@ -23,6 +23,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { subscribeMapPick } from '@/store/mapPickStore';
 import { getRoute } from '@/lib/routing';
 import { useDriverLocation } from '@/hooks/useDriverLocation';
+import { useTripShare } from '@/hooks/useTripShare';
 import RouteMapPreview from '@/components/RouteMapPreview';
 import { BG_GRADIENT, BG_DARK, BG_MID, BG_DEEP, GOLD_GRADIENT, GOLD_FOCUSED_BORDER, GOLD_FOCUSED_FILL, GOLD_MEDIUM_FILL, GOLD_MEDIUM_BORDER } from '@/lib/theme';
 
@@ -55,6 +56,7 @@ interface Order {
 
 export default function OrderScreen() {
   const { t } = useTranslation();
+  const { shareTrip } = useTripShare();
   const [pointA, setPointA] = useState('');
   const [pointB, setPointB] = useState('');
   const [pickupCoords, setPickupCoords] = useState<{ lng: number; lat: number } | null>(null);
@@ -584,19 +586,35 @@ export default function OrderScreen() {
                   <Text style={styles.driverName}>{abbrev(driver.first_name, driver.last_name)}</Text>
                   <Text style={styles.driverLabel}>{t('order.driverLabel')}</Text>
                 </View>
-                <TouchableOpacity
-                  style={styles.callDriverButton}
-                  onPress={() => {
-                    if (!driver.phone) {
-                      Alert.alert(t('common.info'), t('order.errorNoDriverPhone'));
-                      return;
-                    }
-                    Linking.openURL(`tel:${driver.phone}`);
-                  }}
-                  activeOpacity={0.7}
-                >
-                  <Text style={styles.callDriverText}>{t('order.callButton')}</Text>
-                </TouchableOpacity>
+                <View style={styles.driverActions}>
+                  <TouchableOpacity
+                    style={styles.shareTripBtn}
+                    onPress={async () => {
+                      if (!currentOrder?.id) return;
+                      try {
+                        await shareTrip(currentOrder.id);
+                      } catch (e) {
+                        Alert.alert(t('common.error'), t('order.errorShareFailed'));
+                      }
+                    }}
+                    activeOpacity={0.7}
+                  >
+                    <Share2 size={20} color="#FFFFFF" />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.callDriverButton}
+                    onPress={() => {
+                      if (!driver.phone) {
+                        Alert.alert(t('common.info'), t('order.errorNoDriverPhone'));
+                        return;
+                      }
+                      Linking.openURL(`tel:${driver.phone}`);
+                    }}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={styles.callDriverText}>{t('order.callButton')}</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             )}
 
@@ -961,6 +979,18 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter-Regular',
     color: 'rgba(255,255,255,0.5)',
     marginTop: 2,
+  },
+  driverActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  shareTripBtn: {
+    backgroundColor: 'rgba(255,255,255,0.15)',
+    padding: 10,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.2)',
   },
   callDriverButton: {
     backgroundColor: '#22C55E',

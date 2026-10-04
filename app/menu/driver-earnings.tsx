@@ -1,211 +1,182 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
   StyleSheet,
+  ScrollView,
   TouchableOpacity,
-  Alert,
   ActivityIndicator,
-  FlatList,
+  Dimensions,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { ChevronLeft, Wallet, CreditCard } from 'lucide-react-native';
+import { ChevronLeft, TrendingUp, Calendar, Star } from 'lucide-react-native';
 import { router } from 'expo-router';
 import { getUser } from '@/store/userStore';
 import { useTranslation } from '@/hooks/useTranslation';
-import { notifyLocal } from '@/lib/notifications';
+import { BG_GRADIENT, BG_DARK, GOLD_PRIMARY } from '@/lib/theme';
+import Svg, { Rect, Polyline } from 'react-native-svg';
 
-const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL!;
-const SUPABASE_ANON_KEY = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY!;
+const { width } = Dimensions.get('window');
 
-interface PaidOrder {
-  id: string;
-  passenger_first_name: string;
-  passenger_last_name: string;
-  pickup_address: string;
-  dropoff_address: string;
-  driver_paid_amount: number;
-  driver_withdrawn: boolean;
-}
+type Period = 'day' | 'week' | 'month';
 
 export default function DriverEarningsScreen() {
   const { t } = useTranslation();
-  const [orders, setOrders] = useState<PaidOrder[]>([]);
+  const [period, setPeriod] = useState<Period>('month');
   const [loading, setLoading] = useState(true);
-  const [withdrawing, setWithdrawing] = useState(false);
-  const [cardLast4, setCardLast4] = useState<string | null>(null);
+  const [stats, setStats] = useState<any>(null);
 
-  const fetchData = useCallback(async () => {
-    const phone = getUser().phone;
+  const fetchStats = async () => {
     setLoading(true);
     try {
-      const [ordersRes, userRes] = await Promise.all([
-        fetch(
-          `${SUPABASE_URL}/rest/v1/orders?driver_phone=eq.${encodeURIComponent(phone)}&driver_paid=eq.true&order=created_at.desc&select=id,passenger_first_name,passenger_last_name,pickup_address,dropoff_address,driver_paid_amount,driver_withdrawn`,
-          {
-            headers: {
-              apikey: SUPABASE_ANON_KEY,
-              Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-            },
-          }
-        ),
-        fetch(
-          `${SUPABASE_URL}/rest/v1/users?phone=eq.${encodeURIComponent(phone)}&select=card_last4`,
-          {
-            headers: {
-              apikey: SUPABASE_ANON_KEY,
-              Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-            },
-          }
-        ),
-      ]);
+      const user = getUser();
+      if (!user.phone) return;
 
-      const ordersData = await ordersRes.json();
-      const userData = await userRes.json();
-      setOrders(Array.isArray(ordersData) ? ordersData : []);
-      setCardLast4(userData?.[0]?.card_last4 ?? null);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+      const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL!;
+      const SUPABASE_ANON_KEY = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY!;
 
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
-
-  const pendingTotal = orders
-    .filter((o) => !o.driver_withdrawn)
-    .reduce((sum, o) => sum + (o.driver_paid_amount || 0), 0);
-
-  const handleWithdraw = async () => {
-    if (!cardLast4) {
-      Alert.alert(t('menuDriverEarnings.noCardTitle'), t('menuDriverEarnings.noCardMessage'), [
-        { text: t('menuDriverEarnings.addCardButton'), onPress: () => router.push('/menu/add-card') },
-        { text: t('common.cancel'), style: 'cancel' },
-      ]);
-      return;
-    }
-    if (pendingTotal <= 0) return;
-
-    setWithdrawing(true);
-    try {
-      const phone = getUser().phone;
       const res = await fetch(
-        `${SUPABASE_URL}/rest/v1/orders?driver_phone=eq.${encodeURIComponent(phone)}&driver_paid=eq.true&driver_withdrawn=eq.false`,
+        `${SUPABASE_URL}/rest/v1/rpc/get_driver_stats`,
         {
-          method: 'PATCH',
+          method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             apikey: SUPABASE_ANON_KEY,
             Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
           },
-          body: JSON.stringify({ driver_withdrawn: true }),
+          body: JSON.stringify({
+            driver_phone_input: user.phone,
+            period_input: period,
+          }),
         }
       );
 
-      if (!res.ok) throw new Error('withdraw failed');
+      if (!res.ok) throw new Error('Failed to fetch stats');
+      const data = await res.json();
 
-      await notifyLocal(t('menuDriverEarnings.successTitle'), t('menuDriverEarnings.successMessage'));
-      Alert.alert(t('menuDriverEarnings.successTitle'), t('menuDriverEarnings.successMessage'));
-      fetchData();
-    } catch {
-      Alert.alert(t('menuDriverEarnings.errorTitle'), t('menuDriverEarnings.errorWithdrawFailed'));
+      setStats(Array.isArray(data) ? data[0] : data);
+    } catch (e) {
+      console.error(e);
     } finally {
-      setWithdrawing(false);
+      setLoading(false);
     }
+  };
+
+  useEffect(() => {
+    fetchStats();
+  }, [period]);
+
+  const renderChart = () => {
+    if (!stats?.earnings_history || stats.earnings_history.length === 0) {
+      return (
+        <View style={styles.emptyChart}>
+          <Text style={styles.emptyChartText}>Деректер жоқ</Text>
+        </View>
+      );
+    }
+
+    const history = stats.earnings_history;
+    const maxVal = Math.max(...history.map((h: any) => h.value));
+    const chartWidth = width - 64;
+    const chartHeight = 150;
+    const step = chartWidth / (history.length - 1 || 1);
+
+    const points = history.map((h: any, i: number) => {
+      const x = i * step;
+      const y = chartHeight - (h.value / maxVal) * chartHeight;
+      return `${x},${y}`;
+    }).join(' ');
+
+    return (
+      <View style={styles.chartContainer}>
+        <Svg width={chartWidth} height={chartHeight}>
+          <Polyline
+            points={points}
+            fill="none"
+            stroke={GOLD_PRIMARY}
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          {history.map((h: any, i: number) => (
+            <Rect
+              key={i}
+              x={i * step - 3}
+              y={chartHeight - (h.value / maxVal) * chartHeight - 3}
+              width="6"
+              height="6"
+              fill="#FFFFFF"
+              rx="3"
+            />
+          ))}
+        </Svg>
+      </View>
+    );
   };
 
   return (
     <View style={styles.container}>
-      <LinearGradient colors={['#0A1628', '#1A3A5C', '#0D2137']} style={StyleSheet.absoluteFillObject} />
+      <LinearGradient colors={BG_GRADIENT} style={styles.bg} />
 
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7}>
+        <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
           <ChevronLeft size={28} color="#FFFFFF" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>{t('menuDriverEarnings.headerTitle')}</Text>
+        <Text style={styles.headerTitle}>{t('menuDriverEarnings.headerTitle') || 'Табыс статистикасы'}</Text>
         <View style={{ width: 28 }} />
       </View>
 
-      <View style={styles.content}>
-        <View style={styles.balanceCard}>
-          <LinearGradient colors={['#1D4ED8', '#2563EB']} style={styles.balanceGradient}>
-            <View style={styles.balanceTopRow}>
-              <Wallet size={26} color="rgba(255,255,255,0.85)" />
-              {cardLast4 ? (
-                <View style={styles.cardBadge}>
-                  <CreditCard size={14} color="#FFFFFF" />
-                  <Text style={styles.cardBadgeText}>···· {cardLast4}</Text>
-                </View>
-              ) : null}
-            </View>
-            <Text style={styles.balanceLabel}>{t('menuDriverEarnings.pendingLabel')}</Text>
-            <Text style={styles.balanceAmount}>{pendingTotal} ₸</Text>
-
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <View style={styles.periodTabs}>
+          {(['day', 'week', 'month'] as Period[]).map((p) => (
             <TouchableOpacity
-              style={[styles.withdrawButton, (pendingTotal <= 0 || withdrawing) && styles.withdrawButtonDisabled]}
-              onPress={handleWithdraw}
-              activeOpacity={0.85}
-              disabled={pendingTotal <= 0 || withdrawing}
+              key={p}
+              style={[styles.tab, period === p && styles.tabActive]}
+              onPress={() => setPeriod(p)}
             >
-              {withdrawing ? (
-                <ActivityIndicator color="#2563EB" />
-              ) : (
-                <Text style={styles.withdrawButtonText}>{t('menuDriverEarnings.withdrawButton')}</Text>
-              )}
+              <Text style={[styles.tabText, period === p && styles.tabTextActive]}>
+                {p === 'day' ? 'Күн' : p === 'week' ? 'Апта' : 'Ай'}
+              </Text>
             </TouchableOpacity>
-          </LinearGradient>
+          ))}
         </View>
 
         {loading ? (
-          <ActivityIndicator color="#2563EB" style={{ marginTop: 24 }} />
-        ) : orders.length === 0 ? (
-          <View style={styles.emptyCard}>
-            <Wallet size={48} color="rgba(255,255,255,0.15)" />
-            <Text style={styles.emptyTitle}>{t('menuDriverEarnings.emptyTitle')}</Text>
-            <Text style={styles.emptySubtitle}>{t('menuDriverEarnings.emptySubtitle')}</Text>
-          </View>
+          <ActivityIndicator size="large" color={GOLD_PRIMARY} style={{ marginTop: 50 }} />
         ) : (
-          <FlatList
-            data={orders}
-            keyExtractor={(item) => item.id}
-            contentContainerStyle={{ paddingBottom: 24 }}
-            renderItem={({ item }) => (
-              <View style={styles.tripCard}>
-                <View style={styles.tripHeaderRow}>
-                  <Text style={styles.passengerName}>
-                    {item.passenger_first_name} {item.passenger_last_name?.[0] || ''}
-                  </Text>
-                  <Text style={styles.tripPrice}>{item.driver_paid_amount} ₸</Text>
-                </View>
-                <Text style={styles.routeText} numberOfLines={1}>
-                  {item.pickup_address} → {item.dropoff_address}
-                </Text>
-                <View
-                  style={[
-                    styles.statusBadge,
-                    item.driver_withdrawn ? styles.statusBadgeWithdrawn : styles.statusBadgePending,
-                  ]}
-                >
-                  <Text style={styles.statusBadgeText}>
-                    {item.driver_withdrawn
-                      ? t('menuDriverEarnings.statusWithdrawn')
-                      : t('menuDriverEarnings.statusPending')}
-                  </Text>
-                </View>
+          <>
+            <View style={styles.statsGrid}>
+              <View style={styles.statCard}>
+                <TrendingUp size={24} color={GOLD_PRIMARY} />
+                <Text style={styles.statLabel}>{t('menuDriverEarnings.totalEarnings') || 'Барлық табыс'}</Text>
+                <Text style={styles.statValue}>{stats?.total_earnings?.toLocaleString()} ₸</Text>
               </View>
-            )}
-          />
+              <View style={styles.statCard}>
+                <Calendar size={24} color={GOLD_PRIMARY} />
+                <Text style={styles.statLabel}>{t('menuDriverEarnings.tripCount') || 'Сапар саны'}</Text>
+                <Text style={styles.statValue}>{stats?.trip_count || 0}</Text>
+              </View>
+              <View style={styles.statCard}>
+                <Star size={24} color={GOLD_PRIMARY} />
+                <Text style={styles.statLabel}>{t('menuDriverEarnings.avgRating') || 'Рейтинг'}</Text>
+                <Text style={styles.statValue}>{stats?.avg_rating?.toFixed(1) || '5.0'}</Text>
+              </View>
+            </View>
+
+            <View style={styles.chartCard}>
+              <Text style={styles.chartTitle}>{t('menuDriverEarnings.earningsGraph') || 'Табыс динамикасы'}</Text>
+              {renderChart()}
+            </View>
+          </>
         )}
-      </View>
+      </ScrollView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
+  bg: { ...StyleSheet.absoluteFillObject },
   header: {
     paddingTop: 60,
     paddingHorizontal: 24,
@@ -214,56 +185,100 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 20,
   },
-  headerTitle: { fontSize: 20, fontFamily: 'Inter-SemiBold', color: '#FFFFFF' },
-  content: { flex: 1, paddingHorizontal: 24 },
-  balanceCard: { borderRadius: 24, overflow: 'hidden', marginBottom: 24 },
-  balanceGradient: { padding: 24 },
-  balanceTopRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 },
-  cardBadge: {
+  headerTitle: {
+    fontSize: 20,
+    fontFamily: 'Inter-SemiBold',
+    color: '#FFFFFF',
+  },
+  backBtn: {
+    padding: 4,
+  },
+  scrollContent: {
+    paddingHorizontal: 24,
+    paddingBottom: 40,
+  },
+  periodTabs: {
     flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    backgroundColor: 'rgba(255,255,255,0.15)',
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 10,
-  },
-  cardBadgeText: { color: '#FFFFFF', fontSize: 12, fontFamily: 'Inter-SemiBold' },
-  balanceLabel: { fontSize: 14, fontFamily: 'Inter-Regular', color: 'rgba(255,255,255,0.7)' },
-  balanceAmount: { fontSize: 36, fontFamily: 'Inter-Bold', color: '#FFFFFF', marginBottom: 16 },
-  withdrawButton: {
-    height: 48,
-    borderRadius: 14,
-    backgroundColor: '#FFFFFF',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  withdrawButtonDisabled: { opacity: 0.5 },
-  withdrawButtonText: { color: '#2563EB', fontSize: 15, fontFamily: 'Inter-Bold' },
-  emptyCard: {
-    backgroundColor: 'rgba(255,255,255,0.05)',
-    borderRadius: 20,
-    padding: 32,
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.08)',
-  },
-  emptyTitle: { fontSize: 16, fontFamily: 'Inter-SemiBold', color: 'rgba(255,255,255,0.4)', marginTop: 12 },
-  emptySubtitle: { fontSize: 13, fontFamily: 'Inter-Regular', color: 'rgba(255,255,255,0.25)', marginTop: 4, textAlign: 'center' },
-  tripCard: {
     backgroundColor: 'rgba(255,255,255,0.06)',
-    borderRadius: 18,
+    borderRadius: 16,
+    padding: 4,
+    marginBottom: 24,
+  },
+  tab: {
+    flex: 1,
+    paddingVertical: 10,
+    alignItems: 'center',
+    borderRadius: 12,
+  },
+  tabActive: {
+    backgroundColor: GOLD_PRIMARY,
+  },
+  tabText: {
+    color: 'rgba(255,255,255,0.6)',
+    fontFamily: 'Inter-Medium',
+    fontSize: 14,
+  },
+  tabTextActive: {
+    color: BG_DARK,
+    fontFamily: 'Inter-Bold',
+  },
+  statsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    gap: 12,
+    marginBottom: 24,
+  },
+  statCard: {
+    width: (width - 64) / 3,
+    backgroundColor: 'rgba(255,255,255,0.06)',
+    borderRadius: 20,
     padding: 16,
-    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.1)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  statLabel: {
+    fontSize: 10,
+    color: 'rgba(255,255,255,0.5)',
+    fontFamily: 'Inter-Regular',
+    textAlign: 'center',
+    marginTop: 8,
+    marginBottom: 4,
+  },
+  statValue: {
+    fontSize: 16,
+    color: '#FFFFFF',
+    fontFamily: 'Inter-Bold',
+    textAlign: 'center',
+  },
+  chartCard: {
+    backgroundColor: 'rgba(255,255,255,0.06)',
+    borderRadius: 24,
+    padding: 20,
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.1)',
   },
-  tripHeaderRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 },
-  passengerName: { fontSize: 15, fontFamily: 'Inter-SemiBold', color: '#FFFFFF' },
-  tripPrice: { fontSize: 16, fontFamily: 'Inter-Bold', color: '#2563EB' },
-  routeText: { fontSize: 13, fontFamily: 'Inter-Regular', color: 'rgba(255,255,255,0.5)', marginBottom: 10 },
-  statusBadge: { alignSelf: 'flex-start', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 8 },
-  statusBadgeWithdrawn: { backgroundColor: 'rgba(34,197,94,0.15)' },
-  statusBadgePending: { backgroundColor: 'rgba(245,158,11,0.15)' },
-  statusBadgeText: { fontSize: 12, fontFamily: 'Inter-SemiBold', color: '#FFFFFF' },
+  chartTitle: {
+    fontSize: 16,
+    color: '#FFFFFF',
+    fontFamily: 'Inter-SemiBold',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  chartContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 150,
+  },
+  emptyChart: {
+    height: 150,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyChartText: {
+    color: 'rgba(255,255,255,0.4)',
+    fontFamily: 'Inter-Regular',
+  },
 });

@@ -9,7 +9,9 @@ import {
   Inter_700Bold,
 } from '@expo-google-fonts/inter';
 import * as SplashScreen from 'expo-splash-screen';
-import { requestNotificationPermission } from '@/lib/notifications';
+import { requestNotificationPermission, registerForPushNotificationsAsync, savePushToken } from '@/lib/notifications';
+import { NetworkProvider } from '@/hooks/useNetwork';
+import { getUser } from '@/store/userStore';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -29,6 +31,17 @@ export default function RootLayout() {
   }, [fontsLoaded, fontError]);
 
   useEffect(() => {
+    const setupNotifications = async () => {
+      const user = getUser();
+      if (!user.id) return;
+
+      const token = await registerForPushNotificationsAsync();
+      if (token) {
+        await savePushToken(user.id, token);
+      }
+    };
+
+    setupNotifications();
     requestNotificationPermission();
   }, []);
 
@@ -37,7 +50,7 @@ export default function RootLayout() {
   }
 
   return (
-    <>
+    <NetworkProvider>
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="onboarding" />
         <Stack.Screen name="home" />
@@ -60,7 +73,7 @@ export default function RootLayout() {
         <Stack.Screen name="+not-found" />
       </Stack>
       <StatusBar style="light" />
-    </>
+    </NetworkProvider>
   );
 }
 

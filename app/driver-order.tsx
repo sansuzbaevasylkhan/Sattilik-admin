@@ -24,6 +24,7 @@ import {
   Menu,
   RefreshCw,
   Inbox,
+  Timer
 } from 'lucide-react-native';
 import MenuDrawer from '@/components/MenuDrawer';
 import { getUser } from '@/store/userStore';
@@ -62,6 +63,7 @@ interface Order {
   driver_first_name?: string;
   driver_last_name?: string;
   passenger_reviewed?: boolean;
+  expires_at?: string;
 }
 
 
@@ -452,6 +454,13 @@ export default function DriverOrderScreen() {
                       <>
                         <Play size={18} color={BG_DARK} fill={BG_DARK} />
                         <Text style={styles.acceptButtonText}>{t('driverOrder.acceptButton')}</Text>
+                        {order.expires_at && (
+                          <View style={styles.timerBadge}>
+                            <Timer size={14} color={BG_DARK} />
+                            <Text style={styles.timerText}>
+                              {Math.max(0, Math.ceil((new Date(order.expires_at).getTime() - new Date().getTime()) / 1000))}с</Text>
+                          </View>
+                        )}
                       </>
                     )}
                   </LinearGradient>
