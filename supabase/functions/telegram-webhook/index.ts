@@ -83,7 +83,7 @@ async function buildAdminStatsMessage(): Promise<string> {
     ]);
 
   return (
-    `📊 <b>ASKDRV — статистика</b>\n\n` +
+    `📊 <b>Sattilik Taxi — статистика</b>\n\n` +
     `👥 Барлық тіркелгендер: <b>${usersTotal}</b>\n` +
     `🧍 Жолаушылар: <b>${passengers}</b>\n` +
     `🚗 Жүргізушілер: <b>${drivers}</b>\n` +
@@ -170,7 +170,7 @@ Deno.serve(async (req: Request) => {
     await sendTelegramMessage(
       chatId,
       `Сәлем, ${firstName}! 👋\n\n` +
-        `Бұл бот тек ASKDRV тіркелу кезінде растау кодтарын жіберу үшін қолданылады.`,
+        `Бұл бот тек Sattilik Taxi тіркелу кезінде растау кодтарын жіберу үшін қолданылады.`,
     );
     return jsonResponse({ ok: true });
   }
@@ -181,7 +181,7 @@ Deno.serve(async (req: Request) => {
     await sendTelegramMessage(
       chatId,
       `Сәлем, ${firstName}! 👋\n\n` +
-        `ASKDRV қосымшасын ашып, тіркелу кезіндегі "Telegram-ты ашу" батырмасын басыңыз.`,
+        `Sattilik Taxi қосымшасын ашып, тіркелу кезіндегі "Telegram-ты ашу" батырмасын басыңыз.`,
     );
     return jsonResponse({ ok: true, noArg: true });
   }
@@ -191,7 +191,7 @@ Deno.serve(async (req: Request) => {
     await sendTelegramMessage(
       chatId,
       `Қателік: сілтемедегі нөмір дұрыс емес.\n` +
-        `ASKDRV қосыммасында қайтадан тіркеліп көріңіз.`,
+        `Sattilik Taxi қосыммасында қайтадан тіркеліп көріңіз.`,
     );
     return jsonResponse({ ok: true, invalidArg: true });
   }
@@ -217,7 +217,7 @@ Deno.serve(async (req: Request) => {
       chatId,
       `Сәлем, ${firstName}! 👋\n\n` +
         `Сіздің нөміріңіз ${phone} тіркелу парағында табылмады.\n` +
-        `ASKDRV қосымшасында "Код жіберу" батырмасын басып, қайтадан бастаңыз.`,
+        `Sattilik Taxi қосымшасында "Код жіберу" батырмасын басып, қайтадан бастаңыз.`,
     );
     return jsonResponse({ ok: true, noUser: true });
   }
@@ -273,7 +273,7 @@ Deno.serve(async (req: Request) => {
   await sendTelegramMessage(
     chatId,
     `Сәлем, ${firstNameForCode}! 👋\n\n` +
-      `🔐 <b>ASKDRV растау коды:</b> <code>${code}</code>\n\n` +
+      `🔐 <b>Sattilik Taxi растау коды:</b> <code>${code}</code>\n\n` +
       `Код 5 минут ішінде жарамды. Егер сұрамасаңыз — хабарламаны елемеуіңізге болады.`,
   );
 

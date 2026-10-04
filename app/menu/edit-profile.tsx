@@ -178,6 +178,12 @@ export default function EditProfileScreen() {
     if (!lastName.trim()) return t('menuEditProfile.errorLastNameRequired');
     if (!phone.trim()) return t('menuEditProfile.errorPhoneRequired');
 
+    // Basic phone validation (should be digits and start with + or 7)
+    const phoneRegex = /^\+?[0-9]{10,15}$/;
+    if (!phoneRegex.test(phone.trim())) {
+      return t('menuEditProfile.errorPhoneInvalid') || 'Invalid phone number format';
+    }
+
     if (role === 'driver') {
       if (!carName.trim()) return t('menuEditProfile.errorCarNameRequired');
       if (!carNumber.trim()) return t('menuEditProfile.errorCarNumberRequired');
@@ -214,10 +220,16 @@ export default function EditProfileScreen() {
       }
 
       const originalPhone = getUser().phone;
+      const updatedPhone = phone.trim();
+
+      // If phone is changed, we need to handle it carefully
+      // In a real app, we'd verify the new phone via SMS first.
+      const filterQuery = originalPhone
+        ? `phone=eq.${encodeURIComponent(originalPhone)}`
+        : `phone=eq.${encodeURIComponent(updatedPhone)}`;
+
       const res = await fetch(
-        `${SUPABASE_URL}/rest/v1/users?phone=eq.${encodeURIComponent(
-          originalPhone || phone.trim()
-        )}`,
+        `${SUPABASE_URL}/rest/v1/users?${filterQuery}`,
         {
           method: 'PATCH',
           headers: {

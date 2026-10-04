@@ -221,7 +221,7 @@ Deno.serve(async (req: Request) => {
     if (chatId) {
       const roleLabel = role === "passenger" ? "Жолаушы" : "Жүргізуші";
       const text =
-        `🔐 <b>ASKDRV растау коды:</b> <code>${code}</code>\n\n` +
+        `🔐 <b>Sattilik Taxi растау коды:</b> <code>${code}</code>\n\n` +
         `Сәлем, ${first_name} ${last_name}!\n` +
         `Рөл: ${roleLabel}\n\n` +
         `Код 5 минут ішінде жарамды. Егер сұрамасаңыз — хабарламаны елемеуіңізге болады.`;
