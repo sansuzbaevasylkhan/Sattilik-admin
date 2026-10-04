@@ -262,7 +262,7 @@ Deno.serve(async (req: Request) => {
       chatId,
       `Сәлем, ${user.first_name}! 👋\n\n` +
         `Сіздің нөміріңіз Telegram-қа байланысты.\n` +
-        `Бірақ жарамды растау коды табылмады — ASKDRV қосымшасында "Код жіберу" батырмасын қайта басыңыз.`,
+        `Бірақ жарамды растау коды табылмады — Sattilik қосымшасында "Код жіберу" батырмасын қайта басыңыз.`,
     );
     return jsonResponse({ ok: true, linked: true, noPendingCode: true });
   }
