@@ -12,6 +12,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { requestNotificationPermission, registerForPushNotificationsAsync, savePushToken } from '@/lib/notifications';
 import { NetworkProvider } from '@/hooks/useNetwork';
 import { getUser } from '@/store/userStore';
+import { GlobalErrorBoundary } from '@/components/GlobalErrorBoundary';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -32,12 +33,16 @@ export default function RootLayout() {
 
   useEffect(() => {
     const setupNotifications = async () => {
-      const user = getUser();
-      if (!user.id) return;
+      try {
+        const user = getUser();
+        if (!user.id) return;
 
-      const token = await registerForPushNotificationsAsync();
-      if (token) {
-        await savePushToken(user.id, token);
+        const token = await registerForPushNotificationsAsync();
+        if (token) {
+          await savePushToken(user.id, token);
+        }
+      } catch (e) {
+        console.error('Notification setup error:', e);
       }
     };
 
@@ -50,30 +55,32 @@ export default function RootLayout() {
   }
 
   return (
-    <NetworkProvider>
-      <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="onboarding" />
-        <Stack.Screen name="home" />
-        <Stack.Screen name="register" />
-        <Stack.Screen name="order" />
-        <Stack.Screen name="driver-order" />
-        <Stack.Screen name="rate-driver" />
-        <Stack.Screen name="menu/profile" />
-        <Stack.Screen name="menu/edit-profile" />
+    <GlobalErrorBoundary>
+      <NetworkProvider>
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="onboarding" />
+          <Stack.Screen name="home" />
+          <Stack.Screen name="register" />
+          <Stack.Screen name="order" />
+          <Stack.Screen name="driver-order" />
+          <Stack.Screen name="rate-driver" />
+          <Stack.Screen name="menu/profile" />
+          <Stack.Screen name="menu/edit-profile" />
 
 
-        <Stack.Screen name="menu/payment" />
-        <Stack.Screen name="menu/history" />
-        <Stack.Screen name="menu/add-card" />
-        <Stack.Screen name="menu/settings" />
-        <Stack.Screen name="menu/guide" />
-        <Stack.Screen name="menu/guide-chat" />
-        <Stack.Screen name="menu/pay-driver" />
-        <Stack.Screen name="menu/driver-earnings" />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="light" />
-    </NetworkProvider>
+          <Stack.Screen name="menu/payment" />
+          <Stack.Screen name="menu/history" />
+          <Stack.Screen name="menu/add-card" />
+          <Stack.Screen name="menu/settings" />
+          <Stack.Screen name="menu/guide" />
+          <Stack.Screen name="menu/guide-chat" />
+          <Stack.Screen name="menu/pay-driver" />
+          <Stack.Screen name="menu/driver-earnings" />
+          <Stack.Screen name="+not-found" />
+        </Stack>
+        <StatusBar style="light" />
+      </NetworkProvider>
+    </GlobalErrorBoundary>
   );
 }
 
