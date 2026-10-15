@@ -23,7 +23,7 @@ export function StatCard({
         <CardTitle className="text-sm font-medium text-muted-foreground">
           {title}
         </CardTitle>
-        <div className="flex h-9 w-9 items-center justify-center rounded-md bg-accent text-accent-foreground">
+        <div className="flex h-9 w-9 items-center justify-center rounded-md bg-primary/20 text-primary transition-colors">
           <Icon className="h-4 w-4" />
         </div>
       </CardHeader>

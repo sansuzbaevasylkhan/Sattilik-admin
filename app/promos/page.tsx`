@@ -1,0 +1,208 @@
+'use client';
+
+import React, { useEffect, useState } from 'react';
+import { createClient } from '@supabase/supabase-js';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Badge } from '@/components/ui/badge';
+import { Ticket, Trash2, Plus, CheckCircle } from 'lucide-react';
+
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+export default function PromoCodesPage() {
+  const [promoCodes, setPromoCodes] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [isAdding, setIsAdding] = useState(false);
+  const [formData, setFormData] = useState({
+    code: '',
+    discount_type: 'percent',
+    value: 0,
+    max_uses: 100,
+    expires_at: '',
+    is_active: true,
+  });
+
+  useEffect(() => {
+    fetchPromoCodes();
+  }, []);
+
+  const fetchPromoCodes = async () => {
+    setLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('promo_codes')
+        .select('*')
+        .order('created_at', { ascending: false });
+      if (error) throw error;
+      setPromoCodes(data || []);
+    } catch (e) {
+      console.error('Error fetching promo codes:', e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSave = async () => {
+    try {
+      const { error } = await supabase
+        .from('promo_codes')
+        .insert([{
+          code: formData.code.toUpperCase(),
+          discount_type: formData.discount_type,
+          value: formData.value,
+          max_uses: formData.max_uses,
+          expires_at: formData.expires_at || null,
+          is_active: formData.is_active,
+        }]);
+      if (error) throw error;
+      setIsAdding(false);
+      setFormData({ code: '', discount_type: 'percent', value: 0, max_uses: 100, expires_at: '', is_active: true });
+      fetchPromoCodes();
+    } catch (e) {
+      alert('Промокодты сақтау кезінде қате кетті');
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm('Бұл промокодты өшіруді растайсыз ба?')) return;
+    try {
+      const { error } = await supabase.from('promo_codes').delete().eq('id', id);
+      if (error) throw error;
+      fetchPromoCodes();
+    } catch (e) {
+      alert('Өшіру кезінде қате кетті');
+    }
+  };
+
+  if (loading) return <div className="p-8 text-center text-white">Жүктелуде...</div>;
+
+  return (
+    <div className="flex h-screen w-full bg-slate-950 text-white p-8 overflow-hidden">
+      <div className="flex-1 flex flex-col gap-8">
+        <div className="flex justify-between items-center">
+          <h1 className="text-3xl font-bold">Промокодтарды басқару</h1>
+          <Button
+            onClick={() => setIsAdding(true)}
+            className="bg-yellow-500 text-black hover:bg-yellow-600"
+          >
+            <Plus size={18} className="mr-2" /> Жаңа промокод
+          </Button>
+        </div>
+
+        {isAdding && (
+          <Card className="bg-slate-900 border-slate-800 p-6 text-white mb-8">
+            <h2 className="text-xl font-bold mb-6">Жаңа промокод жасау</h2>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label className="text-slate-400">Код (мысалы: SATTILIK2026)</Label>
+                <Input
+                  value={formData.code}
+                  onChange={(e) => setFormData({...formData, code: e.target.value})}
+                  className="bg-slate-950 border-slate-700 text-white uppercase"
+                  placeholder="КОД"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-slate-400">Жеңілдік түрі</Label>
+                <select
+                  value={formData.discount_type}
+                  onChange={(e) => setFormData({...formData, discount_type: e.target.value})}
+                  className="w-full bg-slate-950 border border-slate-700 rounded-md p-2 text-white"
+                >
+                  <option value="percent">Пайыздық (%)</option>
+                  <option value="fixed">Фиксированный (₸)</option>
+                </select>
+              </div>
+              <div className="space-y-2">
+                <Label className="text-slate-400">Мөлшері</Label>
+                <Input
+                  type="number"
+                  value={formData.value}
+                  onChange={(e) => setFormData({...formData, value: parseFloat(e.target.value)})}
+                  className="bg-slate-950 border-slate-700 text-white"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-slate-400">Макс. қолдану саны</Label>
+                <Input
+                  type="number"
+                  value={formData.max_uses}
+                  onChange={(e) => setFormData({...formData, max_//uses: parseInt(e.target.value)})}
+                  className="bg-slate-950 border-slate-700 text-white"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-slate-400">Мерзімі аяқталуы</Label>
+                <Input
+                  type="datetime-local"
+                  value={formData.expires_at}
+                  onChange={(e) => setFormData({...formData, expires_at: e.target.value})}
+                  className="bg-slate-950 border-slate-700 text-white"
+                />
+              </div>
+            </div>
+            <div className="mt-8 flex gap-3">
+              <Button
+                className="flex-1 bg-yellow-500 text-black hover:bg-yellow-600"
+                onClick={handleSave}
+              >
+                Сақтау
+              </Button>
+              <Button
+                variant="outline"
+                className="text-white border-slate-700"
+                onClick={() => setIsAdding(false)}
+              >
+                Бас тарту
+              </Button>
+            </div>
+          </Card>
+        )}
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {promoCodes.map(pc => (
+            <Card key={pc.id} className="bg-slate-900 border-slate-800 p-4 text-white relative group">
+              <div className="flex justify-between items-start mb-4">
+                <div className="flex items-center gap-2">
+                  <Ticket size={20} className="text-yellow-500" />
+                  <span className="font-mono font-bold text-lg">{pc.code}</span>
+                </div>
+                <Badge variant={pc.is_active ? 'default' : 'destructive'}>
+                  {pc.is_active ? 'Белсенді' : 'Өшірілген'}
+                </Badge>
+              </div>
+              <div className="space-y-2 text-sm opacity-80">
+                <div className="flex justify-between">
+                  <span>Жеңілдік:</span>
+                  <span className="font-semibold">
+                    {pc.discount_type === 'percent' ? `${pc.value}%` : `${pc.value} ₸`}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Қолданылды:</span>
+                  <span className="font-semibold">{pc.used_count} / {pc.max_uses}</span>
+                </div>
+                {pc.expires_at && (
+                  <div className="flex justify-between">
+                    <span>Мерзімі:</span>
+                    <span className="font-semibold">{new Date(pc.expires_at).toLocaleDateString()}</span>
+                  </div>
+                )}
+              </div>
+              <button
+                onClick={() => handleDelete(pc.id)}
+                className="absolute top-2 right-2 p-2 text-slate-600 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
+              >
+                <Trash2 size={16} />
+              </button>
+            </Card>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
