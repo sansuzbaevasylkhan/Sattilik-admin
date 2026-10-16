@@ -30,10 +30,16 @@ export default function TariffsPage() {
         .from('tariffs')
         .select('*')
         .order('name');
-      if (error) throw error;
+
+      if (error) {
+        console.error('Error fetching tariffs:', error.message);
+        // Show a user-friendly alert instead of just a console error
+        alert(`Деректерді алуда қате кетті: ${error.message}`);
+        return;
+      }
       setTariffs(data || []);
     } catch (e) {
-      console.error('Error fetching tariffs:', e);
+      console.error('Critical error fetching tariffs:', e);
     } finally {
       setLoading(false);
     }

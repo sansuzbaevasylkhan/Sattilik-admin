@@ -145,11 +145,23 @@ export async function getActiveOrders(): Promise<Order[]> {
 
 // ---------- Dashboard stats ----------
 
-export async function getDashboardStats() {
-  const todayStart = startOfDay().toISOString()
-  const todayEnd = endOfDay().toISOString()
+export async function getDashboardStats(period: 'today' | 'weekly' | 'monthly' | 'total' = 'today') {
+  let from = startOfDay().toISOString()
+  let to = endOfDay().toISOString()
 
-  const [driversActive, driversBlocked, todayOrders, completedToday, ratings] =
+  if (period === 'weekly') {
+    const d = new Date()
+    d.setDate(d.getDate() - 7)
+    from = d.toISOString()
+  } else if (period === 'monthly') {
+    const d = new Date()
+    d.setMonth(d.getMonth() - 1)
+    from = d.toISOString()
+  } else if (period === 'total') {
+    from = '1970-01-01T00:00:00Z'
+  }
+
+  const [driversActive, driversBlocked, ordersCount, completedOrders, ratings] =
     await Promise.all([
       supabase
         .from('users')
@@ -164,14 +176,14 @@ export async function getDashboardStats() {
       supabase
         .from('orders')
         .select('id', { count: 'exact', head: true })
-        .gte('created_at', todayStart)
-        .lte('created_at', todayEnd),
+        .gte('created_at', from)
+        .lte('created_at', to),
       supabase
         .from('orders')
         .select('price')
         .eq('status', 'completed')
-        .gte('created_at', todayStart)
-        .lte('created_at', todayEnd),
+        .gte('created_at', from)
+        .lte('created_at', to),
       supabase
         .from('users')
         .select('average_rating')
@@ -182,12 +194,18 @@ export async function getDashboardStats() {
   for (const r of [driversActive, driversBlocked, ratings]) {
     if (r.error) logTableError('users', r.error)
   }
-  for (const r of [todayOrders, completedToday]) {
+  for (const r of [ordersCount, completedOrders]) {
     if (r.error) logTableError('orders', r.error)
   }
 
-  const todayRevenue =
-    completedToday.data?.reduce((sum, r) => sum + (r.price ?? 0), 0) ?? 0
+  const totalRevenue =
+    completedOrders.data?.reduce((sum, r) => sum + (r.price ?? 0), 0) ?? 0
+
+  // Calculate commission based on admin settings
+  const commissionRate = await getAdminSetting('commission_rate')
+  const rate = commissionRate ? parseFloat(commissionRate) / 100 : 0
+  const companyCommission = totalRevenue * rate
+  const netProfit = totalRevenue - companyCommission
 
   const ratingValues = (ratings.data ?? [])
     .map((r) => r.average_rating as number | null)
@@ -199,8 +217,10 @@ export async function getDashboardStats() {
   return {
     activeDrivers: driversActive.count ?? 0,
     blockedDrivers: driversBlocked.count ?? 0,
-    todayOrders: todayOrders.count ?? 0,
-    todayRevenue,
+    todayOrders: ordersCount.count ?? 0,
+    totalRevenue,
+    companyCommission,
+    netProfit,
     avgRating,
   }
 }

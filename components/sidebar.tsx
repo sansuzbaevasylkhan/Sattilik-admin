@@ -11,6 +11,14 @@ import {
   Activity,
   BarChart3,
   CreditCard,
+  ShieldCheck,
+  Wallet,
+  Ticket,
+  Bell,
+  MapPin,
+  Settings,
+  UserCog,
+  FileText,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -20,8 +28,16 @@ const NAV = [
   { href: '/admin/passengers', label: 'Жолаушылар', icon: UserSquare2 },
   { href: '/admin/orders', label: 'Сапарлар', icon: Map },
   { href: '/admin/orders/live', label: 'Live трекинг', icon: Activity },
-  { href: '/admin/statistics', label: 'Статистика', icon: BarChart3 },
   { href: '/admin/payments', label: 'Төлемдер', icon: CreditCard },
+  { href: '/admin/statistics', label: 'Статистика', icon: BarChart3 },
+  { href: '/complaints', label: 'Шағымдар', icon: ShieldCheck },
+  { href: '/tariffs', label: 'Тарифтер', icon: Wallet },
+  { href: '/admin/promos', label: 'Промокодтар', icon: Ticket },
+  { href: '/admin/notifications', label: 'Хабарландырулар', icon: Bell },
+  { href: '/admin/areas', label: 'Қызмет аймақтары', icon: MapPin },
+  { href: '/admin/settings', label: 'Параметрлер', icon: Settings },
+  { href: '/admin/admins', label: 'Әкімшілер', icon: UserCog },
+  { href: '/admin/logs', label: 'Журнал', icon: FileText },
 ] as const
 
 export function Sidebar() {
