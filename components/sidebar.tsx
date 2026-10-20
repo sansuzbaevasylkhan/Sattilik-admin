@@ -45,17 +45,16 @@ export function Sidebar() {
 
   return (
     <aside className="hidden md:flex md:w-64 md:flex-col md:border-r md:border-sidebar-border md:bg-sidebar md:text-sidebar-foreground">
-      <div className="flex h-16 items-center gap-2 border-b border-sidebar-border px-6">
-        <div className="relative h-8 w-8 overflow-hidden rounded-lg">
+      <div className="flex h-20 items-center justify-start gap-3 border-b border-sidebar-border px-6">
+        <div className="relative h-12 w-40 overflow-hidden">
           <Image
             src="/logo.png"
-            alt="Sattilik"
+            alt="Sattilik панель"
             fill
-            sizes="32px"
+            sizes="160px"
             className="object-contain"
           />
         </div>
-        <span className="text-lg font-semibold tracking-tight">Sattilik</span>
       </div>
       <nav className="flex-1 space-y-1 overflow-y-auto p-3">
         {NAV.map((item) => {
