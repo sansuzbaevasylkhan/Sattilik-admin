@@ -19,11 +19,13 @@ import {
   Settings,
   UserCog,
   FileText,
+  MessageSquare,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const NAV = [
   { href: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/admin/chat', label: 'Чаттар', icon: MessageSquare },
   { href: '/admin/drivers', label: 'Жүргізушілер', icon: Users },
   { href: '/admin/passengers', label: 'Жолаушылар', icon: UserSquare2 },
   { href: '/admin/orders', label: 'Сапарлар', icon: Map },
