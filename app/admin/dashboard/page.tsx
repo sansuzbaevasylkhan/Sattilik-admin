@@ -222,48 +222,8 @@ export default async function DashboardPage({
           </CardContent>
         </Card>
 
-        {/* Quick Monitoring Block */}
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="flex items-center gap-2">
-              <ShieldCheck className="h-4 w-4 text-primary" />
-              Жедел бақылау
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-3">
-              {recentDrivers.length === 0 ? (
-                <p className="text-sm text-muted-foreground">Деректер жоқ</p>
-              ) : (
-                recentDrivers.map((d) => (
-                  <Link
-                    key={d.id}
-                    href={`/admin/drivers/${d.id}`}
-                    className="flex items-center justify-between rounded-md border border-border p-3 transition-colors hover:bg-accent"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">
-                        {d.first_name[0]}{d.last_name?.[0]}
-                      </div>
-                      <div>
-                        <div className="font-medium text-sm">{d.first_name} {d.last_name}</div>
-                        <div className="text-xs text-muted-foreground">{d.phone}</div>
-                      </div>
-                    </div>
-                    <StatusBadge status={d.is_blocked ? 'blocked' : 'active'} />
-                  </Link>
-                ))
-              )}
-            </div>
-            <div className="pt-4 border-t border-border">
-              <Button className="w-full gap-2" asChild>
-                <Link href="/admin/orders/live">
-                  <MapIcon className="h-4 w-4" /> Live картаны ашу
-                </Link>
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+        {/* Quick Chats Block */}
+        <RecentChats />
       </div>
     </div>
   )
