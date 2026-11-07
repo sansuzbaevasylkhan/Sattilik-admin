@@ -46,7 +46,7 @@ export class GlobalErrorBoundary extends Component<Props, State> {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0A1628',
+    backgroundColor: '#B8860B',
     alignItems: 'center',
     justifyContent: 'center',
     padding: 20,

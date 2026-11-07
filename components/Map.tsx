@@ -97,7 +97,7 @@ const CenterPinMap = forwardRef<CenterPinMapHandle, CenterPinMapProps>(
           {driver && (
             <Marker lngLat={[driver.lng, driver.lat]} anchor="center">
               <View style={styles.driverMarker}>
-                <Car size={16} color="#0A1628" />
+                <Car size={16} color="#B8860B" />
               </View>
             </Marker>
           )}

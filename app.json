@@ -21,7 +21,7 @@
       "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#0A1628"
+        "backgroundColor": "#B8860B"
       },
       "permissions": [
         "android.permission.ACCESS_COARSE_LOCATION",
@@ -45,12 +45,12 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#0A1628",
+          "backgroundColor": "#B8860B",
           "image": "./assets/images/logo_splash.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "dark": {
-            "backgroundColor": "#0A1628",
+            "backgroundColor": "#B8860B",
             "image": "./assets/images/logo_splash.png",
             "imageWidth": 200,
             "resizeMode": "contain"

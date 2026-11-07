@@ -67,7 +67,7 @@ export default function HistoryScreen() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient colors={['#0A1628', '#1A3A5C', '#0D2137']} style={styles.bg} />
+      <LinearGradient colors={['#B8860B', '#DAA520', '#FFD700']} style={styles.bg} />
 
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7}>

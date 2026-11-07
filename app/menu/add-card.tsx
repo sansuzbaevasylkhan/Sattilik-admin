@@ -120,7 +120,7 @@ export default function AddCardScreen() {
       style={styles.container}
       behavior={Platform.OS === 'web' ? undefined : 'padding'}
     >
-      <LinearGradient colors={['#0A1628', '#1A3A5C', '#0D2137']} style={StyleSheet.absoluteFill} />
+      <LinearGradient colors={['#B8860B', '#DAA520', '#FFD700']} style={StyleSheet.absoluteFill} />
 
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7}>
