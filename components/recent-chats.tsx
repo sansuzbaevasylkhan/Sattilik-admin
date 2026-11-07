@@ -31,13 +31,24 @@ export function RecentChats() {
             content,
             created_at,
             is_read,
-            users (full_name)
+            sender_role,
+            users (
+              full_name
+            )
           `)
           .order('created_at', { ascending: false });
 
-        if (error) throw error;
+        if (error) {
+          console.error('Supabase fetch error:', error.message);
+          throw error;
+        }
 
-        const grouped = data.reduce((acc: any, msg: any) => {
+        if (!data || data.length === 0) {
+          setChats([]);
+          return;
+        }
+
+        const grouped = data.reduce((acc: Record<string, RecentChat>, msg: any) => {
           const userId = msg.user_id;
           if (!acc[userId]) {
             acc[userId] = {
@@ -51,7 +62,6 @@ export function RecentChats() {
           return acc;
         }, {});
 
-        // Оқылмаған хаттарды есептеу
         for (const userId in grouped) {
           const unread = data.filter((m: any) =>
             m.user_id === userId && m.sender_role === 'client' && !m.is_read
@@ -59,8 +69,8 @@ export function RecentChats() {
           grouped[userId].unread_count = unread;
         }
 
-        setChats(Object.values(grouped).slice(0, 5));
-      } catch (err) {
+        setChats(Object.values(grouped).slice(0, 5) as RecentChat[]);
+      } catch (err: any) {
         console.error('Fetch chats error:', err);
       } finally {
         setIsLoading(false);
@@ -91,8 +101,8 @@ export function RecentChats() {
             {chats.map((chat) => (
               <Link
                 key={chat.id}
-                href={`/admin/chat?user_id=${chat.id}`}
-                className="flex items-center justify-between p-3 rounded-lg border border-//border hover:bg-accent transition-colors group"
+                href={`/admin///chat?user_id=${chat.id}`}
+                className="flex items-center justify-between p-3 rounded-lg border border-border hover:bg-accent transition-colors group"
               >
                 <div className="flex items-center gap-3">
                   <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">

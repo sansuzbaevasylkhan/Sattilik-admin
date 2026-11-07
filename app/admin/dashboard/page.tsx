@@ -16,8 +16,10 @@ import {
 } from '@/components/ui/table'
 import { StatCard } from '@/components/stat-card'
 import { StatusBadge } from '@/components/status-badge'
+import { RecentChats } from '@/components/recent-chats'
 import { getDashboardStats, getRecentOrders, getRecentDrivers } from '@/lib/queries'
 import { formatCurrency, formatDate } from '@/lib/format'
+import { cn } from '@/lib/utils'
 
 export const dynamic = 'force-dynamic'
 
@@ -40,7 +42,7 @@ export default async function DashboardPage({
         <div className="flex flex-col gap-1">
           <h1 className="text-3xl font-bold tracking-tight">Sattilik Hub 2.0</h1>
           <p className="text-sm text-muted-foreground">
-            Жүйелік басқару орталығы — {period === 'today' ? 'Бүгінгі' : period === 'weekly' ? 'Апталық' : period === 'monthly' ? 'Айлық' : 'Жалпы'} көрсеткіштер
+            Жүйелік басқару орталығы — {period === 'today' ? 'Бүгін' : period === 'weekly' ? '7 күн' : period === 'monthly' ? '30 күн' : 'Барлығы'} көрсеткіштер
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -228,8 +230,3 @@ export default async function DashboardPage({
     </div>
   )
 }
-
-function cn(...inputs: any[]) {
-  return inputs.filter(Boolean).join(' ')
-}
-
