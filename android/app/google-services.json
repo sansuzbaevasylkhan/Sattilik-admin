@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "669506186705",
+    "project_id": "sattilik-taxi-80941",
+    "storage_bucket": "sattilik-taxi-80941.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:669506186705:android:6e9be1de5f1af14ef404f0",
+        "android_client_info": {
+          "package_name": "com.asylkhansansuzbaev.sattiliktaxi.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_rLGSdxxeo39u3Ftx3DOGK9uiyMNDMHA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

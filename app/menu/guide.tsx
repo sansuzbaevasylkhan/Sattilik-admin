@@ -129,7 +129,7 @@ export default function GuideScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  bg: { ...StyleSheet.absoluteFillObject },
+  bg: { ...StyleSheet.absoluteFill },
   header: {
     paddingTop: 60,
     paddingHorizontal: 24,

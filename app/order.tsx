@@ -672,7 +672,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   background: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
   },
   header: {
     paddingTop: 60,
@@ -697,7 +697,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   formMapLayer: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
   },
   floatingHeader: {
     position: 'absolute',

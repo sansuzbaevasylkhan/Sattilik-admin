@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from 'react';
-import { StyleSheet, View } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
 import {
   Map as MapLibreMap,
   Camera,
@@ -8,14 +8,14 @@ import {
   Layer,
   CameraRef,
 } from '@maplibre/maplibre-react-native';
-import { Car } from 'lucide-react-native';
-import { MAP_STYLES, QAZALY_CENTER } from '@/lib/maptiler';
-import { ROUTE_LINE_COLOR } from '@/lib/theme';
+import { Car, Map as MapIcon, Layers } from 'lucide-react-native';
+import { MAP_STYLES, QAZALY_CENTER, MapStyleId } from '@/lib/maptiler';
+import { ROUTE_LINE_COLOR, BG_DARK } from '@/lib/theme';
 
 interface RouteMapPreviewProps {
   pickup?: { lng: number; lat: number } | null;
   dropoff?: { lng: number; lat: number } | null;
-  driver?: { lng: number; lat: number } | null;
+  driver?: { lng: number; lat: number; bearing?: number } | null;
   /** OSRM/getRoute() арқылы алынған нақты жол сызығы, [lng, lat][] түрінде. */
   routeCoordinates?: [number, number][] | null;
   height?: number;
@@ -33,6 +33,7 @@ export default function RouteMapPreview({
   fill = false,
 }: RouteMapPreviewProps) {
   const cameraRef = useRef<CameraRef>(null);
+  const [mapStyle, setMapStyle] = useState<MapStyleId>('hybrid');
 
   const center = driver ?? pickup ?? dropoff ?? { lng: QAZALY_CENTER[0], lat: QAZALY_CENTER[1] };
 
@@ -76,7 +77,13 @@ export default function RouteMapPreview({
 
   return (
     <View style={fill ? styles.containerFill : [styles.container, { height }]}>
-      <MapLibreMap style={styles.map} mapStyle={MAP_STYLES.streets} logo={false} attribution={false} compass={false}>
+      <MapLibreMap
+        style={styles.map}
+        mapStyle={MAP_STYLES[mapStyle]}
+        logo={false}
+        attribution={false}
+        compass={false}
+      >
         <Camera ref={cameraRef} initialViewState={{ center: [center.lng, center.lat], zoom: 13 }} />
 
         {routeCoordinates && routeCoordinates.length > 1 && (
@@ -92,13 +99,13 @@ export default function RouteMapPreview({
               id="routeLineCasing"
               type="line"
               layout={{ 'line-cap': 'round', 'line-join': 'round' }}
-              paint={{ 'line-color': '#FFFFFF', 'line-width': 7, 'line-opacity': 0.9 }}
+              paint={{ 'line-color': '#000000', 'line-width': 8, 'line-opacity': 1 }}
             />
             <Layer
               id="routeLine"
               type="line"
               layout={{ 'line-cap': 'round', 'line-join': 'round' }}
-              paint={{ 'line-color': ROUTE_LINE_COLOR, 'line-width': 4 }}
+              paint={{ 'line-color': ROUTE_LINE_COLOR, 'line-width': 5 }}
             />
           </GeoJSONSource>
         )}
@@ -121,7 +128,7 @@ export default function RouteMapPreview({
 
         {driver && (
           <Marker lngLat={[driver.lng, driver.lat]} anchor="center">
-            <View style={styles.driverMarker}>
+            <View style={[styles.driverMarker, { transform: [{ rotate: `${driver.bearing || 0}deg` }] }]}>
               <Car size={16} color="#0A1628" />
             </View>
           </Marker>
@@ -139,10 +146,33 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   containerFill: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
   },
   map: {
     flex: 1,
+  },
+  controls: {
+    position: 'absolute',
+    top: 12,
+    right: 12,
+    gap: 8,
+  },
+  styleButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    backdropFilter: 'blur(10px)',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.2)',
+  },
+  styleText: {
+    color: '#FFFFFF',
+    fontSize: 12,
+    fontFamily: 'Inter-SemiBold',
   },
   pinOuter: {
     width: 20,

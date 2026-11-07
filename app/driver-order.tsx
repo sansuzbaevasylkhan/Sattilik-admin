@@ -455,11 +455,11 @@ export default function DriverOrderScreen() {
                         <Play size={18} color={BG_DARK} fill={BG_DARK} />
                         <Text style={styles.acceptButtonText}>{t('driverOrder.acceptButton')}</Text>
                         {order.expires_at && (
-                          <View style={styles.timerBadge}>
-                            <Timer size={14} color={BG_DARK} />
-                            <Text style={styles.timerText}>
-                              {Math.max(0, Math.ceil((new Date(order.expires_at).getTime() - new Date().getTime()) / 1000))}с</Text>
-                          </View>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                          <Timer size={14} color={BG_DARK} />
+                          <Text style={{ fontSize: 12, fontFamily: 'Inter-SemiBold', color: BG_DARK }}>
+                            {Math.max(0, Math.ceil((new Date(order.expires_at).getTime() - new Date().getTime()) / 1000))}с</Text>
+                        </View>
                         )}
                       </>
                     )}
@@ -634,7 +634,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   background: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
   },
   header: {
     paddingTop: 60,

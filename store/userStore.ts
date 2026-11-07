@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface UserState {
+  id: string;
   firstName: string;
   lastName: string;
   phone: string;
@@ -11,6 +12,7 @@ interface UserState {
 const STORAGE_KEY = 'askdrv_user_session';
 
 const state: UserState = {
+  id: '',
   firstName: '',
   lastName: '',
   phone: '',
@@ -72,6 +74,7 @@ export function subscribeUser(fn: () => void): () => void {
 /** Шығу (logout): сақталған сессияны толығымен өшіреді. */
 export function clearUser() {
   Object.assign(state, {
+    id: '',
     firstName: '',
     lastName: '',
     phone: '',

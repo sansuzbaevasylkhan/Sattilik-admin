@@ -153,7 +153,7 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  background: { ...StyleSheet.absoluteFillObject },
+  background: { ...StyleSheet.absoluteFill },
   langWrap: {
     position: 'absolute',
     top: 56,

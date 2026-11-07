@@ -14,7 +14,7 @@ const NetworkContext = createContext<NetworkContextType>({
 });
 
 export const NetworkProvider = ({ children }: { children: React.ReactNode }) => {
-  const [isConnected, setIsConnected] = useState<NetInfoState.isConnected | null>(true);
+  const [isConnected, setIsConnected] = useState<boolean | null>(true);
 
   useEffect(() => {
     // Subscribe to network state changes
@@ -54,7 +54,7 @@ const { width, height } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   overlay: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     backgroundColor: 'rgba(0,0,0,0.8)',
     zIndex: 9999,
     justifyContent: 'center',

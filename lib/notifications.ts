@@ -26,6 +26,30 @@ export async function requestNotificationPermission() {
   }
 }
 
+export async function registerForPushNotificationsAsync() {
+  try {
+    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+    if (existingStatus !== 'granted') {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+    if (finalStatus !== 'granted') {
+      return null;
+    }
+    const token = (await Notifications.getExpoPushTokenAsync()).data;
+    return token;
+  } catch (e) {
+    console.error('Error registering for push notifications:', e);
+    return null;
+  }
+}
+
+export async function savePushToken(userId: string, token: string) {
+  // This should ideally be a Supabase call
+  console.log(`Saving token ${token} for user ${userId}`);
+}
+
 export async function notifyLocal(title: string, body: string) {
   try {
     await Notifications.scheduleNotificationAsync({

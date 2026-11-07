@@ -118,12 +118,12 @@ export default function MenuDrawer({ visible, onClose }: MenuDrawerProps) {
   const roleLabel = user.role === 'driver' ? t('menuDrawer.roleDriver') : t('menuDrawer.rolePassenger');
 
   return (
-    <View style={StyleSheet.absoluteFillObject} pointerEvents="box-none">
+    <View style={StyleSheet.absoluteFill} pointerEvents="box-none">
       <Animated.View
         style={[styles.overlay, { opacity: overlayAnim }]}
         pointerEvents={visible ? 'auto' : 'none'}
       >
-        <TouchableOpacity style={StyleSheet.absoluteFillObject} onPress={onClose} activeOpacity={1} />
+        <TouchableOpacity style={StyleSheet.absoluteFill} onPress={onClose} activeOpacity={1} />
       </Animated.View>
 
       <Animated.View
@@ -238,7 +238,7 @@ export default function MenuDrawer({ visible, onClose }: MenuDrawerProps) {
 
 const styles = StyleSheet.create({
   overlay: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     backgroundColor: 'rgba(0,0,0,0.55)',
   },
   drawer: {

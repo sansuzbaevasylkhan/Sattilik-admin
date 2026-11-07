@@ -35,7 +35,7 @@ export default function RootLayout() {
     const setupNotifications = async () => {
       try {
         const user = getUser();
-        if (!user.id) return;
+        if (!user || !user.id) return;
 
         const token = await registerForPushNotificationsAsync();
         if (token) {

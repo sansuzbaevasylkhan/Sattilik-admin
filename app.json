@@ -2,12 +2,11 @@
   "expo": {
     "name": "Sattilik Taxi",
     "slug": "bolt-expo-nativewind",
-    "version": "1.2.2.3",
+    "version": "1.2.3",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
     "updates": {
       "enabled": false
     },
@@ -30,7 +29,7 @@
         "android.permission.POST_NOTIFICATIONS",
         "android.permission.CAMERA",
         "android.permission.READ_EXTERNAL_STORAGE",
-        "android.//permission.WRITE_EXTERNAL_STORAGE"
+        "android.permission.WRITE_EXTERNAL_STORAGE"
       ],
       "googleServicesFile": "./google-services.json"
     },
@@ -64,13 +63,9 @@
         {
           "locationWhenInUsePermission": "Жақын жүргізушілерді табу үшін орналасқан жеріңіз қолданылады"
         }
-      ]
+      ],
+      "expo-status-bar"
     ],
-    "splash": {
-      "image": "./assets/images/logo_splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#0A1628"
-    },
     "experiments": {
       "typedRoutes": true
     },

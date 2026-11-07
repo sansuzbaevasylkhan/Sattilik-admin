@@ -171,7 +171,7 @@ export default function QrScanScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  bg: { ...StyleSheet.absoluteFillObject },
+  bg: { ...StyleSheet.absoluteFill },
   header: {
     paddingTop: 60,
     paddingHorizontal: 24,
@@ -233,7 +233,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255,255,255,0.03)',
   },
   overlay: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     justifyContent: 'center',
     alignItems: 'center',
   },
