@@ -170,7 +170,8 @@ Deno.serve(async (req: Request) => {
     await sendTelegramMessage(
       chatId,
       `Сәлем, ${firstName}! 👋\n\n` +
-        `Бұл бот тек Sattilik Taxi тіркелу кезінде растау кодтарын жіберу үшін қолданылады.`,
+        `Бұл бот тек Sattilik Taxi тіркелу кезінде растау кодтарын жіберу үшін қолданылады.\n\n` +
+        `Тіркелу үшін Sattilik Taxi қосымшасын жүктеп алып, телефон нөміріңізді енгізіңіз.`,
     );
     return jsonResponse({ ok: true });
   }
@@ -216,8 +217,11 @@ Deno.serve(async (req: Request) => {
     await sendTelegramMessage(
       chatId,
       `Сәлем, ${firstName}! 👋\n\n` +
-        `Сіздің нөміріңіз ${phone} тіркелу парағында табылмады.\n` +
-        `Sattilik Taxi қосымшасында "Код жіберу" батырмасын басып, қайтадан бастаңыз.`,
+        `Кешіріңіз, біздің базамызда ${phone} нөмірімен тіркелген пайдаланушы табылмады.\n\n` +
+        `Бұл мәселені шешу үшін:\n` +
+        `1. Sattilik Taxi қосымшасын ашыңыз\n` +
+        `2. Телефон нөміріңізді дұрыс енгізіңіз\n` +
+        `3. "Код жіберу" батырмасын қайта басыңыз.`,
     );
     return jsonResponse({ ok: true, noUser: true });
   }
