@@ -182,7 +182,11 @@ Deno.serve(async (req: Request) => {
     await sendTelegramMessage(
       chatId,
       `Сәлем, ${firstName}! 👋\n\n` +
-        `Sattilik Taxi қосымшасын ашып, тіркелу кезіндегі "Telegram-ты ашу" батырмасын басыңыз.`,
+        `🚕 <b>Sattilik Taxi</b> қосымшасын ашып, тіркелу кезінде <b>«Telegram-ты ашу»</b> батырмасын басыңыз.\n\n` +
+        `Сонда аккаунтыңыз ботқа бірден байланады ✅\n\n` +
+        `📲 <b>Қосымша жоқ па? Жүктеп алыңыз:</b>\n\n` +
+        `🤖 <a href="https://play.google.com/store/apps/details?id=com.asylkhansansuzbaev.sattiliktaxi.app">Google Play</a>\n` +
+        `🍎 <a href="https://apps.apple.com/...">App Store</a>`,
     );
     return jsonResponse({ ok: true, noArg: true });
   }
