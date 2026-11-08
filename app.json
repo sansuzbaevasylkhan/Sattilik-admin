@@ -64,7 +64,15 @@
           "locationWhenInUsePermission": "Жақын жүргізушілерді табу үшін орналасқан жеріңіз қолданылады"
         }
       ],
-      "expo-status-bar"
+      "expo-status-bar",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "enablePngCrunchInReleaseBuilds": false
+          }
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
