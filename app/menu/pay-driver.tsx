@@ -350,5 +350,5 @@ const styles = StyleSheet.create({
   payButton: { height: 56, borderRadius: 16, overflow: 'hidden' },
   payButtonDisabled: { opacity: 0.7 },
   payButtonGradient: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  payButtonText: { color: '#FFFFFF', fontSize: 18, fontFamily: 'Inter-SemiBold' },
+  payButtonText: { color: '#000000', fontSize: 18, fontFamily: 'Inter-SemiBold' },
 });

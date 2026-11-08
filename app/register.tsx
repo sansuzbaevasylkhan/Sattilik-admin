@@ -975,7 +975,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   proceedText: {
-    color: '#FFD700',
+    color: '#000000',
     fontSize: 16,
     fontFamily: 'Inter-SemiBold',
   },
