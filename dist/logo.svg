@@ -1,0 +1,18 @@
+<svg width="200" height="60" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#D4AF37;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#FFD700;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#B8860B;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <!-- Icon part: A stylized taxi/car or a professional emblem -->
+  <path d="M20 30 L35 20 L45 20 L55 30 L55 40 L45 40 L35 40 Z" fill="url(#goldGradient)" />
+  <circle cx="30" cy="42 r="4" fill="url(#goldGradient)" />
+  <circle cx="45" cy="42 r="4" fill="url(#goldGradient)" />
+
+  <!-- Text part -->
+  <text x="65" y="38" font-family="Arial, sans-serif" font-weight="bold" font-size="22" fill="url(#goldGradient)">
+    Sattilik панель
+  </text>
+</svg>

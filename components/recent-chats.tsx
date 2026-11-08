@@ -27,8 +27,8 @@ export function RecentChats() {
         const { data, error } = await supabase
           .from('messages')
           .select(`
-            user_id,
-            content,
+            sender_id,
+            text,
             created_at,
             is_read,
             sender_role,
@@ -49,12 +49,12 @@ export function RecentChats() {
         }
 
         const grouped = data.reduce((acc: Record<string, RecentChat>, msg: any) => {
-          const userId = msg.user_id;
+          const userId = msg.sender_id;
           if (!acc[userId]) {
             acc[userId] = {
               id: userId,
               full_name: msg.users?.full_name || 'Белгісіз',
-              last_msg: msg.content,
+              last_msg: msg.text,
               last_msg_time: msg.created_at,
               unread_count: 0,
             };
@@ -64,7 +64,7 @@ export function RecentChats() {
 
         for (const userId in grouped) {
           const unread = data.filter((m: any) =>
-            m.user_id === userId && m.sender_role === 'client' && !m.is_read
+            m.sender_id === userId && m.sender_role === 'client' && !m.is_read
           ).length;
           grouped[userId].unread_count = unread;
         }

@@ -81,8 +81,8 @@ export default function AdminMapPage() {
 
         const { data, error } = await supabase
           .from('driver_locations')
-          .select('phone, lat, lng, last_updated')
-          .eq('status', 'online');
+          .select('phone, lat, lng, updated_at')
+          .gte('updated_at', new Date(Date.now() - 2 * 60 * 1000).toISOString());
 
         if (error) {
           throw error;
@@ -175,7 +175,6 @@ export default function AdminMapPage() {
               return prev;
             }
 
-            // Driver went offline
             if (updated.status && updated.status !== 'online') {
               return prev.filter(
                 (driver) => driver.phone !== updated.phone

@@ -274,32 +274,40 @@ export async function getOrdersByPeriod(from: string, to: string) {
 
 export async function getPayments(): Promise<Payment[]> {
   const { data, error } = await supabase
-    .from('payments')
+    .from('orders')
     .select('*')
-    .order('period_end', { ascending: false })
+    .eq('driver_paid', true)
+    .order('updated_at', { ascending: false })
   if (error) {
-    logTableError('payments', error)
+    logTableError('orders', error)
     return []
   }
-  const payments = (data ?? []) as Payment[]
-  if (payments.length === 0) return payments
+  const payments = (data ?? []) as any[]
+  if (payments.length === 0) return []
 
-  const driverIds = Array.from(new Set(payments.map((p) => p.driver_id)))
+  const driverPhones = Array.from(new Set(payments.map((p) => p.driver_phone)))
   const { data: drivers, error: driversError } = await supabase
     .from('users')
-    .select('id, phone, first_name, last_name')
-    .in('id', driverIds)
+    .select('phone, first_name, last_name')
+    .in('phone', driverPhones)
   if (driversError) {
     logTableError('users', driversError)
-    return payments
+    return []
   }
-  const byId = new Map((drivers ?? []).map((d) => [d.id, d]))
+  const byPhone = new Map((drivers ?? []).map((d) => [d.phone, d]))
   return payments.map((p) => {
-    const d = byId.get(p.driver_id)
-    return d
-      ? { ...p, driver_name: `${d.first_name} ${d.last_name}`, driver_phone: d.phone }
-      : p
-  })
+    const d = byPhone.get(p.driver_phone)
+    return {
+      id: p.id,
+      driver_id: p.driver_phone, // Using phone as ID for compatibility
+      amount: p.driver_paid_amount,
+      status: p.driver_withdrawn ? 'paid' : 'pending',
+      created_at: p.updated_at,
+      period_end: p.updated_at,
+      driver_name: d ? `${d.first_name} ${d.last_name}` : 'Белгісіз',
+      driver_phone: p.driver_phone,
+    }
+  }) as Payment[]
 }
 
 export async function markPaymentPaid(id: string): Promise<void> {

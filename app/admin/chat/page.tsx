@@ -11,9 +11,9 @@ const supabase = createClient();
 
 interface Message {
   id: string;
-  user_id: string;
+  sender_id: string;
   sender_role: 'client' | 'admin';
-  content: string;
+  text: string;
   is_read: boolean;
   created_at: string;
 }
@@ -59,7 +59,7 @@ export default function ChatPage() {
       if (error) throw error;
 
       const grouped = data.reduce((acc: any, msg: any) => {
-        const userId = msg.user_id;
+        const userId = msg.sender_id;
         const user = msg.users;
         if (!acc[userId]) {
           acc[userId] = {
@@ -67,13 +67,13 @@ export default function ChatPage() {
             full_name: user?.full_name || 'Белгісіз қолданушы',
             phone: user?.phone || '',
             role: user?.role || 'client',
-            last_msg: msg.content,
+            last_msg: msg.text,
             last_msg_time: msg.created_at,
             unread_count: 0,
           };
         }
         if (!acc[userId].last_msg_time || new Date(msg.created_at) > new Date(acc[userId].last_msg_time)) {
-          acc[userId].last_msg = msg.content;
+          acc[userId].last_msg = msg.text;
           acc[userId].last_msg_time = msg.created_at;
         }
         return acc;
@@ -82,7 +82,7 @@ export default function ChatPage() {
       // Оқылмаған хаттар санын есептеу
       for (const userId in grouped) {
         const unread = data.filter((m: any) =>
-          m.user_id === userId && m.sender_role === 'client' && !m.is_read
+          m.sender_id === userId && m.sender_role === 'client' && !m.is_read
         ).length;
         grouped[userId].unread_count = unread;
       }
@@ -100,7 +100,7 @@ export default function ChatPage() {
     const { data, error } = await supabase
       .from('messages')
       .select('*')
-      .eq('user_id', userId)
+      .eq('sender_id', userId)
       .order('created_at', { ascending: true });
 
     if (error) {
@@ -113,7 +113,7 @@ export default function ChatPage() {
     await supabase
       .from('messages')
       .update({ is_read: true })
-      .eq('user_id', userId)
+      .eq('sender_id', userId)
       .eq('is_read', false);
   };
 
@@ -133,7 +133,7 @@ export default function ChatPage() {
           fetchContacts();
 
           // Егер осы чат ашық болса, хабарламаны тізімге қосу
-          if (selectedContact && newMessage.user_id === selectedContact.id) {
+          if (selectedContact && newMessage.sender_id === selectedContact.id) {
             setMessages(prev => [...prev, newMessage]);
           }
         }
@@ -165,9 +165,9 @@ export default function ChatPage() {
     // Optimistic Update: Хабарламаны бірден көрсету
     const tempMsg: Message = {
       id: `temp-${Date.now()}`,
-      user_id: selectedContact.id,
+      sender_id: selectedContact.id,
       sender_role: 'admin',
-      content: content,
+      text: content,
       is_read: true,
       created_at: new Date().toISOString(),
     };
@@ -176,9 +176,9 @@ export default function ChatPage() {
     const { error } = await supabase
       .from('messages')
       .insert([{
-        user_id: selectedContact.id,
+        sender_id: selectedContact.id,
         sender_role: 'admin',
-        content: content,
+        text: content,
       }]);
 
     if (error) {
@@ -298,7 +298,7 @@ export default function ChatPage() {
                         ? "bg-[#005c4b] text-white rounded-tr-none"
                         : "bg-sidebar-foreground/10 text-foreground rounded-tl-none"
                     )}>
-                      <p className="text-sm">{msg.content}</p>
+                      <p className="text-sm">{msg.text}</p>
                       <span className={cn(
                         "text-[10px] block text-right mt-1",
                         msg.sender_role === 'admin' ? "text-green-200" : "text-muted-foreground"
