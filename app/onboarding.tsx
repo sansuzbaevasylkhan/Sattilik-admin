@@ -74,7 +74,7 @@ export default function OnboardingScreen() {
   return (
     <View style={styles.container}>
       <LinearGradient
-        colors={BG_GRADIENT}
+        colors={['#050505', '#151515']}
         style={styles.background}
       />
 
@@ -121,7 +121,7 @@ export default function OnboardingScreen() {
           activeOpacity={0.8}
         >
           <LinearGradient
-            colors={GOLD_GRADIENT}
+            colors={['#FFD700', '#F5B800']}
             style={styles.nextButtonGradient}
           >
             <Text style={styles.nextButtonText}>{t('onboarding.next')}</Text>
@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   skipText: {
-    color: 'rgba(255,255,255,0.6)',
+    color: '#A0A0A0',
     fontSize: 16,
     fontFamily: 'Inter-Regular',
   },
@@ -159,12 +159,12 @@ const styles = StyleSheet.create({
     width: 140,
     height: 140,
     borderRadius: 70,
-    backgroundColor: GOLD_STRONG_FILL,
+    backgroundColor: '#151515',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 40,
     borderWidth: 2,
-    borderColor: 'rgba(255, 215, 0, 0.5)',
+    borderColor: '#FFD700',
   },
   title: {
     fontSize: 28,
@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
   description: {
     fontSize: 16,
     fontFamily: 'Inter-Regular',
-    color: 'rgba(255,255,255,0.75)',
+    color: '#A0A0A0',
     textAlign: 'center',
     lineHeight: 24,
     maxWidth: 300,
@@ -213,7 +213,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   nextButtonText: {
-    color: BG_DARK,
+    color: '#000000',
     fontSize: 18,
     fontFamily: 'Inter-Bold',
   },

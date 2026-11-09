@@ -95,7 +95,7 @@ export default function OrderScreen() {
   const getStatusColor = () => {
     switch (orderStatus) {
       case 'searching':
-        return '#F59E0B';
+        return '#F5B800';
       case 'accepted':
         return '#22C55E';
       case 'in_progress':

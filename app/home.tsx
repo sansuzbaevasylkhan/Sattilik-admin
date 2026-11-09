@@ -72,7 +72,7 @@ export default function HomeScreen() {
   return (
     <View style={styles.container}>
       <LinearGradient
-        colors={BG_GRADIENT}
+        colors={['#050505', '#151515']}
         style={styles.background}
       />
 
@@ -130,8 +130,8 @@ export default function HomeScreen() {
           onPress={() => goTo('passenger')}
           activeOpacity={0.85}
         >
-          <LinearGradient colors={GOLD_GRADIENT} style={styles.roleButtonGradient}>
-            <User size={24} color={BG_DARK} style={{ marginBottom: 6 }} />
+          <LinearGradient colors={['#FFD700', '#F5B800']} style={styles.roleButtonGradient}>
+            <User size={24} color="#000000" style={{ marginBottom: 6 }} />
             <Text style={styles.roleButtonText}>{t('home.passenger')}</Text>
           </LinearGradient>
         </TouchableOpacity>
@@ -141,8 +141,8 @@ export default function HomeScreen() {
           onPress={() => goTo('driver')}
           activeOpacity={0.85}
         >
-          <LinearGradient colors={GOLD_GRADIENT} style={styles.roleButtonGradient}>
-            <Car size={24} color={BG_DARK} style={{ marginBottom: 6 }} />
+          <LinearGradient colors={['#FFD700', '#F5B800']} style={styles.roleButtonGradient}>
+            <Car size={24} color="#000000" style={{ marginBottom: 6 }} />
             <Text style={styles.roleButtonText}>{t('home.driver')}</Text>
           </LinearGradient>
         </TouchableOpacity>
@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
   },
   langMenu: {
     marginTop: 8,
-    backgroundColor: BG_DARK,
+    backgroundColor: '#151515',
     borderRadius: 12,
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.15)',
@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 16,
     fontFamily: 'Inter-Regular',
-    color: 'rgba(255,255,255,0.7)',
+    color: '#A0A0A0',
     textAlign: 'center',
   },
   buttonsRow: {
@@ -244,7 +244,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   roleButtonText: {
-    color: BG_DARK,
+    color: '#000000',
     fontSize: 17,
     fontFamily: 'Inter-Bold',
   },
