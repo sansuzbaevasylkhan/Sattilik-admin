@@ -10,8 +10,9 @@ declare const Deno: {
   ): void;
 };
 
-const TELEGRAM_BOT_TOKEN = Deno.env.get("TELEGRAM_BOT_TOKEN") || "8807728611:AAHuByveDELzqHC6MrtrFLJiErUJ5QPZv_8";
-const TELEGRAM_GROUP_ID = Deno.env.get("TELEGRAM_GROUP_ID") || "-1004474212726";
+// Токен тек Supabase secret-тен оқылады: supabase secrets set TELEGRAM_BOT_TOKEN=...
+const TELEGRAM_BOT_TOKEN = Deno.env.get("TELEGRAM_BOT_TOKEN");
+const TELEGRAM_GROUP_ID = Deno.env.get("TELEGRAM_GROUP_ID");
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 
@@ -36,6 +37,10 @@ function escapeHtml(unsafe: any): string {
 }
 
 async function sendTelegramMessage(text: string): Promise<void> {
+  if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_GROUP_ID) {
+    console.error("TELEGRAM_BOT_TOKEN / TELEGRAM_GROUP_ID is not configured");
+    return;
+  }
   try {
     const response = await fetch(`${TELEGRAM_API}/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
       method: "POST",

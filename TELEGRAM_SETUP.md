@@ -1,23 +1,30 @@
 # Telegram тіркелу + Admin — орнату нұсқаулығы
 
-## 1) Supabase CLI-мен secrets орнату
+Ағымдағы бот: **@sattiliktaxiappcodebot** (BotFather → `/setusername`).
+Бот атауы кодта қатты жазылмайды: frontend `EXPO_PUBLIC_TELEGRAM_BOT_USERNAME`,
+Edge Functions `TELEGRAM_BOT_USERNAME` secret-інен оқиды.
+
+## 1) Supabase secrets орнату
 
 ```bash
-# Жоба қалтасынан
-cd "C:\Users\Admin\Desktop\менің проектім\askdrv taxi app"
+# BotFather берген токен (репозиторийге жазбаңыз)
+supabase secrets set TELEGRAM_BOT_TOKEN=<BOT_TOKEN_FROM_BOTFATHER>
 
-# Бот токені (сіз бердіңіз)
-supabase secrets set TELEGRAM_BOT_TOKEN=8914952811:AAGJkrp68oSYzn3NYaguEP1mj93T5B6LWoU
+# BotFather-дағы @username-мен дәл бірдей болуы керек
+supabase secrets set TELEGRAM_BOT_USERNAME=sattiliktaxiappcodebot
 
-# Бот @username (BotFather-да /setusername арқылы берілген)
-# Қазір AsqDrvBot деп қалдырылған
-supabase secrets set TELEGRAM_BOT_USERNAME=AsqDrvBot
-
-# Webhook қауіпсіздігі (кез келген ұзын кездейсоқ жол)
+# Webhook қауіпсіздігі (кездейсоқ ұзын жол)
 supabase secrets set TELEGRAM_WEBHOOK_SECRET=$(openssl rand -hex 32)
 
-# Admin кілті (сіздің құпия сөзіңіз)
-supabase secrets set ADMIN_SECRET=AsqDrv-Admin-2026
+# /admin командасына рұқсат берілген телефон
+supabase secrets set ADMIN_PHONE=+7XXXXXXXXXX
+supabase secrets set ADMIN_SECRET=<admin құпия сөзі>
+
+# telegram-notify үшін админ-топ ID-і (бот сол топқа мүше болуы керек)
+supabase secrets set TELEGRAM_GROUP_ID=<telegram group id>
+
+# admin-reset-telegram-links үшін
+supabase secrets set RESET_TELEGRAM_LINKS_SECRET=<кездейсоқ жол>
 ```
 
 ## 2) Edge Functions-ты deploy ету
@@ -27,93 +34,67 @@ supabase functions deploy send-code
 supabase functions deploy verify-code
 supabase functions deploy telegram-webhook
 supabase functions deploy admin-list-registrations
+supabase functions deploy telegram-notify
+supabase functions deploy admin-reset-telegram-links
 ```
 
-## 3) Миграцияны қолдану
+## 3) Frontend env
 
-```bash
-supabase db push
-# немесе жаңа миграцияны жеке:
-supabase migration up
+`.env` және `eas.json` ішінде бірдей мән болуы керек:
+
+```env
+EXPO_PUBLIC_TELEGRAM_BOT_USERNAME=sattiliktaxiappcodebot
 ```
+
+`EXPO_PUBLIC_*` мәні build кезінде bundle-ге кіреді — өзгерткеннен кейін
+қосымшаны қайта build ету керек (Expo Go кэшін де жаңартыңыз).
 
 ## 4) Telegram webhook-ты тіркеу
 
 ```bash
-# Токен + webhook URL + secret_token
-# Жоба ID: yqwtxwxgsvhapqasfmud
-# Webhook URL форматы:
-# https://yqwtxwxgsvhapqasfmud.supabase.co/functions/v1/telegram-webhook
+export TELEGRAM_BOT_TOKEN='<BOT_TOKEN_FROM_BOTFATHER>'
 
-curl -X POST "https://api.telegram.org/bot8914952811:AAGJkrp68oSYzn3NYaguEP1mj93T5B6LWoU/setWebhook" \
+curl -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/setWebhook" \
   -H "Content-Type: application/json" \
   -d '{
     "url": "https://yqwtxwxgsvhapqasfmud.supabase.co/functions/v1/telegram-webhook",
     "secret_token": "<TELEGRAM_WEBHOOK_SECRET мәні>",
     "allowed_updates": ["message"]
   }'
+
+# Тексеру
+curl -s "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/getWebhookInfo"
+curl -s "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/getMe"
 ```
 
-`secret_token`-ды жоғарыда `supabase secrets set TELEGRAM_WEBHOOK_SECRET=...` арқылы
-орнатқан **дәл сол мәнмен** ауыстырыңыз. Бірдей болуы керек.
+`secret_token` = Supabase-тағы `TELEGRAM_WEBHOOK_SECRET` мәнімен дәл бірдей болуы керек.
 
-## 5) Тексеру
+## 5) Ескі боттан қалған chat_id-лерді тазалау
 
-### Тіркелу сілтемесі:
-1. `app/register.tsx` ашыңыз.
-2. Телефон + ат + тегі + рөл енгізіп "Код жіберу" басыңыз.
-3. Telegram сілтемесі ашылады → "Start" басыңыз.
-4. Чатқа 4 цифрлық код келеді.
-5. Аппқа кодты енгізіп растаңыз.
+Жаңа бот ескі `telegram_chat_id` мәндеріне хабарлама жібере алмайды.
+Бұл — **қолмен** орындалатын әрекет:
 
-### Admin тексеру:
-```bash
-curl "https://yqwtxwxgsvhapqasfmud.supabase.co/functions/v1/admin-list-registrations?secret=AsqDrv-Admin-2026" \
-  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlxd3R4d3hnc3ZoYXBxYXNmbXVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcxODA4NjAsImV4cCI6MjA5Mjc1Njg2MH0.Als6PgdXN92Bm2Xvv5K-rupAu1xmwKNDbf646PaJBCI"
-```
+- SQL: `supabase/sql/reset_telegram_chat_ids_sattiliktaxi.sql`
+  (әдепкі бойынша `ROLLBACK`-пен аяқталады; тек рұқсат берілгенде `COMMIT`),
+- немесе Edge Function:
+  `POST https://yqwtxwxgsvhapqasfmud.supabase.co/functions/v1/admin-reset-telegram-links?secret=<RESET_TELEGRAM_LINKS_SECRET>`
 
-Қайтаратыны:
-```json
-{
-  "success": true,
-  "users": [
-    {
-      "id": "...",
-      "phone": "+77001234567",
-      "first_name": "Асан",
-      "last_name": "Үсенов",
-      "role": "passenger",
-      "telegram_chat_id": "7892697980",
-      "telegram_linked": true,
-      "created_at": "2026-07-15T..."
-    }
-  ],
-  "pending_codes": [...],
-  "counts": {
-    "users_total": 12,
-    "users_telegram_linked": 8,
-    "users_passenger": 7,
-    "users_driver": 5,
-    "pending_codes": 1
-  }
-}
-```
+## 6) Тіркелу ағынын тексеру
 
-## 6) Жиі кездесетін қателіктер
+1. Қосымшада телефон + ат + тегі + рөл енгізіп «Код жіберу» басыңыз.
+2. «Telegram-ты ашу» батырмасы `https://t.me/sattiliktaxiappcodebot?start=7...` ашуы керек.
+3. Ботқа «Start» басыңыз — `users.telegram_chat_id` жазылып, 4 цифрлық код келеді.
+4. Кодты қосымшаға енгізіп растаңыз.
+5. `/admin` тек `ADMIN_PHONE` нөмірімен байланысқан чатқа жауап береді.
+
+## 7) Жиі кездесетін қателіктер
 
 | Қателік | Себебі | Шешімі |
 |---------|--------|--------|
-| `TELEGRAM_BOT_TOKEN is not configured` | secrets орнатылмаған | `supabase secrets set TELEGRAM_BOT_TOKEN=...` |
-| `unauthorized` (webhook) | `secret_token` сәйкес емес | Telegram-да setWebhook кезіндегі secret_token = Supabase-тағы TELEGRAM_WEBHOOK_SECRET |
-| `users_telegram_chat_id_key` (unique violation) | бір chat_id бірнеше адам байланыстырған | әр адам өз Telegram аккаунтынан /start жасауы керек |
-| Сілтеме дұрыс емес | TELEGRAM_BOT_USERNAME қате | BotFather-да /setusername тексеріп, .env пен Supabase secret-та бірдей жазыңыз |
-| Код келмейді | ботқа /start жасалмаған | аппта "Telegram-ты ашу" → "Start" басу керек |
-
-## 7) Сіздің жағдайыңыздағы chat_id (7892697980)
-
-Сіз өзіңіз (админ) `chat_id = 7892697980`. Бұл — админдік тексеру үшін.
-Сіз ботқа `/start +7...` жіберсеңіз, бот сіздің chat_id-ңызды
-`users.telegram_chat_id` бағанына жазады (өзіңіздің нөміріңіз үшін).
-
-Пайдаланушылардың әрқайсысының **өз chat_id-і** болады — олар өз
-Telegram аккаунтынан /start жасағанда.
+| `TELEGRAM_BOT_TOKEN is not configured` | secret орнатылмаған | `supabase secrets set TELEGRAM_BOT_TOKEN=...` |
+| `TELEGRAM_BOT_USERNAME is not configured` | username secret жоқ | `supabase secrets set TELEGRAM_BOT_USERNAME=sattiliktaxiappcodebot` |
+| Сілтеме ескі ботты ашады | Supabase-тегі username secret ескі, немесе қосымша ескі build | secret-ті жаңартып, `send-code`-ты қайта deploy етіп, қосымшаны қайта build етіңіз |
+| `unauthorized` (webhook) | `secret_token` сәйкес емес | setWebhook-тегі secret = Supabase-тағы `TELEGRAM_WEBHOOK_SECRET` |
+| Код келмейді | пайдаланушы жаңа ботқа /start баспаған немесе chat_id ескі | тазалау скриптін орындап, қайта /start жасаңыз |
+| `users_telegram_chat_id_key` (unique violation) | бір chat_id бірнеше адамға байланған | әр адам өз Telegram аккаунтынан /start жасауы керек |
+| telegram-notify хабарлама жібермейді | бот `TELEGRAM_GROUP_ID` тобына мүше емес | жаңа ботты админ-топқа қосыңыз |

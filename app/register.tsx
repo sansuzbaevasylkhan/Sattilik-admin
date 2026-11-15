@@ -17,6 +17,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { User, Car, ChevronLeft, Send, ExternalLink } from 'lucide-react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { setUser } from '@/store/userStore';
+import { buildTelegramStartLink } from '@/lib/telegram';
 import { useTranslation } from '@/hooks/useTranslation';
 import {
   BG_GRADIENT,
@@ -33,10 +34,6 @@ import {
 
 const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL!.trim();
 const SUPABASE_ANON_KEY = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY!.trim();
-// Боттың @username (BotFather /setusername) — send-code-тағы TELEGRAM_BOT_USERNAME-мен бірдей.
-// Қазір әдепкі: AsqDrvBot. Өзгерту үшін осында да, Edge Function-да да бірдей username жазыңыз.
-const TELEGRAM_BOT_USERNAME =
-  process.env.EXPO_PUBLIC_TELEGRAM_BOT_USERNAME?.trim() || "sattiliktaxiappcodebot";
 
 type Role = 'passenger' | 'driver' | null;
 type Step = 'role' | 'phone' | 'code' | 'telegram' | 'driverDetails';
@@ -180,10 +177,10 @@ export default function RegisterScreen() {
       // Код Telegram-қа осы сілтеме арқылы байланысқаннан кейін жіберіледі.
       // Егер пайдаланушы бұрын Telegram-ты байланыстырған болса,
       // код бірден жіберіледі — telegram қадамын өткіземіз.
+      // Сілтемені клиенттегі env-тен құрастырамыз: Supabase-тегі secret ескіріп
+      // қалса да, батырма әрқашан конфигурациядағы ботты ашады.
       const link =
-        data?.telegram_link ||
-        // Fallback: Edge Function жауап бермесе, клиент жағынан жасаймыз.
-        `https://t.me/${TELEGRAM_BOT_USERNAME}?start=7${rawDigits}`;
+        buildTelegramStartLink(`7${rawDigits}`) ?? data?.telegram_link ?? '';
       const alreadyLinked = !!data?.telegram_linked;
       setTelegramLink(link);
 

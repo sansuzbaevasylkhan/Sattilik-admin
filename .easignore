@@ -61,4 +61,4 @@ yarn-error.*
 .idea/
 
 # Separate Next.js admin project (not part of the Expo app build)
-askdrv-admin/
+sattilik-admin/

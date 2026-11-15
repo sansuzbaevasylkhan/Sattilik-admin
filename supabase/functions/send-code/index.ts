@@ -28,9 +28,9 @@ const corsHeaders = {
 // Telegram BotFather берген токен. @BotFather-дан алынады.
 // Supabase CLI: supabase secrets set TELEGRAM_BOT_TOKEN=...
 const TELEGRAM_BOT_TOKEN = Deno.env.get("TELEGRAM_BOT_TOKEN");
-// Боттың @username — BotFather-дың "/setusername" командасымен берілген.
-// Сілтеме https://t.me/<username>?start=<phone> осы username-мен жасалады.
-const TELEGRAM_BOT_USERNAME = Deno.env.get("TELEGRAM_BOT_USERNAME") ?? "sattiliktaxiappcodebot";
+// Боттың @username — тек Supabase secret-тен оқылады:
+// supabase secrets set TELEGRAM_BOT_USERNAME=sattiliktaxiappcodebot
+const TELEGRAM_BOT_USERNAME = Deno.env.get("TELEGRAM_BOT_USERNAME")?.trim();
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
@@ -86,6 +86,13 @@ Deno.serve(async (req: Request) => {
     if (!TELEGRAM_BOT_TOKEN) {
       return jsonResponse(
         { error: "TELEGRAM_BOT_TOKEN is not configured" },
+        500,
+      );
+    }
+
+    if (!TELEGRAM_BOT_USERNAME) {
+      return jsonResponse(
+        { error: "TELEGRAM_BOT_USERNAME is not configured" },
         500,
       );
     }

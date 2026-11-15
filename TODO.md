@@ -4,8 +4,8 @@
 - [x] Admin function: list-registrations Edge Function (Supabase REST + admin)
 - [x] RLS note: PATCH users (Edge Function only via service_role)
 - [ ] (Next) Deploy Edge Functions and set Supabase secrets:
-      supabase secrets set TELEGRAM_BOT_TOKEN=8914952811:AAGJkrp68oSYzn3NYaguEP1mj93T5B6LWoU
-      supabase secrets set TELEGRAM_BOT_USERNAME=<нақты @username, BotFather-дан>
+      supabase secrets set TELEGRAM_BOT_TOKEN=<BotFather токені>
+      supabase secrets set TELEGRAM_BOT_USERNAME=sattiliktaxiappcodebot
       supabase secrets set TELEGRAM_WEBHOOK_SECRET=<random>
       supabase secrets set ADMIN_SECRET=<admin_password>
 - [ ] (Next) Apply new migration 20260715000000_admin_list_users_and_update_rls.sql

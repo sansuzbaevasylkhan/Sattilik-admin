@@ -15,6 +15,6 @@
   ],
   "exclude": [
     "supabase/functions",
-    "askdrv-admin"
+    "sattilik-admin"
   ]
 }
