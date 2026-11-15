@@ -13,6 +13,7 @@ import { router } from 'expo-router';
 import { getUser } from '@/store/userStore';
 import { useTranslation } from '@/hooks/useTranslation';
 import { notifyLocal } from '@/lib/notifications';
+import { BG_GRADIENT, GOLD_GRADIENT, GOLD_GRADIENT_DISABLED } from '@/lib/theme';
 
 const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL!;
 const SUPABASE_ANON_KEY = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY!;
@@ -150,11 +151,11 @@ export default function PayDriverScreen() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient colors={['#B8860B', '#DAA520', '#FFD700']} style={StyleSheet.absoluteFill} />
+      <LinearGradient colors={BG_GRADIENT} style={StyleSheet.absoluteFill} />
 
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7}>
-          <ChevronLeft size={28} color="#FFFFFF" />
+          <ChevronLeft size={28} color="#000000" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>{t('menuPayDriver.headerTitle')}</Text>
         <View style={{ width: 28 }} />
@@ -172,7 +173,7 @@ export default function PayDriverScreen() {
                 lookupState === 'notfound' && styles.idBoxError,
               ]}
             >
-              <Text style={styles.idBoxText}>{driverIdInput[i] || ''}</Text>
+              <Text style={[styles.idBoxText, driverIdInput.length === i && styles.idBoxTextActive]}>{driverIdInput[i] || ''}</Text>
             </View>
           ))}
         </View>
@@ -181,7 +182,7 @@ export default function PayDriverScreen() {
           {lookupState === 'idle' && <Text style={styles.priceHint}>—</Text>}
           {lookupState === 'loading' && (
             <View style={styles.priceRow}>
-              <ActivityIndicator color="#2563EB" />
+              <ActivityIndicator color="#0066FF" />
               <Text style={styles.priceHint}>{t('menuPayDriver.searching')}</Text>
             </View>
           )}
@@ -217,7 +218,7 @@ export default function PayDriverScreen() {
                       onPress={handleBackspace}
                       activeOpacity={0.7}
                     >
-                      <Delete size={22} color="#FFFFFF" />
+                      <Delete size={22} color="#000000" />
                     </TouchableOpacity>
                   );
                 }
@@ -243,7 +244,7 @@ export default function PayDriverScreen() {
           disabled={lookupState !== 'found' || paying}
         >
           <LinearGradient
-            colors={lookupState === 'found' ? ['#2563EB', '#1D4ED8'] : ['rgba(37,99,235,0.4)', 'rgba(29,78,216,0.4)']}
+            colors={lookupState === 'found' ? GOLD_GRADIENT : GOLD_GRADIENT_DISABLED}
             style={styles.payButtonGradient}
           >
             {paying ? (
@@ -268,12 +269,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 16,
   },
-  headerTitle: { fontSize: 20, fontFamily: 'Inter-SemiBold', color: '#FFFFFF' },
+  headerTitle: { fontSize: 20, fontFamily: 'Inter-SemiBold', color: '#000000' },
   content: { flex: 1, paddingHorizontal: 24, paddingBottom: 24 },
   idLabel: {
     fontSize: 13,
     fontFamily: 'Inter-SemiBold',
-    color: 'rgba(255,255,255,0.5)',
+    color: '#000000',
     textAlign: 'center',
     marginBottom: 12,
   },
@@ -287,42 +288,45 @@ const styles = StyleSheet.create({
     width: 42,
     height: 52,
     borderRadius: 12,
-    backgroundColor: 'rgba(255,255,255,0.08)',
+    backgroundColor: '#FFC800',
     borderWidth: 2,
-    borderColor: 'rgba(255,255,255,0.15)',
+    borderColor: '#D4AF37',
     justifyContent: 'center',
     alignItems: 'center',
   },
   idBoxActive: {
-    borderColor: '#2563EB',
-    backgroundColor: 'rgba(37, 99, 235, 0.1)',
+    borderColor: '#D4AF37',
+    backgroundColor: '#0066FF',
   },
   idBoxError: {
-    borderColor: '#EF4444',
-    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+    borderColor: '#D4AF37',
+    backgroundColor: '#FFC800',
   },
   idBoxText: {
     fontSize: 20,
     fontFamily: 'Inter-Bold',
+    color: '#000000',
+  },
+  idBoxTextActive: {
     color: '#FFFFFF',
   },
   priceCard: {
-    backgroundColor: 'rgba(255,255,255,0.06)',
+    backgroundColor: '#FFC800',
     borderRadius: 20,
     padding: 20,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
+    borderColor: '#D4AF37',
     alignItems: 'center',
     minHeight: 90,
     justifyContent: 'center',
   },
   priceRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  priceHint: { color: 'rgba(255,255,255,0.4)', fontFamily: 'Inter-Regular', fontSize: 14 },
-  priceLabel: { color: 'rgba(255,255,255,0.5)', fontFamily: 'Inter-Regular', fontSize: 13 },
-  priceValue: { color: '#FFFFFF', fontFamily: 'Inter-Bold', fontSize: 32, marginTop: 4 },
-  driverNameHint: { color: 'rgba(255,255,255,0.5)', fontFamily: 'Inter-Regular', fontSize: 13, marginTop: 8 },
-  notFoundTitle: { color: '#EF4444', fontFamily: 'Inter-SemiBold', fontSize: 15, textAlign: 'center' },
-  notFoundSubtitle: { color: 'rgba(255,255,255,0.4)', fontFamily: 'Inter-Regular', fontSize: 12, textAlign: 'center', marginTop: 6 },
+  priceHint: { color: 'rgba(0, 0, 0, 0.55)', fontFamily: 'Inter-Regular', fontSize: 14 },
+  priceLabel: { color: '#000000', fontFamily: 'Inter-Regular', fontSize: 13 },
+  priceValue: { color: '#000000', fontFamily: 'Inter-Bold', fontSize: 32, marginTop: 4 },
+  driverNameHint: { color: '#000000', fontFamily: 'Inter-Regular', fontSize: 13, marginTop: 8 },
+  notFoundTitle: { color: '#000000', fontFamily: 'Inter-SemiBold', fontSize: 15, textAlign: 'center' },
+  notFoundSubtitle: { color: 'rgba(0, 0, 0, 0.55)', fontFamily: 'Inter-Regular', fontSize: 12, textAlign: 'center', marginTop: 6 },
   spacer: { flex: 1 },
   keypad: { marginBottom: 16 },
   keypadRow: {
@@ -335,9 +339,9 @@ const styles = StyleSheet.create({
     width: 72,
     height: 72,
     borderRadius: 36,
-    backgroundColor: 'rgba(255,255,255,0.08)',
+    backgroundColor: '#FFC800',
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
+    borderColor: '#D4AF37',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -345,10 +349,10 @@ const styles = StyleSheet.create({
   keypadKeyText: {
     fontSize: 24,
     fontFamily: 'Inter-SemiBold',
-    color: '#FFFFFF',
+    color: '#000000',
   },
   payButton: { height: 56, borderRadius: 16, overflow: 'hidden' },
   payButtonDisabled: { opacity: 0.7 },
   payButtonGradient: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  payButtonText: { color: '#000000', fontSize: 18, fontFamily: 'Inter-SemiBold' },
+  payButtonText: { color: '#FFFFFF', fontSize: 18, fontFamily: 'Inter-SemiBold' },
 });

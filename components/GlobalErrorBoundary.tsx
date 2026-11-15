@@ -46,7 +46,7 @@ export class GlobalErrorBoundary extends Component<Props, State> {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#B8860B',
+    backgroundColor: '#FFC800',
     alignItems: 'center',
     justifyContent: 'center',
     padding: 20,
@@ -54,24 +54,24 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 22,
     fontWeight: 'bold',
-    color: '#FFFFFF',
+    color: '#000000',
     textAlign: 'center',
     marginBottom: 10,
   },
   subtitle: {
     fontSize: 16,
-    color: '#A0AEC0',
+    color: '#000000',
     textAlign: 'center',
     marginBottom: 30,
   },
   button: {
-    backgroundColor: '#EAB308',
+    backgroundColor: '#0066FF',
     paddingVertical: 12,
     paddingHorizontal: 24,
     borderRadius: 8,
   },
   buttonText: {
-    color: '#000000',
+    color: '#FFFFFF',
     fontWeight: 'bold',
     fontSize: 16,
   },

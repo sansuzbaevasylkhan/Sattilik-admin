@@ -6,7 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
-    "userInterfaceStyle": "automatic",
+    "userInterfaceStyle": "light",
     "updates": {
       "enabled": false
     },
@@ -21,7 +21,7 @@
       "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#B8860B"
+        "backgroundColor": "#FFD700"
       },
       "permissions": [
         "android.permission.ACCESS_COARSE_LOCATION",
@@ -45,12 +45,12 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#B8860B",
+          "backgroundColor": "#FFD700",
           "image": "./assets/images/logo_splash.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "dark": {
-            "backgroundColor": "#B8860B",
+            "backgroundColor": "#FFD700",
             "image": "./assets/images/logo_splash.png",
             "imageWidth": 200,
             "resizeMode": "contain"

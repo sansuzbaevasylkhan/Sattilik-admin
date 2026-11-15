@@ -104,33 +104,33 @@ export default function MapPickerScreen() {
           resolveAddress(newCenter);
           resolveRoute(newCenter);
         }}
-        pinColor={field === 'pickup' ? '#22C55E' : '#EF4444'}
+        pinColor={field === 'pickup' ? '#000000' : '#000000'}
         otherPoint={otherPoint}
-        otherPointColor={field === 'pickup' ? '#EF4444' : '#22C55E'}
+        otherPointColor={field === 'pickup' ? '#000000' : '#000000'}
         routeCoordinates={routeCoordinates}
       />
 
       <View style={styles.topBar}>
         <TouchableOpacity style={styles.roundButton} onPress={() => router.back()} activeOpacity={0.8}>
-          <ChevronLeft size={24} color={BG_DARK} />
+          <ChevronLeft size={24} color="#000000" />
         </TouchableOpacity>
         <Text style={styles.title}>
           {field === 'pickup' ? t('mapPicker.titlePickup') : t('mapPicker.titleDropoff')}
         </Text>
         <TouchableOpacity style={styles.roundButton} onPress={cycle} activeOpacity={0.8}>
-          <Layers size={20} color={BG_DARK} />
+          <Layers size={20} color="#000000" />
         </TouchableOpacity>
       </View>
 
       <TouchableOpacity style={styles.locateButton} onPress={handleLocateMe} activeOpacity={0.8}>
-        {locating ? <ActivityIndicator size="small" color={BG_DARK} /> : <Locate size={20} color={BG_DARK} />}
+        {locating ? <ActivityIndicator size="small" color="#000000" /> : <Locate size={20} color="#000000" />}
       </TouchableOpacity>
 
       <View style={styles.bottomSheet}>
         <Text style={styles.styleLabel}>{styleLabel}</Text>
         <View style={styles.addressRow}>
           {resolving ? (
-            <ActivityIndicator size="small" color="#2563EB" />
+            <ActivityIndicator size="small" color="#0066FF" />
           ) : (
             <Text style={styles.addressText} numberOfLines={2}>
               {address || t('mapPicker.locating')}
@@ -163,10 +163,10 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#FFC800',
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#000',
+    shadowColor: 'rgba(0, 0, 0, 0.18)',
     shadowOpacity: 0.2,
     shadowRadius: 6,
     elevation: 4,
@@ -174,8 +174,8 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontFamily: 'Inter-SemiBold',
-    color: '#FFFFFF',
-    backgroundColor: 'rgba(184, 134, 11, 0.75)',
+    color: '#000000',
+    backgroundColor: '#FFC800',
     paddingHorizontal: 14,
     paddingVertical: 8,
     borderRadius: 12,
@@ -187,10 +187,10 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#FFC800',
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#000',
+    shadowColor: 'rgba(0, 0, 0, 0.18)',
     shadowOpacity: 0.2,
     shadowRadius: 6,
     elevation: 4,
@@ -207,12 +207,12 @@ const styles = StyleSheet.create({
     paddingTop: 16,
     paddingBottom: 40,
     borderTopWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
+    borderColor: '#D4AF37',
   },
   styleLabel: {
     fontSize: 12,
     fontFamily: 'Inter-SemiBold',
-    color: 'rgba(255,255,255,0.35)',
+    color: 'rgba(0, 0, 0, 0.55)',
     textTransform: 'uppercase',
     letterSpacing: 0.5,
     marginBottom: 8,
@@ -225,7 +225,7 @@ const styles = StyleSheet.create({
   addressText: {
     fontSize: 16,
     fontFamily: 'Inter-SemiBold',
-    color: '#FFFFFF',
+    color: '#000000',
   },
   confirmButton: {
     height: 56,

@@ -19,8 +19,8 @@ export default function GuideScreen() {
     {
       id: 1,
       icon: User,
-      color: '#2563EB',
-      bg: 'rgba(37,99,235,0.12)',
+      color: '#FFFFFF',
+      bg: '#0066FF',
       title: t('menuGuide.section1Title'),
       items: [
         t('menuGuide.section1Item1'),
@@ -33,8 +33,8 @@ export default function GuideScreen() {
     {
       id: 2,
       icon: Car,
-      color: '#22C55E',
-      bg: 'rgba(34,197,94,0.12)',
+      color: '#000000',
+      bg: '#FFC800',
       title: t('menuGuide.section2Title'),
       items: [
         t('menuGuide.section2Item1'),
@@ -47,8 +47,8 @@ export default function GuideScreen() {
     {
       id: 3,
       icon: CreditCard,
-      color: '#F59E0B',
-      bg: 'rgba(245,158,11,0.12)',
+      color: '#000000',
+      bg: '#FFD700',
       title: t('menuGuide.section3Title'),
       items: [
         t('menuGuide.section3Item1'),
@@ -59,8 +59,8 @@ export default function GuideScreen() {
     {
       id: 4,
       icon: Star,
-      color: '#E1306C',
-      bg: 'rgba(225,48,108,0.12)',
+      color: '#000000',
+      bg: '#FFC800',
       title: t('menuGuide.section4Title'),
       items: [
         t('menuGuide.section4Item1'),
@@ -72,11 +72,11 @@ export default function GuideScreen() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient colors={['#B8860B', '#DAA520', '#FFD700']} style={styles.bg} />
+      <LinearGradient colors={['#FFD700', '#FFC800']} style={styles.bg} />
 
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7}>
-          <ChevronLeft size={28} color="#FFFFFF" />
+          <ChevronLeft size={28} color="#000000" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>{t('menuGuide.headerTitle')}</Text>
         <View style={{ width: 28 }} />
@@ -102,8 +102,8 @@ export default function GuideScreen() {
                 </View>
                 <Text style={styles.sectionTitle}>{section.title}</Text>
                 {isOpen
-                  ? <ChevronUp size={18} color="rgba(255,255,255,0.4)" />
-                  : <ChevronDown size={18} color="rgba(255,255,255,0.4)" />
+                  ? <ChevronUp size={18} color="rgba(0, 0, 0, 0.55)" />
+                  : <ChevronDown size={18} color="rgba(0, 0, 0, 0.55)" />
                 }
               </TouchableOpacity>
 
@@ -138,21 +138,21 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 16,
   },
-  headerTitle: { fontSize: 20, fontFamily: 'Inter-SemiBold', color: '#FFFFFF' },
+  headerTitle: { fontSize: 20, fontFamily: 'Inter-SemiBold', color: '#000000' },
   content: { flex: 1 },
   scrollContent: { paddingHorizontal: 24, paddingBottom: 40 },
   intro: {
     fontSize: 15,
     fontFamily: 'Inter-Regular',
-    color: 'rgba(255,255,255,0.6)',
+    color: '#000000',
     lineHeight: 22,
     marginBottom: 24,
   },
   sectionCard: {
-    backgroundColor: 'rgba(255,255,255,0.06)',
+    backgroundColor: '#FFC800',
     borderRadius: 18,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
+    borderColor: '#D4AF37',
     marginBottom: 12,
     overflow: 'hidden',
   },
@@ -169,12 +169,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginRight: 12,
   },
-  sectionTitle: { flex: 1, fontSize: 15, fontFamily: 'Inter-SemiBold', color: '#FFFFFF' },
+  sectionTitle: { flex: 1, fontSize: 15, fontFamily: 'Inter-SemiBold', color: '#000000' },
   sectionBody: {
     paddingHorizontal: 16,
     paddingBottom: 16,
     borderTopWidth: 1,
-    borderTopColor: 'rgba(255,255,255,0.07)',
+    borderTopColor: '#D4AF37',
   },
   stepRow: {
     flexDirection: 'row',
@@ -191,5 +191,5 @@ const styles = StyleSheet.create({
     flexShrink: 0,
   },
   stepNumText: { fontSize: 13, fontFamily: 'Inter-Bold' },
-  stepText: { flex: 1, fontSize: 14, fontFamily: 'Inter-Regular', color: 'rgba(255,255,255,0.75)', lineHeight: 20 },
+  stepText: { flex: 1, fontSize: 14, fontFamily: 'Inter-Regular', color: '#000000', lineHeight: 20 },
 });

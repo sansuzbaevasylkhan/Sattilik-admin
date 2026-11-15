@@ -67,11 +67,11 @@ export default function ProfileScreen() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient colors={['#050505', '#151515']} style={styles.bg} />
+      <LinearGradient colors={['#FFD700', '#FFC800']} style={styles.bg} />
 
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7}>
-          <ChevronLeft size={28} color="#FFFFFF" />
+          <ChevronLeft size={28} color="#000000" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>{t('menuProfile.headerTitle')}</Text>
         <View style={{ width: 28 }} />
@@ -105,8 +105,8 @@ export default function ProfileScreen() {
                 <Star
                   key={i}
                   size={22}
-                  color={filled ? '#FFD700' : 'rgba(255,255,255,0.2)'}
-                  fill={filled ? '#F5B800' : 'rgba(255,255,255,0.1)'}
+                  color={filled ? '#000000' : 'rgba(0, 0, 0, 0.55)'}
+                  fill={filled ? '#000000' : 'rgba(0, 0, 0, 0.55)'}
                 />
               );
             })}
@@ -124,7 +124,7 @@ export default function ProfileScreen() {
         <View style={styles.infoCard}>
           <View style={styles.infoRow}>
             <View style={styles.infoIconCircle}>
-              <User size={18} color="#FFD700" />
+              <User size={18} color="#000000" />
             </View>
             <View style={styles.infoContent}>
               <Text style={styles.infoLabel}>{t('menuProfile.fullNameLabel')}</Text>
@@ -136,7 +136,7 @@ export default function ProfileScreen() {
 
           <View style={styles.infoRow}>
             <View style={styles.infoIconCircle}>
-              <Phone size={18} color="#FFD700" />
+              <Phone size={18} color="#000000" />
             </View>
             <View style={styles.infoContent}>
               <Text style={styles.infoLabel}>{t('menuProfile.phoneLabel')}</Text>
@@ -151,7 +151,7 @@ export default function ProfileScreen() {
               <View style={styles.infoRowDivider} />
               <View style={styles.infoRow}>
                 <View style={styles.infoIconCircle}>
-                  <Text style={{ color: '#FFD700', fontFamily: 'Inter-Bold', fontSize: 14 }}>ID</Text>
+                  <Text style={{ color: '#000000', fontFamily: 'Inter-Bold', fontSize: 14 }}>ID</Text>
                 </View>
                 <View style={styles.infoContent}>
                   <Text style={styles.infoLabel}>{t('menuProfile.driverIdLabel')}</Text>
@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 20,
     fontFamily: 'Inter-SemiBold',
-    color: '#FFFFFF',
+    color: '#000000',
   },
   content: { paddingHorizontal: 24 },
   avatarSection: { alignItems: 'center', marginBottom: 32 },
@@ -205,61 +205,61 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     overflow: 'hidden',
     borderWidth: 3,
-    borderColor: '#FFD700',
+    borderColor: '#D4AF37',
     marginBottom: 14,
   },
   avatarImg: { width: '100%', height: '100%' },
-  name: { fontSize: 22, fontFamily: 'Inter-Bold', color: '#FFFFFF', marginBottom: 4 },
-  roleLabel: { fontSize: 14, fontFamily: 'Inter-Regular', color: '#A0A0A0', marginBottom: 12 },
+  name: { fontSize: 22, fontFamily: 'Inter-Bold', color: '#000000', marginBottom: 4 },
+  roleLabel: { fontSize: 14, fontFamily: 'Inter-Regular', color: '#000000', marginBottom: 12 },
   starsRow: { flexDirection: 'row', gap: 6, marginBottom: 6 },
-  ratingText: { fontSize: 13, fontFamily: 'Inter-Regular', color: 'rgba(255,255,255,0.3)' },
+  ratingText: { fontSize: 13, fontFamily: 'Inter-Regular', color: 'rgba(0, 0, 0, 0.55)' },
   editButton: {
     marginTop: 6,
     paddingHorizontal: 14,
     paddingVertical: 8,
     borderRadius: 14,
-    backgroundColor: 'rgba(255,215,0,0.18)',
+    backgroundColor: '#FFD700',
     borderWidth: 1,
-    borderColor: 'rgba(255,215,0,0.45)',
+    borderColor: '#D4AF37',
   },
   editButtonText: {
     fontSize: 14,
     fontFamily: 'Inter-SemiBold',
-    color: '#FFD700',
+    color: '#000000',
   },
 
   infoCard: {
-    backgroundColor: '#151515',
+    backgroundColor: '#FFC800',
     borderRadius: 20,
     padding: 20,
     borderWidth: 1,
-    borderColor: '#333333',
+    borderColor: '#D4AF37',
     marginBottom: 16,
   },
   infoRow: { flexDirection: 'row', alignItems: 'center' },
-  infoRowDivider: { height: 1, backgroundColor: 'rgba(255,255,255,0.07)', marginVertical: 12 },
+  infoRowDivider: { height: 1, backgroundColor: '#FFC800', marginVertical: 12 },
   infoIconCircle: {
     width: 40,
     height: 40,
     borderRadius: 12,
-    backgroundColor: 'rgba(255,215,0,0.12)',
+    backgroundColor: '#FFD700',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 14,
   },
   infoContent: { flex: 1 },
-  infoLabel: { fontSize: 12, fontFamily: 'Inter-Regular', color: 'rgba(255,255,255,0.4)' },
-  infoValue: { fontSize: 16, fontFamily: 'Inter-SemiBold', color: '#FFFFFF', marginTop: 2 },
+  infoLabel: { fontSize: 12, fontFamily: 'Inter-Regular', color: 'rgba(0, 0, 0, 0.55)' },
+  infoValue: { fontSize: 16, fontFamily: 'Inter-SemiBold', color: '#000000', marginTop: 2 },
   statsRow: { flexDirection: 'row', gap: 12 },
   statCard: {
     flex: 1,
-    backgroundColor: 'rgba(255,255,255,0.06)',
+    backgroundColor: '#FFC800',
     borderRadius: 16,
     padding: 16,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
+    borderColor: '#D4AF37',
   },
-  statValue: { fontSize: 20, fontFamily: 'Inter-Bold', color: '#FFFFFF', marginBottom: 4 },
-  statLabel: { fontSize: 12, fontFamily: 'Inter-Regular', color: 'rgba(255,255,255,0.4)' },
+  statValue: { fontSize: 20, fontFamily: 'Inter-Bold', color: '#000000', marginBottom: 4 },
+  statLabel: { fontSize: 12, fontFamily: 'Inter-Regular', color: 'rgba(0, 0, 0, 0.55)' },
 });

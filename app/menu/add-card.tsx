@@ -105,7 +105,7 @@ export default function AddCardScreen() {
           value={value}
           onChangeText={onChangeText}
           placeholder={placeholder}
-          placeholderTextColor="rgba(255,255,255,0.35)"
+          placeholderTextColor="rgba(0, 0, 0, 0.55)"
           style={styles.input}
           keyboardType={keyboardType}
           maxLength={maxLength}
@@ -120,11 +120,11 @@ export default function AddCardScreen() {
       style={styles.container}
       behavior={Platform.OS === 'web' ? undefined : 'padding'}
     >
-      <LinearGradient colors={['#B8860B', '#DAA520', '#FFD700']} style={StyleSheet.absoluteFill} />
+      <LinearGradient colors={['#FFD700', '#FFC800']} style={StyleSheet.absoluteFill} />
 
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7}>
-          <ChevronLeft size={28} color="#FFFFFF" />
+          <ChevronLeft size={28} color="#000000" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>{t('menuAddCard.headerTitle')}</Text>
         <View style={{ width: 28 }} />
@@ -132,9 +132,9 @@ export default function AddCardScreen() {
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.cardPreview}>
-          <LinearGradient colors={['#1D4ED8', '#2563EB']} style={styles.cardGradient}>
+          <LinearGradient colors={['#0066FF', '#0052CC']} style={styles.cardGradient}>
             <View style={styles.previewTop}>
-              <CreditCard size={30} color="rgba(255,255,255,0.9)" />
+              <CreditCard size={30} color="#FFFFFF" />
             </View>
             <Text style={styles.previewNumber} numberOfLines={1}>
               {cardNumber.trim() ? cardNumber : '•••• •••• •••• ••••'}
@@ -202,7 +202,7 @@ export default function AddCardScreen() {
             activeOpacity={0.85}
             disabled={!isValid || saving}
           >
-            <LinearGradient colors={['#2563EB', '#1D4ED8']} style={styles.submitGradient}>
+            <LinearGradient colors={['#0066FF', '#0052CC']} style={styles.submitGradient}>
               {saving ? (
                 <ActivityIndicator color="#FFFFFF" />
               ) : (
@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 20,
     fontFamily: 'Inter-SemiBold',
-    color: '#FFFFFF',
+    color: '#000000',
   },
   content: {
     paddingHorizontal: 24,
@@ -270,7 +270,7 @@ const styles = StyleSheet.create({
   previewLabel: {
     fontSize: 12,
     fontFamily: 'Inter-Regular',
-    color: 'rgba(255,255,255,0.65)',
+    color: '#FFFFFF',
   },
   previewValue: {
     fontSize: 16,
@@ -282,13 +282,13 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontSize: 14,
     fontFamily: 'Inter-Regular',
-    color: 'rgba(255,255,255,0.9)',
+    color: '#FFFFFF',
   },
   formBlock: {
-    backgroundColor: 'rgba(255,255,255,0.06)',
+    backgroundColor: '#FFC800',
     borderRadius: 22,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
+    borderColor: '#D4AF37',
     padding: 16,
   },
   fieldBlock: {
@@ -297,19 +297,19 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 12,
     fontFamily: 'Inter-SemiBold',
-    color: 'rgba(255,255,255,0.35)',
+    color: 'rgba(0, 0, 0, 0.55)',
     marginBottom: 8,
   },
   inputWrap: {
-    backgroundColor: 'rgba(255,255,255,0.06)',
+    backgroundColor: '#FFC800',
     borderRadius: 14,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.08)',
+    borderColor: '#D4AF37',
     paddingHorizontal: 14,
   },
   input: {
     height: 52,
-    color: '#FFFFFF',
+    color: '#000000',
     fontSize: 16,
     fontFamily: 'Inter-Regular',
   },
@@ -345,7 +345,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
     fontSize: 12,
     fontFamily: 'Inter-Regular',
-    color: 'rgba(255,255,255,0.35)',
+    color: 'rgba(0, 0, 0, 0.55)',
     textAlign: 'center',
   },
 });

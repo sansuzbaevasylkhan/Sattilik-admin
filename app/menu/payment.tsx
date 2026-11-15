@@ -5,7 +5,7 @@ import { ChevronLeft, CreditCard, Plus, Wallet, Banknote } from 'lucide-react-na
 import { router } from 'expo-router';
 import { useTranslation } from '@/hooks/useTranslation';
 import { getUser } from '@/store/userStore';
-import { BG_GRADIENT, BG_DARK, GOLD_GRADIENT, GOLD_PRIMARY, GOLD_SOFT_FILL } from '@/lib/theme';
+import { BG_GRADIENT, GOLD_GRADIENT, GOLD_PRIMARY, GOLD_SOFT_FILL } from '@/lib/theme';
 
 export default function PaymentScreen() {
   const { t } = useTranslation();
@@ -17,7 +17,7 @@ export default function PaymentScreen() {
 
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7}>
-          <ChevronLeft size={28} color="#FFFFFF" />
+          <ChevronLeft size={28} color="#000000" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>{t('menuPayment.headerTitle')}</Text>
         <View style={{ width: 28 }} />
@@ -30,7 +30,7 @@ export default function PaymentScreen() {
           onPress={() => router.push(isDriver ? '/menu/driver-earnings' : '/menu/pay-driver')}
         >
           <LinearGradient colors={GOLD_GRADIENT} style={styles.fareButtonGradient}>
-            <Banknote size={20} color={BG_DARK} />
+            <Banknote size={20} color="#FFFFFF" />
             <Text style={styles.fareButtonText}>
               {isDriver ? t('menuPayment.driverFareButton') : t('menuPayment.payFareButton')}
             </Text>
@@ -38,9 +38,9 @@ export default function PaymentScreen() {
         </TouchableOpacity>
 
         <View style={styles.balanceCard}>
-          <LinearGradient colors={GOLD_GRADIENT} style={styles.balanceGradient}>
+          <LinearGradient colors={BG_GRADIENT} style={styles.balanceGradient}>
             <View style={styles.balanceIconRow}>
-              <Wallet size={28} color="rgba(255,255,255,0.8)" />
+              <Wallet size={28} color="#000000" />
             </View>
             <Text style={styles.balanceLabel}>{t('menuPayment.balanceLabel')}</Text>
             <Text style={styles.balanceAmount}>0 ₸</Text>
@@ -54,14 +54,14 @@ export default function PaymentScreen() {
             activeOpacity={0.7}
             onPress={() => router.push('/menu/add-card')}
           >
-            <Plus size={16} color={GOLD_PRIMARY} />
+            <Plus size={16} color="#000000" />
             <Text style={styles.addButtonText}>{t('menuPayment.addButton')}</Text>
           </TouchableOpacity>
         </View>
 
 
         <View style={styles.emptyCard}>
-          <CreditCard size={48} color="rgba(255,255,255,0.15)" />
+          <CreditCard size={48} color="rgba(0, 0, 0, 0.55)" />
           <Text style={styles.emptyText}>{t('menuPayment.emptyText')}</Text>
           <Text style={styles.emptySubtext}>{t('menuPayment.emptySubtext')}</Text>
         </View>
@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 24,
   },
-  headerTitle: { fontSize: 20, fontFamily: 'Inter-SemiBold', color: '#FFFFFF' },
+  headerTitle: { fontSize: 20, fontFamily: 'Inter-SemiBold', color: '#000000' },
   content: { paddingHorizontal: 24 },
   fareButton: { height: 56, borderRadius: 16, overflow: 'hidden', marginBottom: 20 },
   fareButtonGradient: { flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 10 },
@@ -120,15 +120,15 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   balanceIconRow: { alignItems: 'flex-end' },
-  balanceLabel: { fontSize: 14, fontFamily: 'Inter-Regular', color: 'rgba(255,255,255,0.7)' },
-  balanceAmount: { fontSize: 36, fontFamily: 'Inter-Bold', color: '#FFFFFF' },
+  balanceLabel: { fontSize: 14, fontFamily: 'Inter-Regular', color: '#000000' },
+  balanceAmount: { fontSize: 36, fontFamily: 'Inter-Bold', color: '#000000' },
   sectionHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 16,
   },
-  sectionTitle: { fontSize: 16, fontFamily: 'Inter-SemiBold', color: '#FFFFFF' },
+  sectionTitle: { fontSize: 16, fontFamily: 'Inter-SemiBold', color: '#000000' },
   addButton: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -138,35 +138,35 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: GOLD_SOFT_FILL,
   },
-  addButtonText: { fontSize: 13, fontFamily: 'Inter-SemiBold', color: GOLD_PRIMARY, },
+  addButtonText: { fontSize: 13, fontFamily: 'Inter-SemiBold', color: '#000000' },
   emptyCard: {
     backgroundColor: 'rgba(255,255,255,0.05)',
     borderRadius: 20,
     padding: 32,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.08)',
+    borderColor: '#D4AF37',
     marginBottom: 24,
   },
-  emptyText: { fontSize: 16, fontFamily: 'Inter-SemiBold', color: 'rgba(255,255,255,0.4)', marginTop: 12 },
-  emptySubtext: { fontSize: 13, fontFamily: 'Inter-Regular', color: 'rgba(255,255,255,0.25)', marginTop: 4 },
+  emptyText: { fontSize: 16, fontFamily: 'Inter-SemiBold', color: 'rgba(0, 0, 0, 0.55)', marginTop: 12 },
+  emptySubtext: { fontSize: 13, fontFamily: 'Inter-Regular', color: 'rgba(0, 0, 0, 0.55)', marginTop: 4 },
   methodsSection: { marginTop: 4 },
   methodItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,0.06)',
+    backgroundColor: '#FFC800',
     borderRadius: 14,
     padding: 16,
     marginBottom: 10,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.08)',
+    borderColor: '#D4AF37',
   },
   methodDot: {
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: '#22C55E',
+    backgroundColor: '#FFC800',
     marginRight: 12,
   },
-  methodText: { fontSize: 15, fontFamily: 'Inter-SemiBold', color: '#FFFFFF' },
+  methodText: { fontSize: 15, fontFamily: 'Inter-SemiBold', color: '#000000' },
 });

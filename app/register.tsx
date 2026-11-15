@@ -21,7 +21,6 @@ import { buildTelegramStartLink } from '@/lib/telegram';
 import { useTranslation } from '@/hooks/useTranslation';
 import {
   BG_GRADIENT,
-  BG_DARK,
   GOLD_GRADIENT,
   GOLD_GRADIENT_DISABLED,
   GOLD_SOFT_FILL,
@@ -388,7 +387,7 @@ export default function RegisterScreen() {
 
       <View style={styles.header}>
         <TouchableOpacity onPress={handleBack} activeOpacity={0.7}>
-          <ChevronLeft size={28} color="#FFFFFF" />
+          <ChevronLeft size={28} color="#000000" />
         </TouchableOpacity>
       </View>
 
@@ -438,7 +437,7 @@ export default function RegisterScreen() {
                   >
                     <User
                       size={32}
-                      color={selectedRole === 'passenger' ? BG_DARK : '#FFD700'}
+                      color="#000000"
                     />
                   </View>
                   <Text
@@ -481,7 +480,7 @@ export default function RegisterScreen() {
                   >
                     <Car
                       size={32}
-                      color={selectedRole === 'driver' ? BG_DARK : '#FFD700'}
+                      color="#000000"
                     />
                   </View>
                   <Text
@@ -515,7 +514,7 @@ export default function RegisterScreen() {
                       value={firstName}
                       onChangeText={setFirstName}
                       placeholder={t('register.firstNamePlaceholder')}
-                      placeholderTextColor="rgba(255,255,255,0.35)"
+                      placeholderTextColor="rgba(0, 0, 0, 0.55)"
                     />
                   </View>
                   <View style={[styles.inputContainer, styles.nameInput]}>
@@ -524,7 +523,7 @@ export default function RegisterScreen() {
                       value={lastName}
                       onChangeText={setLastName}
                       placeholder={t('register.lastNamePlaceholder')}
-                      placeholderTextColor="rgba(255,255,255,0.35)"
+                      placeholderTextColor="rgba(0, 0, 0, 0.55)"
                     />
                   </View>
                 </View>
@@ -536,7 +535,7 @@ export default function RegisterScreen() {
                   value={formatDisplay(rawDigits)}
                   onChangeText={handlePhoneChange}
                   placeholder={t('register.phonePlaceholder')}
-                  placeholderTextColor="rgba(255,255,255,0.35)"
+                  placeholderTextColor="rgba(0, 0, 0, 0.55)"
                   keyboardType="phone-pad"
                   maxLength={18}
                 />
@@ -587,7 +586,7 @@ export default function RegisterScreen() {
                   disabled={loading}
                 >
                   <LinearGradient
-                    colors={['#0088CC', '#006699']}
+                    colors={['#0066FF', '#0052CC']}
                     style={styles.sendCodeGradient}
                   >
                     <ExternalLink size={20} color="#FFFFFF" style={{ marginRight: 8 }} />
@@ -610,7 +609,7 @@ export default function RegisterScreen() {
           {step === 'code' && (
             <View style={styles.codeSection}>
               <View style={styles.telegramBadge}>
-                <Send size={20} color="#0088CC" />
+                <Send size={20} color="#FFFFFF" />
                 <Text style={styles.telegramBadgeText}>{t('register.telegramSentBadge')}</Text>
               </View>
 
@@ -688,7 +687,7 @@ export default function RegisterScreen() {
                     value={lastName}
                     onChangeText={setLastName}
                     placeholder={t('register.lastNamePlaceholder')}
-                    placeholderTextColor="rgba(255,255,255,0.35)"
+                    placeholderTextColor="rgba(0, 0, 0, 0.55)"
                   />
                 </View>
                 <View style={[styles.inputContainer, styles.nameInput]}>
@@ -697,7 +696,7 @@ export default function RegisterScreen() {
                     value={firstName}
                     onChangeText={setFirstName}
                     placeholder={t('register.firstNamePlaceholder')}
-                    placeholderTextColor="rgba(255,255,255,0.35)"
+                    placeholderTextColor="rgba(0, 0, 0, 0.55)"
                   />
                 </View>
               </View>
@@ -708,7 +707,7 @@ export default function RegisterScreen() {
                   value={carName}
                   onChangeText={setCarName}
                   placeholder={t('register.carNamePlaceholder')}
-                  placeholderTextColor="rgba(255,255,255,0.35)"
+                  placeholderTextColor="rgba(0, 0, 0, 0.55)"
                 />
               </View>
 
@@ -718,7 +717,7 @@ export default function RegisterScreen() {
                   value={carNumber}
                   onChangeText={setCarNumber}
                   placeholder={t('register.carNumberPlaceholder')}
-                  placeholderTextColor="rgba(255,255,255,0.35)"
+                  placeholderTextColor="rgba(0, 0, 0, 0.55)"
                   autoCapitalize="characters"
                 />
               </View>
@@ -729,7 +728,7 @@ export default function RegisterScreen() {
                   value={carColor}
                   onChangeText={setCarColor}
                   placeholder={t('register.carColorPlaceholder')}
-                  placeholderTextColor="rgba(255,255,255,0.35)"
+                  placeholderTextColor="rgba(0, 0, 0, 0.55)"
                 />
               </View>
 
@@ -782,7 +781,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     overflow: 'hidden',
     borderWidth: 2,
-    borderColor: 'rgba(255, 215, 0, 0.5)',
+    borderColor: '#D4AF37',
   },
   logoImage: {
     width: '100%',
@@ -791,21 +790,21 @@ const styles = StyleSheet.create({
   welcome: {
     fontSize: 15,
     fontFamily: 'Inter-Regular',
-    color: 'rgba(255,255,255,0.75)',
+    color: '#000000',
     textAlign: 'center',
     marginBottom: 6,
   },
   subtitle: {
     fontSize: 20,
     fontFamily: 'Inter-SemiBold',
-    color: '#FFFFFF',
+    color: '#000000',
     textAlign: 'center',
     marginBottom: 24,
   },
   registerHint: {
     fontSize: 16,
     fontFamily: 'Inter-Regular',
-    color: 'rgba(255,255,255,0.65)',
+    color: '#000000',
     textAlign: 'center',
     marginTop: -16,
     marginBottom: 24,
@@ -818,22 +817,22 @@ const styles = StyleSheet.create({
   },
   roleCard: {
     flex: 1,
-    backgroundColor: 'rgba(255,255,255,0.08)',
+    backgroundColor: '#FFC800',
     borderRadius: 20,
     padding: 24,
     alignItems: 'center',
     borderWidth: 2,
-    borderColor: 'rgba(255,255,255,0.1)',
+    borderColor: '#D4AF37',
   },
   roleCardActive: {
-    backgroundColor: 'rgba(255, 215, 0, 0.25)',
-    borderColor: '#FFD700',
+    backgroundColor: '#FFD700',
+    borderColor: '#D4AF37',
   },
   roleIconCircle: {
     width: 64,
     height: 64,
     borderRadius: 32,
-    backgroundColor: 'rgba(255, 215, 0, 0.15)',
+    backgroundColor: '#FFD700',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 12,
@@ -844,19 +843,19 @@ const styles = StyleSheet.create({
   roleTitle: {
     fontSize: 18,
     fontFamily: 'Inter-SemiBold',
-    color: '#FFFFFF',
+    color: '#000000',
     marginBottom: 4,
   },
   roleTitleActive: {
-    color: '#FFFFFF',
+    color: '#000000',
   },
   roleDesc: {
     fontSize: 14,
     fontFamily: 'Inter-Regular',
-    color: 'rgba(255,255,255,0.5)',
+    color: '#000000',
   },
   roleDescActive: {
-    color: 'rgba(255,255,255,0.8)',
+    color: '#000000',
   },
   phoneSection: {
     marginTop: 8,
@@ -870,10 +869,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   inputContainer: {
-    backgroundColor: 'rgba(255,255,255,0.08)',
+    backgroundColor: '#FFC800',
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.15)',
+    borderColor: '#D4AF37',
     paddingHorizontal: 16,
     paddingVertical: 4,
     marginBottom: 16,
@@ -881,13 +880,13 @@ const styles = StyleSheet.create({
   textInput: {
     fontSize: 16,
     fontFamily: 'Inter-Regular',
-    color: '#FFFFFF',
+    color: '#000000',
     paddingVertical: 14,
   },
   phoneInput: {
     fontSize: 20,
     fontFamily: 'Inter-SemiBold',
-    color: '#FFFFFF',
+    color: '#000000',
     paddingVertical: 16,
     letterSpacing: 1,
   },
@@ -906,12 +905,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   sendCodeText: {
-    color: BG_DARK,
+    color: '#FFFFFF',
     fontSize: 18,
     fontFamily: 'Inter-Bold',
   },
   hintText: {
-    color: 'rgba(255,255,255,0.45)',
+    color: 'rgba(0, 0, 0, 0.55)',
     fontSize: 14,
     fontFamily: 'Inter-Regular',
     textAlign: 'center',
@@ -922,31 +921,31 @@ const styles = StyleSheet.create({
     alignItems: 'stretch',
   },
   telegramCard: {
-    backgroundColor: 'rgba(255,255,255,0.08)',
+    backgroundColor: '#FFC800',
     borderRadius: 20,
     padding: 24,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: 'rgba(0, 136, 204, 0.4)',
+    borderColor: '#D4AF37',
   },
   telegramIconCircle: {
     width: 64,
     height: 64,
     borderRadius: 32,
-    backgroundColor: '#0088CC',
+    backgroundColor: '#0066FF',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 16,
   },
   telegramTitle: {
-    color: '#FFFFFF',
+    color: '#000000',
     fontSize: 20,
     fontFamily: 'Inter-SemiBold',
     marginBottom: 12,
     textAlign: 'center',
   },
   telegramDescription: {
-    color: 'rgba(255,255,255,0.7)',
+    color: '#000000',
     fontSize: 14,
     fontFamily: 'Inter-Regular',
     textAlign: 'center',
@@ -954,7 +953,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   telegramSteps: {
-    color: 'rgba(255,255,255,0.6)',
+    color: '#000000',
     fontSize: 14,
     fontFamily: 'Inter-Regular',
     textAlign: 'left',
@@ -983,20 +982,20 @@ const styles = StyleSheet.create({
   telegramBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 136, 204, 0.15)',
+    backgroundColor: '#0066FF',
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderRadius: 12,
     marginBottom: 16,
   },
   telegramBadgeText: {
-    color: '#0088CC',
+    color: '#FFFFFF',
     fontSize: 14,
     fontFamily: 'Inter-SemiBold',
     marginLeft: 8,
   },
   codeDescription: {
-    color: 'rgba(255,255,255,0.6)',
+    color: '#000000',
     fontSize: 14,
     fontFamily: 'Inter-Regular',
     textAlign: 'center',
@@ -1012,24 +1011,24 @@ const styles = StyleSheet.create({
     width: 60,
     height: 64,
     borderRadius: 14,
-    backgroundColor: 'rgba(255,255,255,0.08)',
+    backgroundColor: '#FFC800',
     borderWidth: 2,
-    borderColor: 'rgba(255,255,255,0.15)',
+    borderColor: '#D4AF37',
     justifyContent: 'center',
     alignItems: 'center',
   },
   codeDigitBoxActive: {
-    borderColor: '#FFD700',
-    backgroundColor: 'rgba(255, 215, 0, 0.1)',
+    borderColor: '#D4AF37',
+    backgroundColor: '#FFD700',
   },
   codeDigitBoxError: {
-    borderColor: '#EF4444',
-    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+    borderColor: '#D4AF37',
+    backgroundColor: '#FFC800',
   },
   codeDigitText: {
     fontSize: 28,
     fontFamily: 'Inter-Bold',
-    color: '#FFFFFF',
+    color: '#000000',
   },
   hiddenCodeInput: {
     position: 'absolute',
@@ -1038,7 +1037,7 @@ const styles = StyleSheet.create({
     opacity: 0,
   },
   errorText: {
-    color: '#EF4444',
+    color: '#000000',
     fontSize: 14,
     fontFamily: 'Inter-Regular',
     textAlign: 'center',
@@ -1052,7 +1051,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   resendText: {
-    color: '#FFD700',
+    color: '#000000',
     fontSize: 16,
     fontFamily: 'Inter-SemiBold',
     marginTop: 8,

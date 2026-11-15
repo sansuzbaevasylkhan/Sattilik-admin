@@ -25,7 +25,7 @@ import { getRoute } from '@/lib/routing';
 import { useDriverLocation } from '@/hooks/useDriverLocation';
 import { useTripShare } from '@/hooks/useTripShare';
 import RouteMapPreview from '@/components/RouteMapPreview';
-import { BG_GRADIENT, BG_DARK, BG_MID, BG_DEEP, GOLD_GRADIENT, GOLD_FOCUSED_BORDER, GOLD_FOCUSED_FILL, GOLD_MEDIUM_FILL, GOLD_MEDIUM_BORDER } from '@/lib/theme';
+import { BG_GRADIENT, BG_DARK, BG_MID, BG_DEEP, GOLD_GRADIENT, GOLD_GRADIENT_DISABLED, GOLD_FOCUSED_BORDER, GOLD_FOCUSED_FILL, GOLD_MEDIUM_FILL, GOLD_MEDIUM_BORDER } from '@/lib/theme';
 
 const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL!;
 const SUPABASE_ANON_KEY = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY!;
@@ -95,15 +95,15 @@ export default function OrderScreen() {
   const getStatusColor = () => {
     switch (orderStatus) {
       case 'searching':
-        return '#F5B800';
+        return '#000000';
       case 'accepted':
-        return '#22C55E';
+        return '#000000';
       case 'in_progress':
-        return '#2563EB';
+        return '#0066FF';
       case 'completed':
-        return '#22C55E';
+        return '#000000';
       default:
-        return '#FFFFFF';
+        return '#000000';
     }
   };
 
@@ -339,7 +339,7 @@ export default function OrderScreen() {
           activeOpacity={0.7}
           style={orderStatus === 'form' ? styles.floatingMenuButton : undefined}
         >
-          <Menu size={orderStatus === 'form' ? 22 : 28} color={orderStatus === 'form' ? BG_DARK : '#FFFFFF'} />
+          <Menu size={orderStatus === 'form' ? 22 : 28} color="#000000" />
         </TouchableOpacity>
         {orderStatus !== 'form' && (
           <>
@@ -370,7 +370,7 @@ export default function OrderScreen() {
                 >
                   <MapPin
                     size={20}
-                    color={focusedField === 'A' ? '#FFD700' : 'rgba(255,255,255,0.4)'}
+                    color={focusedField === 'A' ? '#000000' : 'rgba(0, 0, 0, 0.55)'}
                   />
                   <TextInput
                     style={styles.input}
@@ -380,7 +380,7 @@ export default function OrderScreen() {
                       setPickupCoords(null);
                     }}
                     placeholder={t('order.pickupPlaceholder')}
-                    placeholderTextColor="rgba(255,255,255,0.35)"
+                    placeholderTextColor="rgba(0, 0, 0, 0.55)"
                     onFocus={() => setFocusedField('A')}
                     onBlur={() => setFocusedField(null)}
                   />
@@ -399,7 +399,7 @@ export default function OrderScreen() {
                     activeOpacity={0.7}
                     hitSlop={8}
                   >
-                    <Navigation size={18} color="#FFD700" />
+                    <Navigation size={18} color="#000000" />
                   </TouchableOpacity>
                 </View>
 
@@ -408,7 +408,7 @@ export default function OrderScreen() {
                 >
                   <Navigation
                     size={20}
-                    color={focusedField === 'B' ? '#FFD700' : 'rgba(255,255,255,0.4)'}
+                    color={focusedField === 'B' ? '#000000' : 'rgba(0, 0, 0, 0.55)'}
                   />
                   <TextInput
                     style={styles.input}
@@ -418,7 +418,7 @@ export default function OrderScreen() {
                       setDropoffCoords(null);
                     }}
                     placeholder={t('order.dropoffPlaceholder')}
-                    placeholderTextColor="rgba(255,255,255,0.35)"
+                    placeholderTextColor="rgba(0, 0, 0, 0.55)"
                     onFocus={() => setFocusedField('B')}
                     onBlur={() => setFocusedField(null)}
                   />
@@ -437,7 +437,7 @@ export default function OrderScreen() {
                     activeOpacity={0.7}
                     hitSlop={8}
                   >
-                    <Navigation size={18} color="#FFD700" />
+                    <Navigation size={18} color="#000000" />
                   </TouchableOpacity>
                 </View>
               </View>
@@ -455,7 +455,7 @@ export default function OrderScreen() {
               <View style={styles.priceHeader}>
                 <DollarSign
                   size={20}
-                  color={focusedField === 'price' ? '#FFD700' : 'rgba(255,255,255,0.4)'}
+                  color={focusedField === 'price' ? '#000000' : 'rgba(0, 0, 0, 0.55)'}
                 />
                 <Text style={styles.priceLabel}>{t('order.priceLabel')}</Text>
               </View>
@@ -466,7 +466,7 @@ export default function OrderScreen() {
                   value={price}
                   onChangeText={setPrice}
                   placeholder="0"
-                  placeholderTextColor="rgba(255,255,255,0.35)"
+                  placeholderTextColor="rgba(0, 0, 0, 0.55)"
                   keyboardType="number-pad"
                   onFocus={() => setFocusedField('price')}
                   onBlur={() => setFocusedField(null)}
@@ -517,7 +517,7 @@ export default function OrderScreen() {
                 disabled={loading}
               >
                 <LinearGradient
-                  colors={loading ? ['#4B5563', '#374151'] : GOLD_GRADIENT}
+                  colors={loading ? GOLD_GRADIENT_DISABLED : GOLD_GRADIENT}
                   style={styles.orderButtonGradient}
                 >
                   {loading ? <ActivityIndicator color="#FFFFFF" /> : <Text style={styles.orderButtonText}>{t('order.orderButton')}</Text>}
@@ -599,7 +599,7 @@ export default function OrderScreen() {
                     }}
                     activeOpacity={0.7}
                   >
-                    <Share2 size={20} color="#FFFFFF" />
+                    <Share2 size={20} color="#000000" />
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={styles.callDriverButton}
@@ -647,7 +647,7 @@ export default function OrderScreen() {
                   activeOpacity={0.8}
                 >
                   <LinearGradient
-                    colors={[BG_DARK, BG_DEEP]}
+                    colors={GOLD_GRADIENT}
                     style={styles.newOrderButtonGradient}
                   >
                     <Text style={styles.newOrderButtonText}>{t('order.newOrderButton')}</Text>
@@ -685,7 +685,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 20,
     fontFamily: 'Inter-SemiBold',
-    color: '#FFFFFF',
+    color: '#000000',
   },
   content: {
     flex: 1,
@@ -709,10 +709,10 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#FFC800',
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#000',
+    shadowColor: 'rgba(0, 0, 0, 0.18)',
     shadowOpacity: 0.2,
     shadowRadius: 6,
     elevation: 4,
@@ -728,13 +728,13 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 24,
     paddingTop: 10,
     borderTopWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
+    borderColor: '#D4AF37',
   },
   sheetHandle: {
     width: 40,
     height: 4,
     borderRadius: 2,
-    backgroundColor: 'rgba(255,255,255,0.25)',
+    backgroundColor: '#FFC800',
     alignSelf: 'center',
     marginBottom: 12,
   },
@@ -744,11 +744,11 @@ const styles = StyleSheet.create({
   },
   routeCard: {
     flexDirection: 'row',
-    backgroundColor: 'rgba(255,255,255,0.06)',
+    backgroundColor: '#FFC800',
     borderRadius: 20,
     padding: 20,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
+    borderColor: '#D4AF37',
     marginBottom: 20,
   },
   routeLineContainer: {
@@ -761,19 +761,19 @@ const styles = StyleSheet.create({
     width: 12,
     height: 12,
     borderRadius: 6,
-    backgroundColor: '#22C55E',
+    backgroundColor: '#FFC800',
   },
   routeLine: {
     width: 2,
     flex: 1,
-    backgroundColor: 'rgba(255,255,255,0.2)',
+    backgroundColor: '#FFC800',
     marginVertical: 8,
   },
   routeDotB: {
     width: 12,
     height: 12,
     borderRadius: 6,
-    backgroundColor: '#EF4444',
+    backgroundColor: '#FFC800',
   },
   inputsContainer: {
     flex: 1,
@@ -782,40 +782,40 @@ const styles = StyleSheet.create({
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,0.06)',
+    backgroundColor: '#FFC800',
     borderRadius: 12,
     paddingHorizontal: 14,
     height: 52,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.08)',
+    borderColor: '#D4AF37',
   },
   inputWrapperFocused: {
-    borderColor: '#FFD700',
-    backgroundColor: 'rgba(255, 215, 0, 0.1)',
+    borderColor: '#D4AF37',
+    backgroundColor: '#FFD700',
   },
   input: {
     flex: 1,
     fontSize: 16,
     fontFamily: 'Inter-Regular',
-    color: '#FFFFFF',
+    color: '#000000',
     marginLeft: 10,
   },
   priceCard: {
-    backgroundColor: 'rgba(255,255,255,0.06)',
+    backgroundColor: '#FFC800',
     borderRadius: 20,
     padding: 20,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
+    borderColor: '#D4AF37',
     marginBottom: 20,
   },
   priceCardFocused: {
-    borderColor: '#FFD700',
-    backgroundColor: 'rgba(255, 215, 0, 0.08)',
+    borderColor: '#D4AF37',
+    backgroundColor: '#FFD700',
   },
   routeInfoText: {
     fontSize: 13,
     fontFamily: 'Inter-Regular',
-    color: 'rgba(255,255,255,0.45)',
+    color: 'rgba(0, 0, 0, 0.55)',
     marginTop: -12,
     marginBottom: 16,
     marginLeft: 4,
@@ -828,29 +828,29 @@ const styles = StyleSheet.create({
   priceLabel: {
     fontSize: 14,
     fontFamily: 'Inter-SemiBold',
-    color: 'rgba(255,255,255,0.6)',
+    color: '#000000',
     marginLeft: 8,
   },
   priceInputRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,0.06)',
+    backgroundColor: '#FFC800',
     borderRadius: 12,
     paddingHorizontal: 16,
     height: 56,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.08)',
+    borderColor: '#D4AF37',
   },
   priceInput: {
     flex: 1,
     fontSize: 28,
     fontFamily: 'Inter-Bold',
-    color: '#FFFFFF',
+    color: '#000000',
   },
   currencySymbol: {
     fontSize: 24,
     fontFamily: 'Inter-SemiBold',
-    color: 'rgba(255,255,255,0.5)',
+    color: '#000000',
     marginLeft: 8,
   },
   spacer: {
@@ -871,7 +871,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   orderButtonText: {
-    color: BG_DARK,
+    color: '#FFFFFF',
     fontSize: 20,
     fontFamily: 'Inter-Bold',
   },
@@ -890,11 +890,11 @@ const styles = StyleSheet.create({
   },
   orderDetailsCard: {
     width: '100%',
-    backgroundColor: 'rgba(255,255,255,0.06)',
+    backgroundColor: '#FFC800',
     borderRadius: 20,
     padding: 20,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
+    borderColor: '#D4AF37',
     marginBottom: 16,
   },
   orderRouteRow: {
@@ -905,21 +905,21 @@ const styles = StyleSheet.create({
     width: 12,
     height: 12,
     borderRadius: 6,
-    backgroundColor: '#22C55E',
+    backgroundColor: '#FFC800',
     marginRight: 12,
   },
   orderRouteDotRed: {
-    backgroundColor: '#EF4444',
+    backgroundColor: '#FFC800',
   },
   orderRouteText: {
     fontSize: 16,
     fontFamily: 'Inter-SemiBold',
-    color: '#FFFFFF',
+    color: '#000000',
   },
   orderRouteConnector: {
     width: 2,
     height: 20,
-    backgroundColor: 'rgba(255,255,255,0.2)',
+    backgroundColor: '#FFC800',
     marginLeft: 5,
     marginVertical: 8,
   },
@@ -930,27 +930,27 @@ const styles = StyleSheet.create({
     marginTop: 16,
     paddingTop: 16,
     borderTopWidth: 1,
-    borderTopColor: 'rgba(255,255,255,0.1)',
+    borderTopColor: '#D4AF37',
   },
   orderPriceLabel: {
     fontSize: 14,
     fontFamily: 'Inter-Regular',
-    color: 'rgba(255,255,255,0.5)',
+    color: '#000000',
   },
   orderPriceValue: {
     fontSize: 24,
     fontFamily: 'Inter-Bold',
-    color: '#FFD700',
+    color: '#000000',
   },
   driverCard: {
     width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,0.06)',
+    backgroundColor: '#FFC800',
     borderRadius: 20,
     padding: 16,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
+    borderColor: '#D4AF37',
   },
   driverAvatar: {
     width: 52,
@@ -963,7 +963,7 @@ const styles = StyleSheet.create({
   driverAvatarText: {
     fontSize: 22,
     fontFamily: 'Inter-Bold',
-    color: BG_DARK,
+    color: '#000000',
   },
   driverInfo: {
     flex: 1,
@@ -972,12 +972,12 @@ const styles = StyleSheet.create({
   driverName: {
     fontSize: 18,
     fontFamily: 'Inter-SemiBold',
-    color: '#FFFFFF',
+    color: '#000000',
   },
   driverLabel: {
     fontSize: 14,
     fontFamily: 'Inter-Regular',
-    color: 'rgba(255,255,255,0.5)',
+    color: '#000000',
     marginTop: 2,
   },
   driverActions: {
@@ -986,14 +986,14 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   shareTripBtn: {
-    backgroundColor: 'rgba(255,255,255,0.15)',
+    backgroundColor: '#FFC800',
     padding: 10,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.2)',
+    borderColor: '#D4AF37',
   },
   callDriverButton: {
-    backgroundColor: '#22C55E',
+    backgroundColor: '#FFC800',
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderRadius: 12,
@@ -1001,7 +1001,7 @@ const styles = StyleSheet.create({
   callDriverText: {
     fontSize: 14,
     fontFamily: 'Inter-SemiBold',
-    color: '#FFFFFF',
+    color: '#000000',
   },
   newOrderButton: {
     height: 56,
@@ -1016,22 +1016,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   newOrderButtonText: {
-    color: BG_DARK,
+    color: '#FFFFFF',
     fontSize: 18,
     fontFamily: 'Inter-Bold',
   },
 
   paymentCard: {
-    backgroundColor: 'rgba(255,255,255,0.06)',
+    backgroundColor: '#FFC800',
     borderRadius: 20,
     padding: 20,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
+    borderColor: '#D4AF37',
     marginBottom: 20,
   },
   paymentCardFocused: {
-    borderColor: '#FFD700',
-    backgroundColor: 'rgba(255, 215, 0, 0.08)',
+    borderColor: '#D4AF37',
+    backgroundColor: '#FFD700',
   },
   paymentHeader: {
     flexDirection: 'row',
@@ -1041,7 +1041,7 @@ const styles = StyleSheet.create({
   paymentLabel: {
     fontSize: 14,
     fontFamily: 'Inter-SemiBold',
-    color: 'rgba(255,255,255,0.6)',
+    color: '#000000',
   },
   paymentButtonsRow: {
     flexDirection: 'row',
@@ -1050,18 +1050,18 @@ const styles = StyleSheet.create({
   paymentButton: {
     flex: 1,
     borderRadius: 16,
-    backgroundColor: 'rgba(255,255,255,0.06)',
+    backgroundColor: '#FFC800',
     paddingVertical: 14,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.08)',
+    borderColor: '#D4AF37',
     alignItems: 'center',
   },
   paymentButtonSelected: {
-    backgroundColor: 'rgba(255, 215, 0, 0.18)',
-    borderColor: 'rgba(255, 215, 0, 0.55)',
+    backgroundColor: '#FFD700',
+    borderColor: '#D4AF37',
   },
   paymentButtonText: {
-    color: '#FFFFFF',
+    color: '#000000',
     fontSize: 15,
     fontFamily: 'Inter-SemiBold',
   },

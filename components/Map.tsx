@@ -47,9 +47,9 @@ const CenterPinMap = forwardRef<CenterPinMapHandle, CenterPinMapProps>(
       initialZoom = QAZALY_DEFAULT_ZOOM,
       showUserLocation = true,
       onRegionDidChange,
-      pinColor = '#FFD700',
+      pinColor = '#000000',
       otherPoint = null,
-      otherPointColor = '#EF4444',
+      otherPointColor = '#000000',
       driver = null,
       routeCoordinates = null,
     },
@@ -97,7 +97,7 @@ const CenterPinMap = forwardRef<CenterPinMapHandle, CenterPinMapProps>(
           {driver && (
             <Marker lngLat={[driver.lng, driver.lat]} anchor="center">
               <View style={styles.driverMarker}>
-                <Car size={16} color="#B8860B" />
+                <Car size={16} color="#000000" />
               </View>
             </Marker>
           )}
@@ -115,7 +115,7 @@ const CenterPinMap = forwardRef<CenterPinMapHandle, CenterPinMapProps>(
                 id="pickerRouteLineCasing"
                 type="line"
                 layout={{ 'line-cap': 'round', 'line-join': 'round' }}
-                paint={{ 'line-color': '#FFFFFF', 'line-width': 7, 'line-opacity': 0.9 }}
+                paint={{ 'line-color': '#000000', 'line-width': 7, 'line-opacity': 0.9 }}
               />
               <Layer
                 id="pickerRouteLine"
@@ -174,10 +174,10 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     borderRadius: 10,
-    backgroundColor: 'rgba(255,255,255,0.9)',
+    backgroundColor: '#FFC800',
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#000',
+    shadowColor: 'rgba(0, 0, 0, 0.18)',
     shadowOpacity: 0.25,
     shadowRadius: 3,
     elevation: 3,
@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
     height: 12,
     borderRadius: 6,
     borderWidth: 2,
-    borderColor: '#FFFFFF',
+    borderColor: '#D4AF37',
   },
   driverMarker: {
     width: 28,
@@ -197,6 +197,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 2,
-    borderColor: '#FFFFFF',
+    borderColor: '#D4AF37',
   },
 });

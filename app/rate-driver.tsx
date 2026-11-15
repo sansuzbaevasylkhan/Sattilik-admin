@@ -150,7 +150,7 @@ export default function RateDriverScreen() {
   if (loading) {
     return (
       <View style={styles.center}>
-        <ActivityIndicator color={BG_DARK} size="large" />
+        <ActivityIndicator color="#0066FF" size="large" />
       </View>
     );
   }
@@ -167,7 +167,7 @@ export default function RateDriverScreen() {
 
       <View style={styles.header}>
         <TouchableOpacity onPress={handleSkip} activeOpacity={0.7}>
-          <ChevronLeft size={28} color="#FFFFFF" />
+          <ChevronLeft size={28} color="#000000" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>{t('rateDriver.headerTitle')}</Text>
         <View style={{ width: 28 }} />
@@ -196,7 +196,7 @@ export default function RateDriverScreen() {
                 value={comment}
                 onChangeText={setComment}
                 placeholder={t('rateDriver.commentPlaceholder')}
-                placeholderTextColor="rgba(255,255,255,0.35)"
+                placeholderTextColor="rgba(0, 0, 0, 0.55)"
                 multiline
               />
             </View>
@@ -243,15 +243,15 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 16,
   },
-  headerTitle: { fontSize: 20, fontFamily: 'Inter-SemiBold', color: '#FFFFFF' },
+  headerTitle: { fontSize: 20, fontFamily: 'Inter-SemiBold', color: '#000000' },
   content: { flex: 1, paddingHorizontal: 24, justifyContent: 'flex-start' },
   center: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   driverCard: {
-    backgroundColor: 'rgba(255,255,255,0.06)',
+    backgroundColor: '#FFC800',
     borderRadius: 20,
     padding: 20,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
+    borderColor: '#D4AF37',
   },
   avatarWrap: {
     width: 96,
@@ -264,20 +264,20 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   avatarImg: { width: '100%', height: '100%' },
-  driverName: { fontSize: 22, fontFamily: 'Inter-Bold', color: '#FFFFFF', textAlign: 'center', marginBottom: 18 },
+  driverName: { fontSize: 22, fontFamily: 'Inter-Bold', color: '#000000', textAlign: 'center', marginBottom: 18 },
   ratingBlock: { marginBottom: 12 },
-  ratingTitle: { fontSize: 14, fontFamily: 'Inter-SemiBold', color: 'rgba(255,255,255,0.6)', marginBottom: 10 },
+  ratingTitle: { fontSize: 14, fontFamily: 'Inter-SemiBold', color: '#000000', marginBottom: 10 },
   commentBlock: { marginTop: 14 },
-  commentLabel: { fontSize: 14, fontFamily: 'Inter-SemiBold', color: 'rgba(255,255,255,0.6)', marginBottom: 8 },
+  commentLabel: { fontSize: 14, fontFamily: 'Inter-SemiBold', color: '#000000', marginBottom: 8 },
   textarea: {
     minHeight: 110,
     borderRadius: 16,
     paddingHorizontal: 12,
     paddingVertical: 10,
-    backgroundColor: 'rgba(255,255,255,0.06)',
+    backgroundColor: '#FFC800',
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
-    color: '#FFFFFF',
+    borderColor: '#D4AF37',
+    color: '#000000',
     fontFamily: 'Inter-Regular',
     fontSize: 14,
   },
@@ -289,6 +289,6 @@ const styles = StyleSheet.create({
   },
   primaryButtonGradient: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   primaryButtonText: { color: '#FFFFFF', fontSize: 18, fontFamily: 'Inter-Bold' },
-  skipLink: { marginTop: 14, textAlign: 'center', color: 'rgba(255,255,255,0.55)', fontFamily: 'Inter-Regular', fontSize: 14 },
+  skipLink: { marginTop: 14, textAlign: 'center', color: '#000000', fontFamily: 'Inter-Regular', fontSize: 14 },
 });
 

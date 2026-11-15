@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     maxWidth: 400,
   },
   text: {
-    color: '#FFFFFF',
+    color: '#000000',
     fontSize: 16,
     fontFamily: 'Inter-SemiBold',
     textAlign: 'center',

@@ -32,7 +32,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { useLocationBroadcast } from '@/hooks/useLocationBroadcast';
 import RouteMapPreview from '@/components/RouteMapPreview';
 import { getRoute } from '@/lib/routing';
-import { BG_GRADIENT, BG_DARK, GOLD_GRADIENT } from '@/lib/theme';
+import { BG_GRADIENT, GOLD_GRADIENT } from '@/lib/theme';
 
 const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL!;
 const SUPABASE_ANON_KEY = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY!;
@@ -325,9 +325,9 @@ export default function DriverOrderScreen() {
   };
 
   const getStatusColor = () => {
-    if (activeOrderStatus === 'completed') return '#22C55E';
-    if (activeOrderStatus === 'in_progress') return '#2563EB';
-    return '#F59E0B';
+    if (activeOrderStatus === 'completed') return '#000000';
+    if (activeOrderStatus === 'in_progress') return '#0066FF';
+    return '#000000';
   };
 
   const getStatusText = () => {
@@ -345,7 +345,7 @@ export default function DriverOrderScreen() {
 
       <View style={styles.header}>
         <TouchableOpacity onPress={() => setMenuVisible(true)} activeOpacity={0.7}>
-          <Menu size={28} color="#FFFFFF" />
+          <Menu size={28} color="#000000" />
         </TouchableOpacity>
         <View style={styles.headerCenter}>
           <Text style={styles.headerTitle}>
@@ -371,13 +371,13 @@ export default function DriverOrderScreen() {
             <RefreshControl
               refreshing={refreshing}
               onRefresh={onRefresh}
-              tintColor="#FFD700"
+              tintColor="#000000"
             />
           }
         >
           {pendingOrders.length === 0 ? (
             <View style={styles.emptyContainer}>
-              <Inbox size={64} color="rgba(255,255,255,0.2)" />
+              <Inbox size={64} color="rgba(0, 0, 0, 0.55)" />
               <Text style={styles.emptyTitle}>{t('driverOrder.emptyTitle')}</Text>
               <Text style={styles.emptySubtitle}>
                 {t('driverOrder.emptySubtitle')}
@@ -387,7 +387,7 @@ export default function DriverOrderScreen() {
                 onPress={fetchPendingOrders}
                 activeOpacity={0.7}
               >
-                <RefreshCw size={20} color="#FFD700" />
+                <RefreshCw size={20} color="#000000" />
                 <Text style={styles.refreshButtonText}>{t('driverOrder.refreshButton')}</Text>
               </TouchableOpacity>
             </View>
@@ -397,7 +397,7 @@ export default function DriverOrderScreen() {
                 <View style={styles.orderHeader}>
                   <View style={styles.passengerInfo}>
                     <View style={styles.passengerAvatar}>
-                      <User size={18} color="#FFFFFF" />
+                      <User size={18} color="#000000" />
                     </View>
                     <View>
                       <Text style={styles.passengerName}>
@@ -426,11 +426,11 @@ export default function DriverOrderScreen() {
 
                 <View style={styles.orderMeta}>
                   <View style={styles.metaItem}>
-                    <Route size={16} color="rgba(255,255,255,0.4)" />
+                    <Route size={16} color="rgba(0, 0, 0, 0.55)" />
                     <Text style={styles.metaText}>{order.distance}</Text>
                   </View>
                   <View style={styles.metaItem}>
-                    <Clock size={16} color="rgba(255,255,255,0.4)" />
+                    <Clock size={16} color="rgba(0, 0, 0, 0.55)" />
                     <Text style={styles.metaText}>{order.estimated_time}</Text>
                   </View>
                   <View style={styles.metaPrice}>
@@ -449,15 +449,15 @@ export default function DriverOrderScreen() {
                     style={styles.acceptButtonGradient}
                   >
                     {loading ? (
-                      <ActivityIndicator color={BG_DARK} size="small" />
+                      <ActivityIndicator color={'#FFFFFF'} size="small" />
                     ) : (
                       <>
-                        <Play size={18} color={BG_DARK} fill={BG_DARK} />
+                        <Play size={18} color={'#FFFFFF'} fill={'#FFFFFF'} />
                         <Text style={styles.acceptButtonText}>{t('driverOrder.acceptButton')}</Text>
                         {order.expires_at && (
                         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                          <Timer size={14} color={BG_DARK} />
-                          <Text style={{ fontSize: 12, fontFamily: 'Inter-SemiBold', color: BG_DARK }}>
+                          <Timer size={14} color={'#FFFFFF'} />
+                          <Text style={{ fontSize: 12, fontFamily: 'Inter-SemiBold', color: '#FFFFFF' }}>
                             {Math.max(0, Math.ceil((new Date(order.expires_at).getTime() - new Date().getTime()) / 1000))}с</Text>
                         </View>
                         )}
@@ -475,7 +475,7 @@ export default function DriverOrderScreen() {
         <View style={styles.content}>
           <View style={styles.passengerCard}>
             <View style={styles.passengerAvatarLarge}>
-              <User size={28} color="#FFFFFF" />
+              <User size={28} color="#000000" />
             </View>
             <View style={styles.passengerCardInfo}>
               <Text style={styles.passengerCardName}>
@@ -489,7 +489,7 @@ export default function DriverOrderScreen() {
               activeOpacity={0.7}
             >
               <Animated.View style={[styles.callButtonInner, { transform: [{ scale: callButtonScale }] }]}>
-                <Phone size={20} color="#FFFFFF" />
+                <Phone size={20} color="#000000" />
               </Animated.View>
             </TouchableOpacity>
           </View>
@@ -527,7 +527,7 @@ export default function DriverOrderScreen() {
               </View>
 
               <View style={styles.routeDistanceContainer}>
-                <Route size={16} color="rgba(255,255,255,0.4)" />
+                <Route size={16} color="rgba(0, 0, 0, 0.55)" />
                 <Text style={styles.routeDistanceText}>{activeOrder.distance}</Text>
               </View>
 
@@ -540,16 +540,16 @@ export default function DriverOrderScreen() {
 
           <View style={styles.infoCards}>
             <View style={styles.infoCard}>
-              <View style={[styles.infoIconCircle, { backgroundColor: 'rgba(34, 197, 94, 0.15)' }]}>
-                <Clock size={20} color="#22C55E" />
+              <View style={[styles.infoIconCircle, { backgroundColor: '#FFC800' }]}>
+                <Clock size={20} color="#000000" />
               </View>
               <Text style={styles.infoValue}>{activeOrder.estimated_time}</Text>
               <Text style={styles.infoLabel}>{t('driverOrder.timeLabel')}</Text>
             </View>
 
             <View style={styles.infoCard}>
-              <View style={[styles.infoIconCircle, { backgroundColor: 'rgba(37, 99, 235, 0.15)' }]}>
-                <Wallet size={20} color="#2563EB" />
+              <View style={[styles.infoIconCircle, { backgroundColor: '#0066FF' }]}>
+                <Wallet size={20} color="#FFFFFF" />
               </View>
               <Text style={styles.infoValue}>{activeOrder.price} ₸</Text>
               <Text style={styles.infoLabel}>{t('driverOrder.paymentLabel')}</Text>
@@ -570,7 +570,7 @@ export default function DriverOrderScreen() {
                     colors={GOLD_GRADIENT}
                     style={styles.primaryButtonGradient}
                   >
-                    <Play size={22} color={BG_DARK} fill={BG_DARK} />
+                    <Play size={22} color={'#FFFFFF'} fill={'#FFFFFF'} />
                     <Text style={styles.primaryButtonText}>{t('driverOrder.startTripButton')}</Text>
                   </LinearGradient>
                 </TouchableOpacity>
@@ -587,7 +587,7 @@ export default function DriverOrderScreen() {
 
                 >
                   <LinearGradient
-                    colors={['#22C55E', '#16A34A']}
+                    colors={['#0066FF', '#0052CC']}
                     style={styles.primaryButtonGradient}
                   >
                     <CheckCircle size={22} color="#FFFFFF" />
@@ -604,7 +604,7 @@ export default function DriverOrderScreen() {
                   onPress={() => handleOpenNavigation(activeOrder.pickup_address)}
                   activeOpacity={0.7}
                 >
-                  <Navigation size={20} color="#FFD700" />
+                  <Navigation size={20} color="#000000" />
                   <Text style={styles.secondaryButtonText}>{t('driverOrder.navigationButton')}</Text>
                 </TouchableOpacity>
               </Animated.View>
@@ -615,7 +615,7 @@ export default function DriverOrderScreen() {
                   onPress={() => handleCallPassenger(activeOrder.passenger_phone)}
                   activeOpacity={0.7}
                 >
-                  <Phone size={20} color="#FFD700" />
+                  <Phone size={20} color="#000000" />
                   <Text style={styles.secondaryButtonText}>{t('driverOrder.callButton')}</Text>
                 </TouchableOpacity>
               </Animated.View>
@@ -650,7 +650,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 20,
     fontFamily: 'Inter-SemiBold',
-    color: '#FFFFFF',
+    color: '#000000',
     marginBottom: 6,
   },
   statusBadge: {
@@ -687,13 +687,13 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontSize: 20,
     fontFamily: 'Inter-SemiBold',
-    color: 'rgba(255,255,255,0.5)',
+    color: '#000000',
     marginTop: 16,
   },
   emptySubtitle: {
     fontSize: 14,
     fontFamily: 'Inter-Regular',
-    color: 'rgba(255,255,255,0.3)',
+    color: 'rgba(0, 0, 0, 0.55)',
     marginTop: 8,
   },
   refreshButton: {
@@ -702,21 +702,21 @@ const styles = StyleSheet.create({
     marginTop: 24,
     paddingHorizontal: 20,
     paddingVertical: 12,
-    backgroundColor: 'rgba(255, 215, 0, 0.15)',
+    backgroundColor: '#FFD700',
     borderRadius: 12,
     gap: 8,
   },
   refreshButtonText: {
     fontSize: 15,
     fontFamily: 'Inter-SemiBold',
-    color: '#FFD700',
+    color: '#000000',
   },
   orderCard: {
-    backgroundColor: 'rgba(255,255,255,0.06)',
+    backgroundColor: '#FFC800',
     borderRadius: 20,
     padding: 16,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
+    borderColor: '#D4AF37',
     marginBottom: 12,
   },
   orderHeader: {
@@ -730,7 +730,7 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: 'rgba(255, 215, 0, 0.3)',
+    backgroundColor: '#FFD700',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 10,
@@ -738,12 +738,12 @@ const styles = StyleSheet.create({
   passengerName: {
     fontSize: 16,
     fontFamily: 'Inter-SemiBold',
-    color: '#FFFFFF',
+    color: '#000000',
   },
   passengerLabel: {
     fontSize: 12,
     fontFamily: 'Inter-Regular',
-    color: 'rgba(255,255,255,0.4)',
+    color: 'rgba(0, 0, 0, 0.55)',
   },
   orderRoute: {
     marginBottom: 12,
@@ -756,7 +756,7 @@ const styles = StyleSheet.create({
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: '#22C55E',
+    backgroundColor: '#FFC800',
     marginRight: 10,
     marginTop: 4,
   },
@@ -764,21 +764,21 @@ const styles = StyleSheet.create({
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: '#EF4444',
+    backgroundColor: '#FFC800',
     marginRight: 10,
     marginTop: 4,
   },
   routeConnector: {
     width: 2,
     height: 16,
-    backgroundColor: 'rgba(255,255,255,0.15)',
+    backgroundColor: '#FFC800',
     marginLeft: 4,
     marginVertical: 4,
   },
   routeAddress: {
     fontSize: 14,
     fontFamily: 'Inter-Regular',
-    color: 'rgba(255,255,255,0.8)',
+    color: '#000000',
     flex: 1,
   },
   orderMeta: {
@@ -795,7 +795,7 @@ const styles = StyleSheet.create({
   metaText: {
     fontSize: 12,
     fontFamily: 'Inter-Regular',
-    color: 'rgba(255,255,255,0.5)',
+    color: '#000000',
   },
   metaPrice: {
     marginLeft: 'auto',
@@ -803,7 +803,7 @@ const styles = StyleSheet.create({
   metaPriceText: {
     fontSize: 18,
     fontFamily: 'Inter-Bold',
-    color: '#FFD700',
+    color: '#000000',
   },
   acceptButton: {
     height: 48,
@@ -818,29 +818,29 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   acceptButtonText: {
-    color: BG_DARK,
+    color: '#FFFFFF',
     fontSize: 16,
     fontFamily: 'Inter-Bold',
   },
   passengerCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,0.06)',
+    backgroundColor: '#FFC800',
     borderRadius: 20,
     padding: 16,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
+    borderColor: '#D4AF37',
     marginBottom: 16,
   },
   passengerAvatarLarge: {
     width: 52,
     height: 52,
     borderRadius: 26,
-    backgroundColor: 'rgba(255, 215, 0, 0.3)',
+    backgroundColor: '#FFD700',
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 2,
-    borderColor: 'rgba(255, 215, 0, 0.5)',
+    borderColor: '#D4AF37',
   },
   passengerCardInfo: {
     flex: 1,
@@ -849,13 +849,13 @@ const styles = StyleSheet.create({
   passengerCardName: {
     fontSize: 18,
     fontFamily: 'Inter-SemiBold',
-    color: '#FFFFFF',
+    color: '#000000',
     marginBottom: 2,
   },
   passengerCardLabel: {
     fontSize: 14,
     fontFamily: 'Inter-Regular',
-    color: 'rgba(255,255,255,0.5)',
+    color: '#000000',
   },
   callButton: {
     padding: 4,
@@ -864,17 +864,17 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: '#22C55E',
+    backgroundColor: '#FFC800',
     justifyContent: 'center',
     alignItems: 'center',
   },
   routeCard: {
     flexDirection: 'row',
-    backgroundColor: 'rgba(255,255,255,0.06)',
+    backgroundColor: '#FFC800',
     borderRadius: 20,
     padding: 20,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
+    borderColor: '#D4AF37',
     marginBottom: 16,
   },
   routeLineContainer: {
@@ -887,14 +887,14 @@ const styles = StyleSheet.create({
     width: 14,
     height: 14,
     borderRadius: 7,
-    backgroundColor: '#22C55E',
+    backgroundColor: '#FFC800',
     borderWidth: 3,
-    borderColor: 'rgba(34, 197, 94, 0.3)',
+    borderColor: '#D4AF37',
   },
   routeLine: {
     width: 3,
     height: 50,
-    backgroundColor: 'rgba(255,255,255,0.15)',
+    backgroundColor: '#FFC800',
     marginVertical: 6,
     borderRadius: 2,
     overflow: 'hidden',
@@ -908,9 +908,9 @@ const styles = StyleSheet.create({
     width: 14,
     height: 14,
     borderRadius: 7,
-    backgroundColor: '#EF4444',
+    backgroundColor: '#FFC800',
     borderWidth: 3,
-    borderColor: 'rgba(239, 68, 68, 0.3)',
+    borderColor: '#D4AF37',
   },
   routeDetails: {
     flex: 1,
@@ -922,7 +922,7 @@ const styles = StyleSheet.create({
   routeLabel: {
     fontSize: 12,
     fontFamily: 'Inter-SemiBold',
-    color: 'rgba(255,255,255,0.4)',
+    color: 'rgba(0, 0, 0, 0.55)',
     marginBottom: 2,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
@@ -930,7 +930,7 @@ const styles = StyleSheet.create({
   routeAddressText: {
     fontSize: 16,
     fontFamily: 'Inter-SemiBold',
-    color: '#FFFFFF',
+    color: '#000000',
   },
   routeDistanceContainer: {
     flexDirection: 'row',
@@ -940,7 +940,7 @@ const styles = StyleSheet.create({
   routeDistanceText: {
     fontSize: 14,
     fontFamily: 'Inter-SemiBold',
-    color: 'rgba(255,255,255,0.5)',
+    color: '#000000',
     marginLeft: 6,
   },
   infoCards: {
@@ -950,11 +950,11 @@ const styles = StyleSheet.create({
   },
   infoCard: {
     flex: 1,
-    backgroundColor: 'rgba(255,255,255,0.06)',
+    backgroundColor: '#FFC800',
     borderRadius: 16,
     padding: 16,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
+    borderColor: '#D4AF37',
     alignItems: 'center',
   },
   infoIconCircle: {
@@ -968,13 +968,13 @@ const styles = StyleSheet.create({
   infoValue: {
     fontSize: 20,
     fontFamily: 'Inter-Bold',
-    color: '#FFFFFF',
+    color: '#000000',
     marginBottom: 2,
   },
   infoLabel: {
     fontSize: 12,
     fontFamily: 'Inter-SemiBold',
-    color: 'rgba(255,255,255,0.4)',
+    color: 'rgba(0, 0, 0, 0.55)',
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
@@ -998,7 +998,7 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   primaryButtonText: {
-    color: BG_DARK,
+    color: '#FFFFFF',
     fontSize: 18,
     fontFamily: 'Inter-Bold',
   },
@@ -1015,13 +1015,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     height: 52,
     borderRadius: 14,
-    backgroundColor: 'rgba(255,255,255,0.08)',
+    backgroundColor: '#FFC800',
     borderWidth: 1,
-    borderColor: 'rgba(255, 215, 0, 0.3)',
+    borderColor: '#D4AF37',
     gap: 8,
   },
   secondaryButtonText: {
-    color: '#FFD700',
+    color: '#000000',
     fontSize: 15,
     fontFamily: 'Inter-SemiBold',
   },

@@ -72,7 +72,7 @@ export default function QrScanScreen() {
 
       <View style={styles.header}>
         <TouchableOpacity onPress={handleBack} activeOpacity={0.7}>
-          <ChevronLeft size={28} color="#FFFFFF" />
+          <ChevronLeft size={28} color="#000000" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>{t('menuQrScan.headerTitle')}</Text>
         <View style={{ width: 28 }} />
@@ -118,7 +118,7 @@ export default function QrScanScreen() {
               <View pointerEvents="none" style={styles.overlay}>
                 <View style={styles.scanFrame} />
                 <View style={styles.scanHint}>
-                  <Scan size={22} color="rgba(255,255,255,0.9)" />
+                  <Scan size={22} color="#000000" />
                   <Text style={styles.scanHintText}>{t('menuQrScan.scanHintText')}</Text>
                 </View>
               </View>
@@ -133,7 +133,7 @@ export default function QrScanScreen() {
               ) : scanned ? (
                 <View>
                   <View style={styles.resultIconRow}>
-                    <CheckCircle size={20} color="#22C55E" />
+                    <CheckCircle size={20} color="#000000" />
                     <Text style={styles.resultTitle}>{t('menuQrScan.resultSuccessTitle')}</Text>
                   </View>
                   <Text style={styles.resultPayload} numberOfLines={6}>
@@ -153,7 +153,7 @@ export default function QrScanScreen() {
                 </View>
               ) : (
                 <View style={styles.resultRow}>
-                  <XCircle size={20} color="rgba(255,255,255,0.35)" />
+                  <XCircle size={20} color="rgba(0, 0, 0, 0.55)" />
                   <Text style={styles.resultText}>{t('menuQrScan.resultEmptyText')}</Text>
                 </View>
               )}
@@ -183,7 +183,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 20,
     fontFamily: 'Inter-SemiBold',
-    color: '#FFFFFF',
+    color: '#000000',
   },
   content: {
     flex: 1,
@@ -199,19 +199,19 @@ const styles = StyleSheet.create({
   permissionTitle: {
     fontSize: 18,
     fontFamily: 'Inter-SemiBold',
-    color: '#FFFFFF',
+    color: '#000000',
     marginBottom: 8,
     textAlign: 'center',
   },
   permissionSubtitle: {
     fontSize: 14,
     fontFamily: 'Inter-Regular',
-    color: 'rgba(255,255,255,0.5)',
+    color: '#000000',
     textAlign: 'center',
     marginBottom: 16,
   },
   permissionButton: {
-    backgroundColor: GOLD_SOFT_FILL,
+    backgroundColor: '#0066FF',
     borderWidth: 1,
     borderColor: GOLD_MEDIUM_BORDER,
     borderRadius: 14,
@@ -229,7 +229,7 @@ const styles = StyleSheet.create({
     borderRadius: 22,
     overflow: 'hidden',
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.12)',
+    borderColor: '#D4AF37',
     backgroundColor: 'rgba(255,255,255,0.03)',
   },
   overlay: {
@@ -254,20 +254,20 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 10,
     borderRadius: 14,
-    backgroundColor: 'rgba(0,0,0,0.25)',
+    backgroundColor: '#FFD700',
   },
   scanHintText: {
-    color: 'rgba(255,255,255,0.9)',
+    color: '#000000',
     fontFamily: 'Inter-SemiBold',
     fontSize: 14,
   },
   resultBox: {
     marginTop: 16,
-    backgroundColor: 'rgba(255,255,255,0.06)',
+    backgroundColor: '#FFC800',
     borderRadius: 20,
     padding: 16,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
+    borderColor: '#D4AF37',
   },
   resultRow: {
     flexDirection: 'row',
@@ -277,7 +277,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   resultText: {
-    color: 'rgba(255,255,255,0.7)',
+    color: '#000000',
     fontFamily: 'Inter-SemiBold',
     fontSize: 14,
   },
@@ -288,12 +288,12 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   resultTitle: {
-    color: '#FFFFFF',
+    color: '#000000',
     fontFamily: 'Inter-SemiBold',
     fontSize: 16,
   },
   resultPayload: {
-    color: 'rgba(255,255,255,0.75)',
+    color: '#000000',
     fontFamily: 'Inter-Regular',
     fontSize: 13,
     lineHeight: 18,
@@ -303,7 +303,7 @@ const styles = StyleSheet.create({
     height: 52,
     borderRadius: 16,
     overflow: 'hidden',
-    backgroundColor: GOLD_MEDIUM_FILL,
+    backgroundColor: '#0066FF',
     borderWidth: 1,
     borderColor: GOLD_MEDIUM_BORDER,
     justifyContent: 'center',
@@ -316,7 +316,7 @@ const styles = StyleSheet.create({
   },
   footerNote: {
     marginTop: 12,
-    color: 'rgba(255,255,255,0.35)',
+    color: 'rgba(0, 0, 0, 0.55)',
     fontFamily: 'Inter-Regular',
     fontSize: 12,
     textAlign: 'center',

@@ -36,29 +36,29 @@ const MENU_ITEMS = [
   {
     icon: CreditCard,
     labelKey: 'menuPayment',
-    color: '#22C55E',
-    bg: 'rgba(34,197,94,0.12)',
+    color: '#000000',
+    bg: '#FFC800',
     route: '/menu/payment',
   },
   {
     icon: Clock,
     labelKey: 'menuHistory',
-    color: '#F59E0B',
-    bg: 'rgba(245,158,11,0.12)',
+    color: '#000000',
+    bg: '#FFD700',
     route: '/menu/history',
   },
   {
     icon: BookOpen,
     labelKey: 'menuGuide',
-    color: '#2563EB',
-    bg: 'rgba(37,99,235,0.12)',
+    color: '#FFFFFF',
+    bg: '#0066FF',
     route: '/menu/guide-chat',
   },
   {
     icon: Settings,
     labelKey: 'menuSettings',
-    color: '#94A3B8',
-    bg: 'rgba(148,163,184,0.12)',
+    color: '#000000',
+    bg: '#FFC800',
     route: '/menu/settings',
   },
 ];
@@ -118,7 +118,7 @@ export default function MenuDrawer({ visible, onClose }: MenuDrawerProps) {
   const roleLabel = user.role === 'driver' ? t('menuDrawer.roleDriver') : t('menuDrawer.rolePassenger');
 
   return (
-    <View style={StyleSheet.absoluteFill} pointerEvents="box-none">
+    <View style={[StyleSheet.absoluteFill, styles.container]} pointerEvents="box-none">
       <Animated.View
         style={[styles.overlay, { opacity: overlayAnim }]}
         pointerEvents={visible ? 'auto' : 'none'}
@@ -139,7 +139,7 @@ export default function MenuDrawer({ visible, onClose }: MenuDrawerProps) {
             <Text style={styles.langToggleText}>{lang === 'kk' ? 'ҚАЗ' : 'РУС'}</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={onClose} style={styles.closeButton} activeOpacity={0.7}>
-            <X size={22} color="rgba(255,255,255,0.7)" />
+            <X size={22} color="#000000" />
           </TouchableOpacity>
         </View>
 
@@ -159,12 +159,12 @@ export default function MenuDrawer({ visible, onClose }: MenuDrawerProps) {
             <Text style={styles.profileRole}>{roleLabel}</Text>
             <View style={styles.starsRow}>
               {[1, 2, 3, 4, 5].map((i) => (
-                <Star key={i} size={14} color="rgba(255,255,255,0.2)" fill="rgba(255,255,255,0.1)" />
+                <Star key={i} size={14} color="rgba(0, 0, 0, 0.55)" fill="rgba(0, 0, 0, 0.55)" />
               ))}
               <Text style={styles.ratingText}>0.0</Text>
             </View>
           </View>
-          <ChevronRight size={20} color="rgba(255,255,255,0.3)" />
+          <ChevronRight size={20} color="rgba(0, 0, 0, 0.55)" />
         </TouchableOpacity>
 
         <View style={styles.divider} />
@@ -183,7 +183,7 @@ export default function MenuDrawer({ visible, onClose }: MenuDrawerProps) {
                   <Icon size={20} color={item.color} />
                 </View>
                 <Text style={styles.menuItemLabel}>{t(`menuDrawer.${item.labelKey}`)}</Text>
-                <ChevronRight size={18} color="rgba(255,255,255,0.25)" />
+                <ChevronRight size={18} color="rgba(0, 0, 0, 0.55)" />
               </TouchableOpacity>
             );
           })}
@@ -199,8 +199,8 @@ export default function MenuDrawer({ visible, onClose }: MenuDrawerProps) {
               onPress={() => Linking.openURL('https://www.instagram.com/sattilik.app')}
               activeOpacity={0.75}
             >
-              <View style={[styles.socialIconWrap, { backgroundColor: 'rgba(225,48,108,0.15)' }]}>
-                <Instagram size={22} color="#E1306C" />
+              <View style={[styles.socialIconWrap, { backgroundColor: '#FFC800' }]}>
+                <Instagram size={22} color="#000000" />
               </View>
               <Text style={styles.socialName}>{t('menuDrawer.socialInstagram')}</Text>
             </TouchableOpacity>
@@ -210,8 +210,8 @@ export default function MenuDrawer({ visible, onClose }: MenuDrawerProps) {
               onPress={() => Linking.openURL('https://t.me/sattiliktaxionelinkapp')}
               activeOpacity={0.75}
             >
-              <View style={[styles.socialIconWrap, { backgroundColor: 'rgba(0,136,204,0.15)' }]}>
-                <Send size={22} color="#0088CC" />
+              <View style={[styles.socialIconWrap, { backgroundColor: '#0066FF' }]}>
+                <Send size={22} color="#FFFFFF" />
               </View>
               <Text style={styles.socialName}>{t('menuDrawer.socialTelegram')}</Text>
             </TouchableOpacity>
@@ -221,7 +221,7 @@ export default function MenuDrawer({ visible, onClose }: MenuDrawerProps) {
               onPress={() => Linking.openURL('https://sattiliktaxionelinkapp.lovable.app')}
               activeOpacity={0.75}
             >
-              <View style={[styles.socialIconWrap, { backgroundColor: 'rgba(37,99,235,0.15)' }]}>
+              <View style={[styles.socialIconWrap, { backgroundColor: '#0066FF' }]}>
                 <Image
                   source={require('@/assets/images/icon.png')}
                   style={styles.socialLogo}
@@ -237,9 +237,13 @@ export default function MenuDrawer({ visible, onClose }: MenuDrawerProps) {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    zIndex: 1000,
+    elevation: 1000,
+  },
   overlay: {
     ...StyleSheet.absoluteFill,
-    backgroundColor: 'rgba(0,0,0,0.55)',
+    backgroundColor: 'rgba(0, 0, 0, 0.45)',
   },
   drawer: {
     position: 'absolute',
@@ -247,9 +251,9 @@ const styles = StyleSheet.create({
     left: 0,
     bottom: 0,
     width: DRAWER_WIDTH,
-    backgroundColor: '#0D1E35',
+    backgroundColor: '#FFC800',
     borderRightWidth: 1,
-    borderRightColor: 'rgba(255,255,255,0.08)',
+    borderRightColor: '#D4AF37',
     paddingTop: 56,
     paddingBottom: 32,
   },
@@ -268,14 +272,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 8,
-    backgroundColor: 'rgba(255,255,255,0.08)',
+    backgroundColor: '#FFC800',
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.15)',
+    borderColor: '#D4AF37',
   },
   langToggleText: {
     fontSize: 12,
     fontFamily: 'Inter-SemiBold',
-    color: '#FFFFFF',
+    color: '#000000',
   },
   profileSection: {
     flexDirection: 'row',
@@ -290,7 +294,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     overflow: 'hidden',
     borderWidth: 2,
-    borderColor: '#FFD700',
+    borderColor: '#D4AF37',
     marginRight: 14,
   },
   avatarImg: {
@@ -303,13 +307,13 @@ const styles = StyleSheet.create({
   profileName: {
     fontSize: 17,
     fontFamily: 'Inter-Bold',
-    color: '#FFFFFF',
+    color: '#000000',
     marginBottom: 2,
   },
   profileRole: {
     fontSize: 13,
     fontFamily: 'Inter-Regular',
-    color: 'rgba(255,255,255,0.45)',
+    color: 'rgba(0, 0, 0, 0.55)',
     marginBottom: 6,
   },
   starsRow: {
@@ -320,12 +324,12 @@ const styles = StyleSheet.create({
   ratingText: {
     fontSize: 12,
     fontFamily: 'Inter-SemiBold',
-    color: 'rgba(255,255,255,0.35)',
+    color: 'rgba(0, 0, 0, 0.55)',
     marginLeft: 4,
   },
   divider: {
     height: 1,
-    backgroundColor: 'rgba(255,255,255,0.07)',
+    backgroundColor: '#FFC800',
     marginHorizontal: 20,
     marginBottom: 12,
   },
@@ -352,7 +356,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 15,
     fontFamily: 'Inter-SemiBold',
-    color: '#FFFFFF',
+    color: '#000000',
   },
   spacer: {
     flex: 1,
@@ -363,7 +367,7 @@ const styles = StyleSheet.create({
   socialLabel: {
     fontSize: 12,
     fontFamily: 'Inter-Regular',
-    color: 'rgba(255,255,255,0.35)',
+    color: 'rgba(0, 0, 0, 0.55)',
     marginBottom: 14,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
@@ -392,6 +396,6 @@ const styles = StyleSheet.create({
   socialName: {
     fontSize: 11,
     fontFamily: 'Inter-SemiBold',
-    color: 'rgba(255,255,255,0.5)',
+    color: '#000000',
   },
 });

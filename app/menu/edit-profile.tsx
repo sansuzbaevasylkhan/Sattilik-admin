@@ -273,7 +273,7 @@ export default function EditProfileScreen() {
 
       <View style={styles.header}>
         <TouchableOpacity onPress={handleCancel} activeOpacity={0.7}>
-          <ChevronLeft size={28} color="#FFFFFF" />
+          <ChevronLeft size={28} color="#000000" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>{t('menuEditProfile.headerTitle')}</Text>
         <View style={{ width: 28 }} />
@@ -297,7 +297,7 @@ export default function EditProfileScreen() {
             activeOpacity={0.8}
             onPress={handlePickAvatar}
           >
-            <Camera size={18} color="#FFFFFF" />
+            <Camera size={18} color="#000000" />
             <Text style={styles.pickPhotoText}>{t('menuEditProfile.uploadPhoto')}</Text>
           </TouchableOpacity>
         </View>
@@ -310,14 +310,14 @@ export default function EditProfileScreen() {
             value={firstName}
             onChangeText={setFirstName}
             placeholder={t('menuEditProfile.firstNamePlaceholder')}
-            placeholderTextColor="rgba(255,255,255,0.35)"
+            placeholderTextColor="rgba(0, 0, 0, 0.55)"
           />
           <TextInput
             style={styles.input}
             value={lastName}
             onChangeText={setLastName}
             placeholder={t('menuEditProfile.lastNamePlaceholder')}
-            placeholderTextColor="rgba(255,255,255,0.35)"
+            placeholderTextColor="rgba(0, 0, 0, 0.55)"
           />
         </View>
 
@@ -327,7 +327,7 @@ export default function EditProfileScreen() {
             value={phone}
             onChangeText={setPhone}
             placeholder={t('menuEditProfile.phonePlaceholder')}
-            placeholderTextColor="rgba(255,255,255,0.35)"
+            placeholderTextColor="rgba(0, 0, 0, 0.55)"
             keyboardType="phone-pad"
           />
         </View>
@@ -342,7 +342,7 @@ export default function EditProfileScreen() {
                 value={carName}
                 onChangeText={setCarName}
                 placeholder={t('menuEditProfile.carNamePlaceholder')}
-                placeholderTextColor="rgba(255,255,255,0.35)"
+                placeholderTextColor="rgba(0, 0, 0, 0.55)"
               />
             </View>
 
@@ -352,7 +352,7 @@ export default function EditProfileScreen() {
                 value={carNumber}
                 onChangeText={setCarNumber}
                 placeholder={t('menuEditProfile.carNumberPlaceholder')}
-                placeholderTextColor="rgba(255,255,255,0.35)"
+                placeholderTextColor="rgba(0, 0, 0, 0.55)"
                 autoCapitalize="characters"
               />
             </View>
@@ -363,7 +363,7 @@ export default function EditProfileScreen() {
                 value={carColor}
                 onChangeText={setCarColor}
                 placeholder={t('menuEditProfile.carColorPlaceholder')}
-                placeholderTextColor="rgba(255,255,255,0.35)"
+                placeholderTextColor="rgba(0, 0, 0, 0.55)"
               />
             </View>
           </>
@@ -416,7 +416,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 20,
     fontFamily: 'Inter-SemiBold',
-    color: '#FFFFFF',
+    color: '#000000',
   },
   scrollContent: {
     paddingHorizontal: 24,
@@ -452,14 +452,14 @@ const styles = StyleSheet.create({
     borderColor: GOLD_MEDIUM_BORDER,
   },
   pickPhotoText: {
-    color: '#FFFFFF',
+    color: '#000000',
     fontFamily: 'Inter-SemiBold',
     fontSize: 15,
   },
   sectionLabel: {
     fontSize: 12,
     fontFamily: 'Inter-SemiBold',
-    color: 'rgba(255,255,255,0.3)',
+    color: 'rgba(0, 0, 0, 0.55)',
     letterSpacing: 1,
     textTransform: 'uppercase',
     marginTop: 10,
@@ -471,10 +471,10 @@ const styles = StyleSheet.create({
     marginBottom: 14,
   },
   inputCard: {
-    backgroundColor: 'rgba(255,255,255,0.06)',
+    backgroundColor: '#FFC800',
     borderRadius: 18,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
+    borderColor: '#D4AF37',
     paddingHorizontal: 14,
     paddingVertical: 4,
     marginBottom: 14,
@@ -483,7 +483,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     fontFamily: 'Inter-Regular',
-    color: '#FFFFFF',
+    color: '#000000',
     paddingVertical: Platform.select({ ios: 14, android: 12, default: 12 }),
   },
   bottomButtons: {
@@ -501,11 +501,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   cancelBtn: {
-    backgroundColor: 'rgba(255,255,255,0.06)',
-    borderColor: 'rgba(255,255,255,0.12)',
+    backgroundColor: '#FFC800',
+    borderColor: '#D4AF37',
   },
   cancelText: {
-    color: 'rgba(255,255,255,0.7)',
+    color: '#000000',
   },
   saveBtn: {
     backgroundColor: GOLD_PRIMARY,
@@ -524,7 +524,7 @@ const styles = StyleSheet.create({
   hintText: {
     marginTop: 18,
     textAlign: 'center',
-    color: 'rgba(255,255,255,0.35)',
+    color: 'rgba(0, 0, 0, 0.55)',
     fontFamily: 'Inter-Regular',
     fontSize: 12,
   },

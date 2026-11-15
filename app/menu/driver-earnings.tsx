@@ -105,7 +105,7 @@ export default function DriverEarningsScreen() {
               y={chartHeight - (h.value / maxVal) * chartHeight - 3}
               width="6"
               height="6"
-              fill="#FFFFFF"
+              fill="#000000"
               rx="3"
             />
           ))}
@@ -120,7 +120,7 @@ export default function DriverEarningsScreen() {
 
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
-          <ChevronLeft size={28} color="#FFFFFF" />
+          <ChevronLeft size={28} color="#000000" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>{t('menuDriverEarnings.headerTitle') || 'Табыс статистикасы'}</Text>
         <View style={{ width: 28 }} />
@@ -188,7 +188,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 20,
     fontFamily: 'Inter-SemiBold',
-    color: '#FFFFFF',
+    color: '#000000',
   },
   backBtn: {
     padding: 4,
@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
   },
   periodTabs: {
     flexDirection: 'row',
-    backgroundColor: 'rgba(255,255,255,0.06)',
+    backgroundColor: '#FFC800',
     borderRadius: 16,
     padding: 4,
     marginBottom: 24,
@@ -214,12 +214,12 @@ const styles = StyleSheet.create({
     backgroundColor: GOLD_PRIMARY,
   },
   tabText: {
-    color: 'rgba(255,255,255,0.6)',
+    color: '#000000',
     fontFamily: 'Inter-Medium',
     fontSize: 14,
   },
   tabTextActive: {
-    color: BG_DARK,
+    color: '#FFFFFF',
     fontFamily: 'Inter-Bold',
   },
   statsGrid: {
@@ -231,17 +231,17 @@ const styles = StyleSheet.create({
   },
   statCard: {
     width: (width - 64) / 3,
-    backgroundColor: 'rgba(255,255,255,0.06)',
+    backgroundColor: '#FFC800',
     borderRadius: 20,
     padding: 16,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
+    borderColor: '#D4AF37',
     alignItems: 'center',
     justifyContent: 'center',
   },
   statLabel: {
     fontSize: 10,
-    color: 'rgba(255,255,255,0.5)',
+    color: '#000000',
     fontFamily: 'Inter-Regular',
     textAlign: 'center',
     marginTop: 8,
@@ -249,20 +249,20 @@ const styles = StyleSheet.create({
   },
   statValue: {
     fontSize: 16,
-    color: '#FFFFFF',
+    color: '#000000',
     fontFamily: 'Inter-Bold',
     textAlign: 'center',
   },
   chartCard: {
-    backgroundColor: 'rgba(255,255,255,0.06)',
+    backgroundColor: '#FFC800',
     borderRadius: 24,
     padding: 20,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
+    borderColor: '#D4AF37',
   },
   chartTitle: {
     fontSize: 16,
-    color: '#FFFFFF',
+    color: '#000000',
     fontFamily: 'Inter-SemiBold',
     marginBottom: 20,
     textAlign: 'center',
@@ -278,7 +278,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   emptyChartText: {
-    color: 'rgba(255,255,255,0.4)',
+    color: 'rgba(0, 0, 0, 0.55)',
     fontFamily: 'Inter-Regular',
   },
 });

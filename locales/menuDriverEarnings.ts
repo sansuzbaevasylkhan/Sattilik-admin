@@ -1,6 +1,10 @@
 export const menuDriverEarnings = {
   kk: {
     headerTitle: 'Жолаушы төлеген жол ақысы',
+    totalEarnings: 'Барлық табыс',
+    tripCount: 'Сапар саны',
+    avgRating: 'Рейтинг',
+    earningsGraph: 'Табыс динамикасы',
     pendingLabel: 'Шығаруға дайын',
     withdrawButton: 'Ақшаны аударып алу',
     withdrawing: 'Аударылуда...',
@@ -18,6 +22,10 @@ export const menuDriverEarnings = {
   },
   ru: {
     headerTitle: 'Оплаты от пассажиров',
+    totalEarnings: 'Общий доход',
+    tripCount: 'Количество поездок',
+    avgRating: 'Рейтинг',
+    earningsGraph: 'Динамика дохода',
     pendingLabel: 'Готово к выводу',
     withdrawButton: 'Вывести деньги',
     withdrawing: 'Вывод...',

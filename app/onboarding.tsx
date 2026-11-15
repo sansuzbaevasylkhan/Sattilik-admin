@@ -74,7 +74,7 @@ export default function OnboardingScreen() {
   return (
     <View style={styles.container}>
       <LinearGradient
-        colors={['#050505', '#151515']}
+        colors={['#FFD700', '#FFC800']}
         style={styles.background}
       />
 
@@ -93,7 +93,7 @@ export default function OnboardingScreen() {
             },
           ]}
         >
-          <IconComponent size={64} color="#FFFFFF" strokeWidth={1.5} />
+          <IconComponent size={64} color="#000000" strokeWidth={1.5} />
         </Animated.View>
 
         <Animated.View style={{ opacity: fadeAnim }}>
@@ -121,7 +121,7 @@ export default function OnboardingScreen() {
           activeOpacity={0.8}
         >
           <LinearGradient
-            colors={['#FFD700', '#F5B800']}
+            colors={['#0066FF', '#0052CC']}
             style={styles.nextButtonGradient}
           >
             <Text style={styles.nextButtonText}>{t('onboarding.next')}</Text>
@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   skipText: {
-    color: '#A0A0A0',
+    color: '#000000',
     fontSize: 16,
     fontFamily: 'Inter-Regular',
   },
@@ -159,24 +159,24 @@ const styles = StyleSheet.create({
     width: 140,
     height: 140,
     borderRadius: 70,
-    backgroundColor: '#151515',
+    backgroundColor: '#FFC800',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 40,
     borderWidth: 2,
-    borderColor: '#FFD700',
+    borderColor: '#D4AF37',
   },
   title: {
     fontSize: 28,
     fontFamily: 'Inter-Bold',
-    color: '#FFFFFF',
+    color: '#000000',
     textAlign: 'center',
     marginBottom: 16,
   },
   description: {
     fontSize: 16,
     fontFamily: 'Inter-Regular',
-    color: '#A0A0A0',
+    color: '#000000',
     textAlign: 'center',
     lineHeight: 24,
     maxWidth: 300,
@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: 'rgba(255,255,255,0.3)',
+    backgroundColor: '#FFC800',
     marginHorizontal: 6,
   },
   activeDot: {
@@ -213,7 +213,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   nextButtonText: {
-    color: '#000000',
+    color: '#FFFFFF',
     fontSize: 18,
     fontFamily: 'Inter-Bold',
   },

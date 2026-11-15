@@ -44,8 +44,8 @@ export default function GuideChatScreen() {
       {
         id: 1,
         icon: User,
-        color: '#2563EB',
-        bg: 'rgba(37,99,235,0.12)',
+        color: '#FFFFFF',
+        bg: '#0066FF',
         title: t('menuGuideChat.section1Title'),
         items: [
           t('menuGuideChat.section1Item1'),
@@ -58,8 +58,8 @@ export default function GuideChatScreen() {
       {
         id: 2,
         icon: Car,
-        color: '#22C55E',
-        bg: 'rgba(34,197,94,0.12)',
+        color: '#000000',
+        bg: '#FFC800',
         title: t('menuGuideChat.section2Title'),
         items: [
           t('menuGuideChat.section2Item1'),
@@ -72,8 +72,8 @@ export default function GuideChatScreen() {
       {
         id: 3,
         icon: CreditCard,
-        color: '#F59E0B',
-        bg: 'rgba(245,158,11,0.12)',
+        color: '#000000',
+        bg: '#FFD700',
         title: t('menuGuideChat.section3Title'),
         items: [
           t('menuGuideChat.section3Item1'),
@@ -84,8 +84,8 @@ export default function GuideChatScreen() {
       {
         id: 4,
         icon: Star,
-        color: '#E1306C',
-        bg: 'rgba(225,48,108,0.12)',
+        color: '#000000',
+        bg: '#FFC800',
         title: t('menuGuideChat.section4Title'),
         items: [
           t('menuGuideChat.section4Item1'),
@@ -150,17 +150,17 @@ export default function GuideChatScreen() {
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
-      <LinearGradient colors={['#B8860B', '#DAA520', '#FFD700']} style={styles.bg} />
+      <LinearGradient colors={['#FFD700', '#FFC800']} style={styles.bg} />
 
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7}>
-          <ChevronLeft size={28} color="#FFFFFF" />
+          <ChevronLeft size={28} color="#000000" />
         </TouchableOpacity>
 
         <View style={styles.headerCenter}>
           <Text style={styles.headerTitle}>{t('menuGuideChat.headerTitle')}</Text>
           <View style={styles.headerSubRow}>
-            <MessageCircle size={16} color="rgba(255,255,255,0.45)" />
+            <MessageCircle size={16} color="rgba(0, 0, 0, 0.55)" />
             <Text style={styles.headerSubtitle}>{t('menuGuideChat.headerSubtitle')}</Text>
           </View>
         </View>
@@ -193,9 +193,9 @@ export default function GuideChatScreen() {
                 </View>
                 <Text style={styles.sectionTitle}>{section.title}</Text>
                 {isOpen ? (
-                  <ChevronUp size={18} color="rgba(255,255,255,0.4)" />
+                  <ChevronUp size={18} color="rgba(0, 0, 0, 0.55)" />
                 ) : (
-                  <ChevronDown size={18} color="rgba(255,255,255,0.4)" />
+                  <ChevronDown size={18} color="rgba(0, 0, 0, 0.55)" />
                 )}
               </TouchableOpacity>
 
@@ -266,7 +266,7 @@ export default function GuideChatScreen() {
               value={input}
               onChangeText={setInput}
               placeholder={t('menuGuideChat.inputPlaceholder')}
-              placeholderTextColor="rgba(255,255,255,0.35)"
+              placeholderTextColor="rgba(0, 0, 0, 0.55)"
               style={styles.input}
               multiline
             />
@@ -294,27 +294,27 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   headerCenter: { alignItems: 'center', flex: 1 },
-  headerTitle: { fontSize: 18, fontFamily: 'Inter-SemiBold', color: '#FFFFFF' },
+  headerTitle: { fontSize: 18, fontFamily: 'Inter-SemiBold', color: '#000000' },
   headerSubRow: { flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 4 },
   headerSubtitle: {
     fontSize: 12,
     fontFamily: 'Inter-Regular',
-    color: 'rgba(255,255,255,0.45)',
+    color: 'rgba(0, 0, 0, 0.55)',
   },
   scroll: { flex: 1 },
   scrollContent: { paddingHorizontal: 24, paddingBottom: 24 },
   intro: {
     fontSize: 14,
     fontFamily: 'Inter-Regular',
-    color: 'rgba(255,255,255,0.6)',
+    color: '#000000',
     lineHeight: 20,
     marginBottom: 18,
   },
   sectionCard: {
-    backgroundColor: 'rgba(255,255,255,0.06)',
+    backgroundColor: '#FFC800',
     borderRadius: 18,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
+    borderColor: '#D4AF37',
     marginBottom: 12,
     overflow: 'hidden',
   },
@@ -359,24 +359,24 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 14,
     fontFamily: 'Inter-Regular',
-    color: 'rgba(255,255,255,0.75)',
+    color: '#000000',
     lineHeight: 20,
   },
   sectionBody: {
     paddingHorizontal: 16,
     paddingBottom: 16,
     borderTopWidth: 1,
-    borderTopColor: 'rgba(255,255,255,0.07)',
+    borderTopColor: '#D4AF37',
   },
   chatCard: {
     marginTop: 18,
-    backgroundColor: 'rgba(255,255,255,0.06)',
+    backgroundColor: '#FFC800',
     borderRadius: 18,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
+    borderColor: '#D4AF37',
     padding: 16,
   },
-  chatTitle: { fontSize: 16, fontFamily: 'Inter-SemiBold', color: '#FFFFFF', marginBottom: 12 },
+  chatTitle: { fontSize: 16, fontFamily: 'Inter-SemiBold', color: '#000000', marginBottom: 12 },
   quickHintsRow: {
     flexDirection: 'row',
     gap: 8,
@@ -384,9 +384,9 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   quickHint: {
-    backgroundColor: 'rgba(37,99,235,0.14)',
+    backgroundColor: '#0066FF',
     borderWidth: 1,
-    borderColor: 'rgba(37,99,235,0.35)',
+    borderColor: '#D4AF37',
     paddingHorizontal: 10,
     paddingVertical: 8,
     borderRadius: 999,
@@ -416,16 +416,16 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   bubbleUser: {
-    backgroundColor: 'rgba(37,99,235,0.25)',
-    borderColor: 'rgba(37,99,235,0.55)',
+    backgroundColor: '#0066FF',
+    borderColor: '#D4AF37',
   },
   bubbleBot: {
-    backgroundColor: 'rgba(255,255,255,0.06)',
-    borderColor: 'rgba(255,255,255,0.12)',
+    backgroundColor: '#FFC800',
+    borderColor: '#D4AF37',
   },
   bubbleText: { fontFamily: 'Inter-Regular', fontSize: 13, lineHeight: 18 },
   bubbleTextUser: { color: '#FFFFFF' },
-  bubbleTextBot: { color: 'rgba(255,255,255,0.8)' },
+  bubbleTextBot: { color: '#000000' },
   inputRow: {
     flexDirection: 'row',
     gap: 10,
@@ -439,10 +439,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 10,
     borderRadius: 14,
-    backgroundColor: 'rgba(255,255,255,0.06)',
+    backgroundColor: '#FFC800',
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
-    color: '#FFFFFF',
+    borderColor: '#D4AF37',
+    color: '#000000',
     fontFamily: 'Inter-Regular',
     fontSize: 14,
   },
@@ -450,7 +450,7 @@ const styles = StyleSheet.create({
     width: 46,
     height: 46,
     borderRadius: 16,
-    backgroundColor: '#2563EB',
+    backgroundColor: '#0066FF',
     justifyContent: 'center',
     alignItems: 'center',
   },

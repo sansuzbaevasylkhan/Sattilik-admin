@@ -78,7 +78,7 @@ export default function RootLayout() {
           <Stack.Screen name="menu/driver-earnings" />
           <Stack.Screen name="+not-found" />
         </Stack>
-        <StatusBar style="light" />
+        <StatusBar style="dark" />
       </NetworkProvider>
     </GlobalErrorBoundary>
   );

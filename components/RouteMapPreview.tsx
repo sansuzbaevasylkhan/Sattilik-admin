@@ -113,7 +113,7 @@ export default function RouteMapPreview({
         {pickup && (
           <Marker lngLat={[pickup.lng, pickup.lat]} anchor="bottom">
             <View style={styles.pinOuter}>
-              <View style={[styles.dot, { backgroundColor: '#22C55E' }]} />
+              <View style={[styles.dot, { backgroundColor: '#FFC800' }]} />
             </View>
           </Marker>
         )}
@@ -121,7 +121,7 @@ export default function RouteMapPreview({
         {dropoff && (
           <Marker lngLat={[dropoff.lng, dropoff.lat]} anchor="bottom">
             <View style={styles.pinOuter}>
-              <View style={[styles.dot, { backgroundColor: '#EF4444' }]} />
+              <View style={[styles.dot, { backgroundColor: '#FFC800' }]} />
             </View>
           </Marker>
         )}
@@ -129,7 +129,7 @@ export default function RouteMapPreview({
         {driver && (
           <Marker lngLat={[driver.lng, driver.lat]} anchor="center">
             <View style={[styles.driverMarker, { transform: [{ rotate: `${driver.bearing || 0}deg` }] }]}>
-              <Car size={16} color="#0A1628" />
+              <Car size={16} color="#000000" />
             </View>
           </Marker>
         )}
@@ -161,16 +161,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    backgroundColor: 'rgba(0,0,0,0.6)',
+    backgroundColor: '#FFD700',
     backdropFilter: 'blur(10px)',
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.2)',
+    borderColor: '#D4AF37',
   },
   styleText: {
-    color: '#FFFFFF',
+    color: '#000000',
     fontSize: 12,
     fontFamily: 'Inter-SemiBold',
   },
@@ -178,10 +178,10 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     borderRadius: 10,
-    backgroundColor: 'rgba(255,255,255,0.9)',
+    backgroundColor: '#FFC800',
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#000',
+    shadowColor: 'rgba(0, 0, 0, 0.18)',
     shadowOpacity: 0.25,
     shadowRadius: 3,
     elevation: 3,
@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
     height: 12,
     borderRadius: 6,
     borderWidth: 2,
-    borderColor: '#FFFFFF',
+    borderColor: '#D4AF37',
   },
   driverMarker: {
     width: 28,
@@ -201,6 +201,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 2,
-    borderColor: '#FFFFFF',
+    borderColor: '#D4AF37',
   },
 });

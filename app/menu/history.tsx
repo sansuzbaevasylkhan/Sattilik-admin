@@ -67,11 +67,11 @@ export default function HistoryScreen() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient colors={['#B8860B', '#DAA520', '#FFD700']} style={styles.bg} />
+      <LinearGradient colors={['#FFD700', '#FFC800']} style={styles.bg} />
 
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7}>
-          <ChevronLeft size={28} color="#FFFFFF" />
+          <ChevronLeft size={28} color="#000000" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>{t('menuHistory.headerTitle')}</Text>
         <View style={{ width: 28 }} />
@@ -79,10 +79,10 @@ export default function HistoryScreen() {
 
       <ScrollView style={styles.content} contentContainerStyle={styles.scrollContent}>
         {loading ? (
-          <ActivityIndicator color="#2563EB" size="large" style={{ marginTop: 60 }} />
+          <ActivityIndicator color="#0066FF" size="large" style={{ marginTop: 60 }} />
         ) : orders.length === 0 ? (
           <View style={styles.emptyState}>
-            <Clock size={56} color="rgba(255,255,255,0.15)" />
+            <Clock size={56} color="rgba(0, 0, 0, 0.55)" />
             <Text style={styles.emptyTitle}>{t('menuHistory.emptyTitle')}</Text>
             <Text style={styles.emptySubtitle}>{t('menuHistory.emptySubtitle')}</Text>
           </View>
@@ -90,19 +90,19 @@ export default function HistoryScreen() {
           orders.map((order) => (
             <View key={order.id} style={styles.orderCard}>
               <View style={styles.orderCardHeader}>
-                <CheckCircle size={16} color="#22C55E" />
+                <CheckCircle size={16} color="#000000" />
                 <Text style={styles.orderDate}>{formatDate(order.created_at)}</Text>
                 <Text style={styles.orderPrice}>{order.price} ₸</Text>
               </View>
               <View style={styles.routeRow}>
-                <MapPin size={14} color="#22C55E" />
+                <MapPin size={14} color="#000000" />
                 <Text style={styles.routeText} numberOfLines={1}>{order.pickup_address}</Text>
               </View>
               <View style={styles.routeConnectorRow}>
                 <View style={styles.routeConnector} />
               </View>
               <View style={styles.routeRow}>
-                <Navigation size={14} color="#EF4444" />
+                <Navigation size={14} color="#000000" />
                 <Text style={styles.routeText} numberOfLines={1}>{order.dropoff_address}</Text>
               </View>
               <View style={styles.orderMeta}>
@@ -127,18 +127,18 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 16,
   },
-  headerTitle: { fontSize: 20, fontFamily: 'Inter-SemiBold', color: '#FFFFFF' },
+  headerTitle: { fontSize: 20, fontFamily: 'Inter-SemiBold', color: '#000000' },
   content: { flex: 1 },
   scrollContent: { paddingHorizontal: 24, paddingBottom: 40 },
   emptyState: { alignItems: 'center', paddingTop: 80 },
-  emptyTitle: { fontSize: 18, fontFamily: 'Inter-SemiBold', color: 'rgba(255,255,255,0.4)', marginTop: 16 },
-  emptySubtitle: { fontSize: 14, fontFamily: 'Inter-Regular', color: 'rgba(255,255,255,0.25)', marginTop: 6, textAlign: 'center' },
+  emptyTitle: { fontSize: 18, fontFamily: 'Inter-SemiBold', color: 'rgba(0, 0, 0, 0.55)', marginTop: 16 },
+  emptySubtitle: { fontSize: 14, fontFamily: 'Inter-Regular', color: 'rgba(0, 0, 0, 0.55)', marginTop: 6, textAlign: 'center' },
   orderCard: {
-    backgroundColor: 'rgba(255,255,255,0.06)',
+    backgroundColor: '#FFC800',
     borderRadius: 18,
     padding: 16,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
+    borderColor: '#D4AF37',
     marginBottom: 12,
   },
   orderCardHeader: {
@@ -147,12 +147,12 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     gap: 6,
   },
-  orderDate: { flex: 1, fontSize: 13, fontFamily: 'Inter-Regular', color: 'rgba(255,255,255,0.5)', marginLeft: 4 },
-  orderPrice: { fontSize: 16, fontFamily: 'Inter-Bold', color: '#2563EB' },
+  orderDate: { flex: 1, fontSize: 13, fontFamily: 'Inter-Regular', color: '#000000', marginLeft: 4 },
+  orderPrice: { fontSize: 16, fontFamily: 'Inter-Bold', color: '#0066FF' },
   routeRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   routeConnectorRow: { paddingLeft: 7, marginVertical: 4 },
-  routeConnector: { width: 2, height: 16, backgroundColor: 'rgba(255,255,255,0.15)', borderRadius: 1 },
-  routeText: { flex: 1, fontSize: 14, fontFamily: 'Inter-SemiBold', color: '#FFFFFF' },
-  orderMeta: { marginTop: 10, paddingTop: 10, borderTopWidth: 1, borderTopColor: 'rgba(255,255,255,0.07)' },
-  distanceText: { fontSize: 12, fontFamily: 'Inter-Regular', color: 'rgba(255,255,255,0.35)' },
+  routeConnector: { width: 2, height: 16, backgroundColor: '#FFC800', borderRadius: 1 },
+  routeText: { flex: 1, fontSize: 14, fontFamily: 'Inter-SemiBold', color: '#000000' },
+  orderMeta: { marginTop: 10, paddingTop: 10, borderTopWidth: 1, borderTopColor: '#D4AF37' },
+  distanceText: { fontSize: 12, fontFamily: 'Inter-Regular', color: 'rgba(0, 0, 0, 0.55)' },
 });

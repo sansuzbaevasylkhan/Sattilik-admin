@@ -59,7 +59,7 @@ export default function SettingsScreen() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient colors={['#050505', '#151515']} style={styles.bg} />
+      <LinearGradient colors={['#FFD700', '#FFC800']} style={styles.bg} />
 
       {notifications && (
         <View style={styles.topBanner} pointerEvents="none">
@@ -69,7 +69,7 @@ export default function SettingsScreen() {
 
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7}>
-          <ChevronLeft size={28} color="#FFFFFF" />
+          <ChevronLeft size={28} color="#000000" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>{t('menuSettings.settingsTitle')}</Text>
         <View style={{ width: 28 }} />
@@ -79,14 +79,14 @@ export default function SettingsScreen() {
         <Text style={styles.sectionLabel}>{t('menuSettings.sectionNotifications')}</Text>
         <View style={styles.settingsCard}>
           <View style={styles.settingRow}>
-            <View style={[styles.settingIcon, { backgroundColor: 'rgba(255, 215, 0, 0.12)' }]}>
-              <Bell size={18} color="#FFD700" />
+            <View style={[styles.settingIcon, { backgroundColor: '#FFD700' }]}>
+              <Bell size={18} color="#000000" />
             </View>
             <Text style={styles.settingText}>{t('menuSettings.notifications')}</Text>
             <Switch
               value={notifications}
               onValueChange={handleToggleNotifications}
-              trackColor={{ false: 'rgba(255,255,255,0.1)', true: '#FFD700' }}
+              trackColor={{ false: 'rgba(0, 0, 0, 0.55)', true: '#000000' }}
               thumbColor="#FFFFFF"
             />
           </View>
@@ -94,8 +94,8 @@ export default function SettingsScreen() {
           <View style={styles.rowDivider} />
 
           <View style={styles.settingRow}>
-            <View style={[styles.settingIcon, { backgroundColor: 'rgba(245,158,11,0.12)' }]}>
-              <Bell size={18} color="#F5B800" />
+            <View style={[styles.settingIcon, { backgroundColor: '#FFD700' }]}>
+              <Bell size={18} color="#000000" />
             </View>
             <Text style={styles.settingText}>{t('menuSettings.sound')}</Text>
             <Switch
@@ -106,7 +106,7 @@ export default function SettingsScreen() {
                   await triggerVibration();
                 }
               }}
-              trackColor={{ false: 'rgba(255,255,255,0.1)', true: '#FFD700' }}
+              trackColor={{ false: 'rgba(0, 0, 0, 0.55)', true: '#000000' }}
               thumbColor="#FFFFFF"
             />
           </View>
@@ -119,8 +119,8 @@ export default function SettingsScreen() {
             activeOpacity={0.7}
             onPress={() => setLang((p) => (p === 'kk' ? 'ru' : 'kk'))}
           >
-            <View style={[styles.settingIcon, { backgroundColor: 'rgba(34,197,94,0.12)' }]}>
-              <Globe size={18} color="#22C55E" />
+            <View style={[styles.settingIcon, { backgroundColor: '#FFC800' }]}>
+              <Globe size={18} color="#000000" />
             </View>
             <Text style={styles.settingText}>{t('menuSettings.language')}</Text>
             <Text style={styles.settingValue}>{LanguageValue}</Text>
@@ -134,12 +134,12 @@ export default function SettingsScreen() {
               activeOpacity={0.7}
               onPress={() => setThemeExpanded((v) => !v)}
             >
-              <View style={[styles.settingIcon, { backgroundColor: 'rgba(148,163,184,0.12)' }]}>
-                {themeMode === 'day' ? <Sun size={18} color="#94A3B8" /> : <Moon size={18} color="#94A3B8" />}
+              <View style={[styles.settingIcon, { backgroundColor: '#FFC800' }]}>
+                {themeMode === 'day' ? <Sun size={18} color="#000000" /> : <Moon size={18} color="#000000" />}
               </View>
               <Text style={styles.settingText}>{t('menuSettings.theme')}</Text>
               <Text style={styles.settingValue}>{ThemeValue}</Text>
-              <ChevronDown size={18} color="rgba(255,255,255,0.35)" style={themeExpanded ? styles.chevUp : undefined} />
+              <ChevronDown size={18} color="rgba(0, 0, 0, 0.55)" style={themeExpanded ? styles.chevUp : undefined} />
             </TouchableOpacity>
 
             {themeExpanded && (
@@ -172,16 +172,16 @@ export default function SettingsScreen() {
           <View style={styles.rowDivider} />
 
           <TouchableOpacity style={styles.settingRow} activeOpacity={0.7}>
-            <View style={[styles.settingIcon, { backgroundColor: 'rgba(148,163,184,0.12)' }]}>
-              <Shield size={18} color="#94A3B8" />
+            <View style={[styles.settingIcon, { backgroundColor: '#FFC800' }]}>
+              <Shield size={18} color="#000000" />
             </View>
             <Text style={styles.settingText}>{t('menuSettings.privacy')}</Text>
           </TouchableOpacity>
         </View>
 
         <TouchableOpacity style={styles.logoutButton} onPress={handleLogout} activeOpacity={0.8}>
-          <View style={[styles.settingIcon, { backgroundColor: 'rgba(239,68,68,0.12)' }]}>
-            <LogOut size={18} color="#EF4444" />
+          <View style={[styles.settingIcon, { backgroundColor: '#FFC800' }]}>
+            <LogOut size={18} color="#000000" />
           </View>
           <Text style={styles.logoutText}>{t('menuSettings.logout')}</Text>
         </TouchableOpacity>
@@ -199,15 +199,15 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     zIndex: 50,
-    backgroundColor: '#050505',
+    backgroundColor: '#FFD700',
     paddingTop: 56,
     paddingBottom: 12,
     alignItems: 'center',
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(255,255,255,0.15)',
+    borderBottomColor: '#D4AF37',
   },
   topBannerTitle: {
-    color: '#FFFFFF',
+    color: '#000000',
     fontFamily: 'Inter-SemiBold',
     fontSize: 14,
   },
@@ -219,21 +219,21 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 24,
   },
-  headerTitle: { fontSize: 20, fontFamily: 'Inter-SemiBold', color: '#FFFFFF' },
+  headerTitle: { fontSize: 20, fontFamily: 'Inter-SemiBold', color: '#000000' },
   content: { paddingHorizontal: 24, paddingTop: 0 },
   sectionLabel: {
     fontSize: 11,
     fontFamily: 'Inter-SemiBold',
-    color: '#A0A0A0',
+    color: '#000000',
     letterSpacing: 1,
     textTransform: 'uppercase',
     marginBottom: 10,
   },
   settingsCard: {
-    backgroundColor: '#151515',
+    backgroundColor: '#FFC800',
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: '#333333',
+    borderColor: '#D4AF37',
     overflow: 'hidden',
   },
   settingRow: {
@@ -249,9 +249,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginRight: 14,
   },
-  settingText: { flex: 1, fontSize: 15, fontFamily: 'Inter-SemiBold', color: '#FFFFFF' },
-  settingValue: { fontSize: 14, fontFamily: 'Inter-Regular', color: '#A0A0A0' },
-  rowDivider: { height: 1, backgroundColor: 'rgba(255,255,255,0.06)', marginLeft: 68 },
+  settingText: { flex: 1, fontSize: 15, fontFamily: 'Inter-SemiBold', color: '#000000' },
+  settingValue: { fontSize: 14, fontFamily: 'Inter-Regular', color: '#000000' },
+  rowDivider: { height: 1, backgroundColor: '#FFC800', marginLeft: 68 },
   themeExpandedArea: {
     paddingLeft: 68,
     paddingRight: 16,
@@ -265,11 +265,11 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     backgroundColor: 'rgba(255,255,255,0.04)',
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.08)',
+    borderColor: '#D4AF37',
   },
   themeOptionActive: {
-    backgroundColor: '#F5B800',
-    borderColor: '#FFD700',
+    backgroundColor: '#FFD700',
+    borderColor: '#D4AF37',
   },
   themeOptionText: {
     fontFamily: 'Inter-SemiBold',
@@ -281,13 +281,13 @@ const styles = StyleSheet.create({
   logoutButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(239,68,68,0.08)',
+    backgroundColor: '#FFC800',
     borderRadius: 20,
     padding: 16,
     borderWidth: 1,
-    borderColor: 'rgba(239,68,68,0.2)',
+    borderColor: '#D4AF37',
     marginTop: 32,
   },
-  logoutText: { fontSize: 15, fontFamily: 'Inter-SemiBold', color: '#EF4444' },
+  logoutText: { fontSize: 15, fontFamily: 'Inter-SemiBold', color: '#000000' },
 });
 

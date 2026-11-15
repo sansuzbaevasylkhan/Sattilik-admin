@@ -23,8 +23,8 @@ export default function StarRating({
     <View style={styles.row}>
       {stars.map((s) => {
         const filled = s <= value;
-        const color = filled ? '#EAB308' : 'rgba(255,255,255,0.25)';
-        const fill = filled ? '#F59E0B' : 'rgba(255,255,255,0)';
+        const color = filled ? '#000000' : 'rgba(0, 0, 0, 0.55)';
+        const fill = filled ? '#000000' : 'rgba(255,255,255,0)';
 
         return (
           <TouchableOpacity

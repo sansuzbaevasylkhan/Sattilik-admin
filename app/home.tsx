@@ -72,7 +72,7 @@ export default function HomeScreen() {
   return (
     <View style={styles.container}>
       <LinearGradient
-        colors={['#050505', '#151515']}
+        colors={['#FFD700', '#FFC800']}
         style={styles.background}
       />
 
@@ -83,7 +83,7 @@ export default function HomeScreen() {
           activeOpacity={0.8}
         >
           <Text style={styles.langButtonText}>{LANG_LABEL[lang]}</Text>
-          <ChevronDown size={18} color="#FFFFFF" />
+          <ChevronDown size={18} color="#000000" />
         </TouchableOpacity>
 
         {langMenuOpen && (
@@ -99,7 +99,7 @@ export default function HomeScreen() {
                 activeOpacity={0.7}
               >
                 <Text style={styles.langMenuItemText}>{LANG_LABEL[code]}</Text>
-                {lang === code && <Check size={16} color="#FFD700" />}
+                {lang === code && <Check size={16} color="#000000" />}
               </TouchableOpacity>
             ))}
           </View>
@@ -130,8 +130,8 @@ export default function HomeScreen() {
           onPress={() => goTo('passenger')}
           activeOpacity={0.85}
         >
-          <LinearGradient colors={['#FFD700', '#F5B800']} style={styles.roleButtonGradient}>
-            <User size={24} color="#000000" style={{ marginBottom: 6 }} />
+          <LinearGradient colors={['#0066FF', '#0052CC']} style={styles.roleButtonGradient}>
+            <User size={24} color="#FFFFFF" style={{ marginBottom: 6 }} />
             <Text style={styles.roleButtonText}>{t('home.passenger')}</Text>
           </LinearGradient>
         </TouchableOpacity>
@@ -141,8 +141,8 @@ export default function HomeScreen() {
           onPress={() => goTo('driver')}
           activeOpacity={0.85}
         >
-          <LinearGradient colors={['#FFD700', '#F5B800']} style={styles.roleButtonGradient}>
-            <Car size={24} color="#000000" style={{ marginBottom: 6 }} />
+          <LinearGradient colors={['#0066FF', '#0052CC']} style={styles.roleButtonGradient}>
+            <Car size={24} color="#FFFFFF" style={{ marginBottom: 6 }} />
             <Text style={styles.roleButtonText}>{t('home.driver')}</Text>
           </LinearGradient>
         </TouchableOpacity>
@@ -163,25 +163,25 @@ const styles = StyleSheet.create({
   langButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,0.1)',
+    backgroundColor: '#FFC800',
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.2)',
+    borderColor: '#D4AF37',
     borderRadius: 12,
     paddingHorizontal: 14,
     paddingVertical: 8,
     gap: 6,
   },
   langButtonText: {
-    color: '#FFFFFF',
+    color: '#000000',
     fontSize: 14,
     fontFamily: 'Inter-SemiBold',
   },
   langMenu: {
     marginTop: 8,
-    backgroundColor: '#151515',
+    backgroundColor: '#FFC800',
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.15)',
+    borderColor: '#D4AF37',
     overflow: 'hidden',
     minWidth: 140,
   },
@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   langMenuItemText: {
-    color: '#FFFFFF',
+    color: '#000000',
     fontSize: 14,
     fontFamily: 'Inter-Regular',
   },
@@ -217,13 +217,13 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 30,
     fontFamily: 'Inter-Bold',
-    color: '#FFFFFF',
+    color: '#000000',
     marginBottom: 10,
   },
   subtitle: {
     fontSize: 16,
     fontFamily: 'Inter-Regular',
-    color: '#A0A0A0',
+    color: '#000000',
     textAlign: 'center',
   },
   buttonsRow: {
@@ -244,7 +244,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   roleButtonText: {
-    color: '#000000',
+    color: '#FFFFFF',
     fontSize: 17,
     fontFamily: 'Inter-Bold',
   },
