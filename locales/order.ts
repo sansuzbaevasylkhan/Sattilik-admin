@@ -21,6 +21,8 @@ export const order = {
     errorDropoffRequired: 'Баратын жеріңізді көрсетіңіз',
     errorOrderFailed: 'Тапсырыс берілмеді',
     errorNoDriverPhone: 'Жүргізуші нөмірі көрсетілмеген',
+    successTitle: 'Сәтті!',
+    successOrderCreated: 'Тапсырыс сәтті берілді',
   },
   ru: {
     headerTitleForm: 'Оформить заказ',
@@ -44,5 +46,7 @@ export const order = {
     errorDropoffRequired: 'Укажите пункт назначения',
     errorOrderFailed: 'Не удалось оформить заказ',
     errorNoDriverPhone: 'Номер водителя не указан',
+    successTitle: 'Успешно!',
+    successOrderCreated: 'Заказ успешно оформлен',
   },
 };

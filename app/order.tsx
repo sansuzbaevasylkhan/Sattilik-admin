@@ -288,14 +288,22 @@ export default function OrderScreen() {
           }),
         });
 
-        if (!res.ok) throw new Error('Order create failed');
+        if (!res.ok) {
+          const errorBody = await res.text();
+          console.error('Order create failed:', res.status, errorBody);
+          throw new Error(`Order create failed: ${res.status}`);
+        }
 
         const orders: Order[] = await res.json();
-        if (orders && orders.length > 0) {
-          setCurrentOrder(orders[0]);
-          setOrderStatus('searching');
-          invokePushEvent('new_order', { orderId: orders[0].id });
+        if (!orders || orders.length === 0) {
+          console.error('Order create returned no row');
+          throw new Error('Order create returned no row');
         }
+
+        setCurrentOrder(orders[0]);
+        setOrderStatus('searching');
+        Alert.alert(t('order.successTitle'), t('order.successOrderCreated'));
+        invokePushEvent('new_order', { orderId: orders[0].id });
       } catch (e) {
         Alert.alert(t('common.error'), t('order.errorOrderFailed'));
         console.error(e);
