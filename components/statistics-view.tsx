@@ -29,10 +29,10 @@ interface Props {
 type Period = 'day' | 'week' | 'month' | 'year'
 
 const COLORS = {
-  line: '#a78bfa',
-  bar: '#34d399',
-  grid: '#27272a',
-  fg: '#a1a1aa',
+  line: '#0066FF',
+  bar: '#0052CC',
+  grid: 'rgba(0, 0, 0, 0.12)',
+  fg: 'rgba(0, 0, 0, 0.6)',
 }
 
 function rangeFor(period: Period): { from: Date; to: Date; bucket: 'hour' | 'day' | 'month' } {
@@ -142,9 +142,10 @@ export function StatisticsView({ initialOrders }: Props) {
                   <YAxis stroke={COLORS.fg} fontSize={11} allowDecimals={false} />
                   <Tooltip
                     contentStyle={{
-                      background: '#18181b',
-                      border: '1px solid #27272a',
+                      background: '#FFC800',
+                      border: '1px solid #D4AF37',
                       borderRadius: 6,
+                      color: '#000000',
                     }}
                   />
                   <Line
@@ -173,9 +174,10 @@ export function StatisticsView({ initialOrders }: Props) {
                   <YAxis stroke={COLORS.fg} fontSize={11} />
                   <Tooltip
                     contentStyle={{
-                      background: '#18181b',
-                      border: '1px solid #27272a',
+                      background: '#FFC800',
+                      border: '1px solid #D4AF37',
                       borderRadius: 6,
+                      color: '#000000',
                     }}
                     formatter={(v) => formatCurrency(Number(Array.isArray(v) ? v[0] : v) || 0)}
                   />

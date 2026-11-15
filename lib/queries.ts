@@ -307,7 +307,7 @@ export async function getPayments(): Promise<Payment[]> {
       driver_name: d ? `${d.first_name} ${d.last_name}` : 'Белгісіз',
       driver_phone: p.driver_phone,
     }
-  }) as Payment[]
+  }) as unknown as Payment[]
 }
 
 export async function markPaymentPaid(id: string): Promise<void> {

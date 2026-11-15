@@ -8,7 +8,7 @@ import { UserCog, Plus } from 'lucide-react';
 export default function AdminsPage() {
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-3xl font-bold tracking-tight">Әкімшілер</h1>
         <Button className="gap-2">
           <Plus className="h-4 w-4" /> Әкімші қосу

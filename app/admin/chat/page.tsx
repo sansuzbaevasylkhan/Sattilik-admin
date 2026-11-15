@@ -202,7 +202,7 @@ export default function ChatPage() {
       <div className="w-full md:w-96 border-r border-sidebar-border flex flex-col bg-sidebar/30">
         <div className="p-4 border-b border-sidebar-border space-y-4 bg-sidebar/50">
           <div className="flex justify-between items-center">
-            <h1 className="text-xl font-bold text-primary">Чаттар</h1>
+            <h1 className="text-xl font-bold text-foreground">Чаттар</h1>
             <div className="flex gap-2">
               <Button variant="ghost" size="icon" className="rounded-full">
                 <UserCircle className="h-5 w-5" />
@@ -234,7 +234,7 @@ export default function ChatPage() {
                 )}
               >
                 <div className="relative">
-                  <div className="h-12 w-12 rounded-full bg-gradient-to-br from-gray-600 to-gray-800 flex items-center justify-center text-white font-bold">
+                  <div className="h-12 w-12 rounded-full bg-primary flex items-center justify-center text-white font-bold">
                     {contact.full_name[0]}
                   </div>
                 </div>
@@ -248,7 +248,7 @@ export default function ChatPage() {
                   <div className="flex justify-between items-center">
                     <p className="text-sm text-muted-foreground truncate">{contact.last_msg}</p>
                     {contact.unread_count > 0 && (
-                      <span className="h-5 w-5 bg-primary text-black text-[10px] font-bold flex items-center justify-center rounded-full">
+                      <span className="h-5 w-5 bg-primary text-white text-[10px] font-bold flex items-center justify-center rounded-full">
                         {contact.unread_count}
                       </span>
                     )}
@@ -266,7 +266,7 @@ export default function ChatPage() {
           <>
             <div className="h-16 border-b border-sidebar-border px-6 flex items-center justify-between bg-sidebar/20">
               <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-full bg-gradient-to-br from-gray-600 to-gray-800 flex items-center justify-center text-white font-bold">
+                <div className="h-10 w-10 rounded-full bg-primary flex items-center justify-center text-white font-bold">
                   {selectedContact.full_name[0]}
                 </div>
                 <div>
@@ -281,7 +281,7 @@ export default function ChatPage() {
               </div>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-[#0b141a] custom-scrollbar" style={{ backgroundImage: 'url("https://user-images.githubusercontent.com/15075759/28128478-d87777f5-5538-11e8-899e-826392730110.png")', backgroundBlendMode: 'overlay' }}>
+            <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-[#FFD700] custom-scrollbar">
               {messages.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-full text-muted-foreground italic">
                   Хабарламалар жоқ. Сөйлесуді бастаңыз!
@@ -295,13 +295,13 @@ export default function ChatPage() {
                     <div className={cn(
                       "max-w-[70%] px-4 py-2 rounded-2xl shadow-sm relative",
                       msg.sender_role === 'admin'
-                        ? "bg-[#005c4b] text-white rounded-tr-none"
-                        : "bg-sidebar-foreground/10 text-foreground rounded-tl-none"
+                        ? "bg-[#0066FF] text-white rounded-tr-none"
+                        : "bg-[#FFC800] text-black border border-[#D4AF37] rounded-tl-none"
                     )}>
                       <p className="text-sm">{msg.text}</p>
                       <span className={cn(
                         "text-[10px] block text-right mt-1",
-                        msg.sender_role === 'admin' ? "text-green-200" : "text-muted-foreground"
+                        msg.sender_role === 'admin' ? "text-white/70" : "text-black/50"
                       )}>
                         {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </span>

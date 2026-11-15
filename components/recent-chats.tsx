@@ -114,7 +114,7 @@ export function RecentChats() {
                   </div>
                 </div>
                 {chat.unread_count > 0 && (
-                  <span className="h-5 w-5 bg-primary text-black text-[10px] font-bold flex items-center justify-center rounded-full">
+                  <span className="h-5 w-5 bg-primary text-white text-[10px] font-bold flex items-center justify-center rounded-full">
                     {chat.unread_count}
                   </span>
                 )}

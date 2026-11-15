@@ -67,19 +67,19 @@ export default function TariffsPage() {
     }
   };
 
-  if (loading) return <div className="p-8 text-center text-white">Жүктелуде...</div>;
+  if (loading) return <div className="p-8 text-center text-foreground">Жүктелуде...</div>;
 
   return (
-    <div className="flex h-screen w-full bg-slate-950 text-white p-8 overflow-hidden">
+    <div className="flex h-screen w-full bg-background text-foreground p-8 overflow-hidden">
       <div className="flex-1 flex flex-col gap-8">
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
           <h1 className="text-3xl font-bold">Тарифтерді басқару</h1>
           <Button
             onClick={() => {
               setEditingTariff({ name: '' });
               setFormData({ name: '', base_price: 0, price_per_km: 0, price_per_minute: 0, night_multiplier: 1, surge_multiplier: 1, night_start: '22:00', night_end: '06:00', is_active: true });
             }}
-            className="bg-yellow-500 text-black hover:bg-yellow-600"
+            className="bg-primary text-primary-foreground hover:bg-primary/90 font-bold"
           >
             Жаңа тариф қосу
           </Button>
@@ -91,10 +91,10 @@ export default function TariffsPage() {
             {tariffs.map(t => (
               <Card
                 key={t.id}
-                className={`p-4 cursor-pointer transition-all ${editingTariff?.id === t.id ? 'bg-yellow-500 text-black' : 'bg-slate-900 border-slate-800 text-white'}`}
+                className={`p-4 cursor-pointer transition-all ${editingTariff?.id === t.id ? 'bg-primary text-primary-foreground' : 'bg-card border-border text-foreground'}`}
                 onClick={() => handleEdit(t)}
               >
-                <div className="flex justify-between items-center">
+                <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <span className="font-bold text-lg">{t.name}</span>
                   <Badge variant={t.is_active ? 'default' : 'destructive'}>
                     {t.is_active ? 'Белсенді' : 'Өшірілген'}
@@ -110,93 +110,93 @@ export default function TariffsPage() {
           {/* Edit Form */}
           <div className="lg:col-span-2">
             {editingTariff ? (
-              <Card className="bg-slate-900 border-slate-800 p-6 text-white">
+              <Card className="bg-card border-border p-6 text-foreground">
                 <h2 className="text-xl font-bold mb-6">Тарифті өңдеу: {formData.name}</h2>
                 <div className="grid grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <Label className="text-slate-400">Тариф атауы</Label>
+                    <Label className="text-muted-foreground">Тариф атауы</Label>
                     <Input
                       value={formData.name}
                       onChange={(e) => setFormData({...formData, name: e.target.value})}
-                      className="bg-slate-950 border-slate-700 text-white"
+                      className="bg-background border-border text-foreground"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-slate-400">Базалық баға (₸)</Label>
+                    <Label className="text-muted-foreground">Базалық баға (₸)</Label>
                     <Input
                       type="number"
                       value={formData.base_price}
                       onChange={(e) => setFormData({...formData, base_price: parseFloat(e.target.value)})}
-                      className="bg-slate-950 border-slate-700 text-white"
+                      className="bg-background border-border text-foreground"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-slate-400">1 км құны (₸)</Label>
+                    <Label className="text-muted-foreground">1 км құны (₸)</Label>
                     <Input
                       type="number"
                       value={formData.price_per_km}
                       onChange={(e) => setFormData({...formData, price_per_km: parseFloat(e.target.value)})}
-                      className="bg-slate-950 border-slate-700 text-white"
+                      className="bg-background border-border text-foreground"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-slate-400">1 мин құны (₸)</Label>
+                    <Label className="text-muted-foreground">1 мин құны (₸)</Label>
                     <Input
                       type="number"
                       value={formData.price_per_minute}
                       onChange={(e) => setFormData({...formData, price_per_minute: parseFloat(e.target.value)})}
-                      className="bg-slate-950 border-slate-700 text-white"
+                      className="bg-background border-border text-foreground"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-slate-400">Түнгі коэффициент</Label>
+                    <Label className="text-muted-foreground">Түнгі коэффициент</Label>
                     <Input
                       type="number"
                       step="0.1"
                       value={formData.night_multiplier}
                       onChange={(e) => setFormData({...formData, night_multiplier: parseFloat(e.target.value)})}
-                      className="bg-slate-950 border-slate-700 text-white"
+                      className="bg-background border-border text-foreground"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-slate-400">Сұраныс коэффициенті</Label>
+                    <Label className="text-muted-foreground">Сұраныс коэффициенті</Label>
                     <Input
                       type="number"
                       step="0.1"
                       value={formData.surge_multiplier}
                       onChange={(e) => setFormData({...formData, surge_multiplier: parseFloat(e.target.value)})}
-                      className="bg-slate-950 border-slate-700 text-white"
+                      className="bg-background border-border text-foreground"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-slate-400">Түнгі уақыт басталуы</Label>
+                    <Label className="text-muted-foreground">Түнгі уақыт басталуы</Label>
                     <Input
                       type="time"
                       value={formData.night_start}
                       onChange={(e) => setFormData({...formData, night_start: e.target.value})}
-                      className="bg-slate-950 border-slate-700 text-white"
+                      className="bg-background border-border text-foreground"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-slate-400">Түнгі уақыт аяқталуы</Label>
+                    <Label className="text-muted-foreground">Түнгі уақыт аяқталуы</Label>
                     <Input
                       type="time"
                       value={formData.night_end}
                       onChange={(e) => setFormData({...formData, night_end: e.target.value})}
-                      className="bg-slate-950 border-slate-700 text-white"
+                      className="bg-background border-border text-foreground"
                     />
                   </div>
                 </div>
                 <div className="mt-8 flex gap-3">
                   <Button
-                    className="flex-1 bg-yellow-500 text-black hover:bg-yellow-600"
+                    className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90 font-bold"
                     onClick={handleSave}
                   >
                     Сақтау
                   </Button>
                   <Button
                     variant="outline"
-                    className="text-white border-slate-700"
+                    className="text-foreground border-border"
                     onClick={() => setEditingTariff(null)}
                   >
                     Бас тарту

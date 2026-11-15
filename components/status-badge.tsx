@@ -4,16 +4,16 @@ import type { OrderStatus, PaymentStatus } from '@/lib/types'
 type Status = OrderStatus | PaymentStatus | 'active' | 'blocked' | string
 
 const STYLES: Record<string, string> = {
-  active: 'bg-primary/20 text-primary border-primary/30',
-  pending: 'bg-amber-500/15 text-amber-400 border-amber-500/20',
-  blocked: 'bg-rose-500/15 text-rose-400 border-rose-500/20',
-  inactive: 'bg-zinc-500/15 text-zinc-400 border-zinc-500/20',
-  accepted: 'bg-sky-500/15 text-sky-400 border-sky-500/20',
-  in_progress: 'bg-violet-500/15 text-violet-400 border-violet-500/20',
-  completed: 'bg-primary/20 text-primary border-primary/30',
-  cancelled: 'bg-rose-500/15 text-rose-400 border-rose-500/20',
-  paid: 'bg-primary/20 text-primary border-primary/30',
-  failed: 'bg-rose-500/15 text-rose-400 border-rose-500/20',
+  active: 'bg-[#0066FF] text-white border-[#0052CC]',
+  pending: 'bg-[#FFC800] text-black border-[#D4AF37]',
+  blocked: 'bg-rose-500/15 text-rose-700 border-rose-500/30',
+  inactive: 'bg-black/10 text-black/60 border-black/20',
+  accepted: 'bg-[#0066FF] text-white border-[#0052CC]',
+  in_progress: 'bg-[#0066FF]/80 text-white border-[#0052CC]',
+  completed: 'bg-[#FFC800] text-black border-[#D4AF37]',
+  cancelled: 'bg-rose-500/15 text-rose-700 border-rose-500/30',
+  paid: 'bg-[#FFC800] text-black border-[#D4AF37]',
+  failed: 'bg-rose-500/15 text-rose-700 border-rose-500/30',
 }
 
 const LABELS: Record<string, string> = {
@@ -36,7 +36,7 @@ export function StatusBadge({ status }: { status: Status }) {
       variant="outline"
       className={
         STYLES[key] ??
-        'bg-zinc-500/15 text-zinc-400 border-zinc-500/20'
+        'bg-black/10 text-black/60 border-black/20'
       }
     >
       {LABELS[key] ?? key}
