@@ -59,6 +59,12 @@
       ],
       "@maplibre/maplibre-react-native",
       [
+        "expo-notifications",
+        {
+          "color": "#FFD700"
+        }
+      ],
+      [
         "expo-location",
         {
           "locationWhenInUsePermission": "Жақын жүргізушілерді табу үшін орналасқан жеріңіз қолданылады"

@@ -22,6 +22,7 @@ import { getUser } from '@/store/userStore';
 import { useTranslation } from '@/hooks/useTranslation';
 import { subscribeMapPick } from '@/store/mapPickStore';
 import { getRoute } from '@/lib/routing';
+import { invokePushEvent } from '@/lib/notifications';
 import { useDriverLocation } from '@/hooks/useDriverLocation';
 import { useTripShare } from '@/hooks/useTripShare';
 import RouteMapPreview from '@/components/RouteMapPreview';
@@ -293,6 +294,7 @@ export default function OrderScreen() {
         if (orders && orders.length > 0) {
           setCurrentOrder(orders[0]);
           setOrderStatus('searching');
+          invokePushEvent('new_order', { orderId: orders[0].id });
         }
       } catch (e) {
         Alert.alert(t('common.error'), t('order.errorOrderFailed'));

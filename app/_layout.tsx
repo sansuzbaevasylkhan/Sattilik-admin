@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { Stack } from 'expo-router';
+import { useEffect, useRef } from 'react';
+import { Stack, router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useFrameworkReady } from '@/hooks/useFrameworkReady';
 import { useFonts } from 'expo-font';
@@ -9,9 +9,15 @@ import {
   Inter_700Bold,
 } from '@expo-google-fonts/inter';
 import * as SplashScreen from 'expo-splash-screen';
-import { requestNotificationPermission, registerForPushNotificationsAsync, savePushToken } from '@/lib/notifications';
+import {
+  addNotificationResponseListener,
+  addPushTokenRefreshListener,
+  getLastNotificationData,
+  registerForPushNotificationsAsync,
+  savePushToken,
+} from '@/lib/notifications';
 import { NetworkProvider } from '@/hooks/useNetwork';
-import { getUser } from '@/store/userStore';
+import { getUser, subscribeUser } from '@/store/userStore';
 import { GlobalErrorBoundary } from '@/components/GlobalErrorBoundary';
 
 SplashScreen.preventAutoHideAsync();
@@ -31,23 +37,57 @@ export default function RootLayout() {
     }
   }, [fontsLoaded, fontError]);
 
-  useEffect(() => {
-    const setupNotifications = async () => {
-      try {
-        const user = getUser();
-        if (!user || !user.id) return;
+  const syncedPhoneRef = useRef('');
 
+  useEffect(() => {
+    let cancelled = false;
+
+    const syncPushToken = async () => {
+      const user = getUser();
+      if (!user.phone || syncedPhoneRef.current === user.phone) return;
+      syncedPhoneRef.current = user.phone;
+
+      try {
         const token = await registerForPushNotificationsAsync();
-        if (token) {
-          await savePushToken(user.id, token);
+        if (token && !cancelled) {
+          await savePushToken(user.phone, token);
         }
       } catch (e) {
         console.error('Notification setup error:', e);
       }
     };
 
-    setupNotifications();
-    requestNotificationPermission();
+    syncPushToken();
+
+    const unsubscribeUser = subscribeUser(syncPushToken);
+    const tokenSubscription = addPushTokenRefreshListener((token) => {
+      const user = getUser();
+      if (user.phone) savePushToken(user.phone, token);
+    });
+
+    return () => {
+      cancelled = true;
+      unsubscribeUser();
+      tokenSubscription.remove();
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleNotification = (data: Record<string, any>) => {
+      if (!data) return;
+      const orderId = data.orderId ?? data.order_id;
+      const type = data.type;
+      if (!orderId && !type) return;
+      const role = getUser().role;
+      router.push(role === 'driver' ? '/driver-order' : '/order');
+    };
+
+    const subscription = addNotificationResponseListener(handleNotification);
+    getLastNotificationData().then((data) => {
+      if (data) handleNotification(data);
+    });
+
+    return () => subscription.remove();
   }, []);
 
   if (!fontsLoaded && !fontError) {

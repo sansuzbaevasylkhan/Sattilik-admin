@@ -12,6 +12,7 @@ import {
   ScrollView,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import * as Location from 'expo-location';
 import {
   Navigation,
   User,
@@ -24,14 +25,20 @@ import {
   Menu,
   RefreshCw,
   Inbox,
-  Timer
+  Timer,
+  ArrowUp,
+  CornerUpLeft,
+  CornerUpRight,
+  RotateCcw,
+  Flag,
 } from 'lucide-react-native';
 import MenuDrawer from '@/components/MenuDrawer';
 import { getUser } from '@/store/userStore';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useLocationBroadcast } from '@/hooks/useLocationBroadcast';
 import RouteMapPreview from '@/components/RouteMapPreview';
-import { getRoute } from '@/lib/routing';
+import { getRoute, getRouteProgress, RouteProgress, RouteResult, RouteStep } from '@/lib/routing';
+import { invokePushEvent } from '@/lib/notifications';
 import { BG_GRADIENT, GOLD_GRADIENT } from '@/lib/theme';
 
 const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL!;
@@ -78,7 +85,12 @@ export default function DriverOrderScreen() {
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [menuVisible, setMenuVisible] = useState(false);
-  const [routeCoordinates, setRouteCoordinates] = useState<[number, number][] | null>(null);
+  const [route, setRoute] = useState<RouteResult | null>(null);
+  const [routeProgress, setRouteProgress] = useState<RouteProgress | null>(null);
+  const [driverPos, setDriverPos] = useState<{ lng: number; lat: number; bearing: number } | null>(null);
+
+  const lastRerouteRef = useRef(0);
+  const arrivedNotifiedRef = useRef<string | null>(null);
 
   useLocationBroadcast(
     getUser().phone || null,
@@ -137,21 +149,141 @@ export default function DriverOrderScreen() {
     return () => clearInterval(interval);
   }, [fetchActiveOrder, fetchPendingOrders]);
 
+  const pickupPoint =
+    activeOrder && activeOrder.pickup_lat != null && activeOrder.pickup_lng != null
+      ? { lat: activeOrder.pickup_lat, lng: activeOrder.pickup_lng }
+      : null;
+  const dropoffPoint =
+    activeOrder && activeOrder.dropoff_lat != null && activeOrder.dropoff_lng != null
+      ? { lat: activeOrder.dropoff_lat, lng: activeOrder.dropoff_lng }
+      : null;
+
+  // Нақты GPS: орналасу мен қозғалыс бағыты үнемі жаңарып отырады.
   useEffect(() => {
-    const p = activeOrder?.pickup_lat != null && activeOrder?.pickup_lng != null ? activeOrder : null;
-    const d = activeOrder?.dropoff_lat != null && activeOrder?.dropoff_lng != null ? activeOrder : null;
-    if (!p || !d) {
-      setRouteCoordinates(null);
+    let cancelled = false;
+    let subscription: Location.LocationSubscription | null = null;
+
+    const start = async () => {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted' || cancelled) return;
+
+      subscription = await Location.watchPositionAsync(
+        { accuracy: Location.Accuracy.High, timeInterval: 3000, distanceInterval: 10 },
+        (pos) => {
+          const heading = pos.coords.heading;
+          setDriverPos({
+            lng: pos.coords.longitude,
+            lat: pos.coords.latitude,
+            bearing: typeof heading === 'number' && heading >= 0 ? heading : 0,
+          });
+        },
+      );
+    };
+
+    start();
+    return () => {
+      cancelled = true;
+      subscription?.remove();
+    };
+  }, []);
+
+  // Қабылданғанда — жолаушыға дейін, жолда — межелі орынға дейін нақты маршрут.
+  useEffect(() => {
+    if (!activeOrder) {
+      setRoute(null);
       return;
     }
+
+    let from: { lat: number; lng: number } | null = null;
+    let to: { lat: number; lng: number } | null = null;
+
+    if (activeOrderStatus === 'accepted') {
+      from = driverPos ? { lat: driverPos.lat, lng: driverPos.lng } : pickupPoint;
+      if (driverPos) {
+        to = pickupPoint;
+      } else if (pickupPoint && dropoffPoint) {
+        // GPS әлі келмесе — алдын ала толық маршрутты көрсетеміз.
+        to = dropoffPoint;
+      }
+    } else if (activeOrderStatus === 'in_progress') {
+      from = driverPos ? { lat: driverPos.lat, lng: driverPos.lng } : pickupPoint;
+      to = dropoffPoint;
+    }
+
+    if (!from || !to) {
+      setRoute(null);
+      return;
+    }
+
     let cancelled = false;
-    getRoute(p.pickup_lng!, p.pickup_lat!, d.dropoff_lng!, d.dropoff_lat!).then((route) => {
-      if (!cancelled) setRouteCoordinates(route.coordinates);
+    lastRerouteRef.current = Date.now();
+    getRoute(from.lng, from.lat, to.lng, to.lat).then((result) => {
+      if (!cancelled) setRoute(result);
     });
+
     return () => {
       cancelled = true;
     };
-  }, [activeOrder?.id, activeOrder?.pickup_lat, activeOrder?.pickup_lng, activeOrder?.dropoff_lat, activeOrder?.dropoff_lng]);
+  }, [
+    activeOrder?.id,
+    activeOrderStatus,
+    !!driverPos,
+    pickupPoint?.lat,
+    pickupPoint?.lng,
+    dropoffPoint?.lat,
+    dropoffPoint?.lng,
+  ]);
+
+  // Ағымдағы орын бойынша қалған жол, келесі бұрылыс және ETA.
+  useEffect(() => {
+    if (!route || !driverPos) {
+      setRouteProgress(null);
+      return;
+    }
+    setRouteProgress(getRouteProgress(route, driverPos.lng, driverPos.lat));
+  }, [route, driverPos]);
+
+  // Маршруттан 60 м-ден көп ауытқыса — 15 секундтан кейін қайта есептеу.
+  useEffect(() => {
+    if (!driverPos || !activeOrder || !routeProgress) return;
+    if (activeOrderStatus !== 'accepted' && activeOrderStatus !== 'in_progress') return;
+    if (routeProgress.distanceToRouteM < 60) return;
+
+    const destination = activeOrderStatus === 'accepted' ? pickupPoint : dropoffPoint;
+    if (!destination) return;
+
+    const now = Date.now();
+    if (now - lastRerouteRef.current < 15000) return;
+    lastRerouteRef.current = now;
+
+    let cancelled = false;
+    getRoute(driverPos.lng, driverPos.lat, destination.lng, destination.lat).then((result) => {
+      if (!cancelled) setRoute(result);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    driverPos,
+    routeProgress?.distanceToRouteM,
+    activeOrder?.id,
+    activeOrderStatus,
+    pickupPoint?.lat,
+    pickupPoint?.lng,
+    dropoffPoint?.lat,
+    dropoffPoint?.lng,
+  ]);
+
+  // Жолаушыға «жүргізуші келді» push хабарын бір рет жіберу.
+  useEffect(() => {
+    if (!activeOrder || activeOrderStatus !== 'accepted' || !routeProgress) return;
+    if (arrivedNotifiedRef.current === activeOrder.id) return;
+    if (routeProgress.remainingM > 150) return;
+
+    arrivedNotifiedRef.current = activeOrder.id;
+    invokePushEvent('driver_arrived', { orderId: activeOrder.id });
+  }, [activeOrder?.id, activeOrderStatus, routeProgress?.remainingM]);
 
   useEffect(() => {
     if (mode === 'active' && activeOrder) {
@@ -242,6 +374,7 @@ export default function DriverOrderScreen() {
         setActiveOrderStatus('accepted');
         setMode('active');
         setPendingOrders(prev => prev.filter(o => o.id !== order.id));
+        invokePushEvent('order_accepted', { orderId: order.id });
       } else {
         Alert.alert(t('driverOrder.errorAcceptTitle'), t('driverOrder.errorAcceptOrderMessage'));
       }
@@ -270,6 +403,7 @@ export default function DriverOrderScreen() {
         );
         setActiveOrderStatus('in_progress');
         setActiveOrder(prev => prev ? { ...prev, status: 'in_progress' } : null);
+        invokePushEvent('trip_started', { orderId: activeOrder.id });
       } catch {
         Alert.alert(t('driverOrder.errorAcceptTitle'), t('driverOrder.errorStatusChangeMessage'));
       }
@@ -292,6 +426,7 @@ export default function DriverOrderScreen() {
             body: JSON.stringify({ status: 'completed' }),
           }
         );
+        invokePushEvent('trip_completed', { orderId: activeOrder.id });
         Alert.alert(
           t('driverOrder.successTitle'),
           t('driverOrder.orderCompletedMessage'),
@@ -335,6 +470,36 @@ export default function DriverOrderScreen() {
     if (activeOrderStatus === 'in_progress') return t('driverOrder.statusInProgress');
     return t('driverOrder.statusAccepted');
   };
+
+  const formatMeters = (meters: number) =>
+    meters >= 1000
+      ? `${(meters / 1000).toFixed(1)} км`
+      : `${Math.max(0, Math.round(meters / 10) * 10)} м`;
+
+  const describeManeuver = (step: RouteStep) => {
+    const street = step.street ? ` · ${step.street}` : '';
+    if (step.type === 'arrive') return t('driverOrder.navArrive');
+    if (step.type === 'roundabout' || step.type === 'rotary') {
+      return `${t('driverOrder.navRoundabout')}${street}`;
+    }
+    if (step.modifier?.includes('uturn')) return `${t('driverOrder.navUTurn')}${street}`;
+    if (step.modifier?.includes('left')) return `${t('driverOrder.navTurnLeft')}${street}`;
+    if (step.modifier?.includes('right')) return `${t('driverOrder.navTurnRight')}${street}`;
+    return `${t('driverOrder.navStraight')}${street}`;
+  };
+
+  const renderManeuverIcon = (step: RouteStep) => {
+    if (step.type === 'arrive') return <Flag size={24} color="#FFD700" />;
+    if (step.type === 'roundabout' || step.type === 'rotary') {
+      return <RotateCcw size={24} color="#FFD700" />;
+    }
+    if (step.modifier?.includes('uturn')) return <RotateCcw size={24} color="#FFD700" />;
+    if (step.modifier?.includes('left')) return <CornerUpLeft size={24} color="#FFD700" />;
+    if (step.modifier?.includes('right')) return <CornerUpRight size={24} color="#FFD700" />;
+    return <ArrowUp size={24} color="#FFD700" />;
+  };
+
+  const showNavigation = activeOrderStatus !== 'completed' && !!routeProgress?.nextStep;
 
   return (
     <View style={styles.container}>
@@ -494,21 +659,31 @@ export default function DriverOrderScreen() {
             </TouchableOpacity>
           </View>
 
-          {(activeOrder.pickup_lat != null && activeOrder.pickup_lng != null) ||
-          (activeOrder.dropoff_lat != null && activeOrder.dropoff_lng != null) ? (
+          {(pickupPoint || dropoffPoint) ? (
             <RouteMapPreview
-              pickup={
-                activeOrder.pickup_lat != null && activeOrder.pickup_lng != null
-                  ? { lat: activeOrder.pickup_lat, lng: activeOrder.pickup_lng }
-                  : null
-              }
-              dropoff={
-                activeOrder.dropoff_lat != null && activeOrder.dropoff_lng != null
-                  ? { lat: activeOrder.dropoff_lat, lng: activeOrder.dropoff_lng }
-                  : null
-              }
-              routeCoordinates={routeCoordinates}
+              pickup={pickupPoint}
+              dropoff={dropoffPoint}
+              driver={driverPos}
+              routeCoordinates={route?.coordinates ?? null}
             />
+          ) : null}
+
+          {showNavigation && routeProgress?.nextStep ? (
+            <View style={styles.navCard}>
+              <View style={styles.navTurnIcon}>{renderManeuverIcon(routeProgress.nextStep)}</View>
+              <View style={styles.navTurnInfo}>
+                <Text style={styles.navDistance}>{formatMeters(routeProgress.distanceToNextStepM)}</Text>
+                <Text style={styles.navStreet} numberOfLines={1}>
+                  {describeManeuver(routeProgress.nextStep)}
+                </Text>
+              </View>
+              <View style={styles.navSummary}>
+                <Text style={styles.navSummaryValue}>{routeProgress.remainingKm} км</Text>
+                <Text style={styles.navSummaryLabel}>
+                  {routeProgress.remainingMin} {t('driverOrder.navMinutes')}
+                </Text>
+              </View>
+            </View>
           ) : null}
 
           <View style={styles.routeCard}>
@@ -1024,5 +1199,53 @@ const styles = StyleSheet.create({
     color: '#000000',
     fontSize: 15,
     fontFamily: 'Inter-SemiBold',
+  },
+  navCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    backgroundColor: '#FFC800',
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: '#D4AF37',
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    marginBottom: 16,
+  },
+  navTurnIcon: {
+    width: 44,
+    height: 44,
+    borderRadius: 12,
+    backgroundColor: '#000000',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  navTurnInfo: {
+    flex: 1,
+    gap: 2,
+  },
+  navDistance: {
+    color: '#000000',
+    fontSize: 20,
+    fontFamily: 'Inter-Bold',
+  },
+  navStreet: {
+    color: 'rgba(0, 0, 0, 0.7)',
+    fontSize: 13,
+    fontFamily: 'Inter-Medium',
+  },
+  navSummary: {
+    alignItems: 'flex-end',
+    gap: 2,
+  },
+  navSummaryValue: {
+    color: '#000000',
+    fontSize: 16,
+    fontFamily: 'Inter-Bold',
+  },
+  navSummaryLabel: {
+    color: 'rgba(0, 0, 0, 0.6)',
+    fontSize: 12,
+    fontFamily: 'Inter-Medium',
   },
 });

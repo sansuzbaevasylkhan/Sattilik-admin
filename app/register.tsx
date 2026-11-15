@@ -18,6 +18,7 @@ import { User, Car, ChevronLeft, Send, ExternalLink } from 'lucide-react-native'
 import { router, useLocalSearchParams } from 'expo-router';
 import { setUser } from '@/store/userStore';
 import { buildTelegramStartLink } from '@/lib/telegram';
+import { invokePushEvent } from '@/lib/notifications';
 import { useTranslation } from '@/hooks/useTranslation';
 import {
   BG_GRADIENT,
@@ -262,6 +263,10 @@ export default function RegisterScreen() {
       });
 
       if (selectedRole === 'passenger') {
+        invokePushEvent('new_passenger', {
+          phone: `+7${rawDigits}`,
+          name: `${data.first_name || firstName} ${data.last_name || lastName}`.trim(),
+        });
         router.replace('/order');
       } else {
         animateTransition(() => setStep('driverDetails'));
@@ -311,6 +316,11 @@ export default function RegisterScreen() {
         phone: `+7${rawDigits}`,
         role: 'driver',
         driverId: data.driver_id || null,
+      });
+
+      invokePushEvent('new_driver', {
+        phone: `+7${rawDigits}`,
+        name: `${firstName.trim()} ${lastName.trim()}`.trim(),
       });
 
       router.replace('/driver-order');
