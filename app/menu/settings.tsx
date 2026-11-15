@@ -59,7 +59,7 @@ export default function SettingsScreen() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient colors={backgroundColors} style={styles.bg} />
+      <LinearGradient colors={['#050505', '#151515']} style={styles.bg} />
 
       {notifications && (
         <View style={styles.topBanner} pointerEvents="none">
@@ -79,14 +79,14 @@ export default function SettingsScreen() {
         <Text style={styles.sectionLabel}>{t('menuSettings.sectionNotifications')}</Text>
         <View style={styles.settingsCard}>
           <View style={styles.settingRow}>
-            <View style={[styles.settingIcon, { backgroundColor: GOLD_SOFT_FILL }]}>
-              <Bell size={18} color={GOLD_PRIMARY} />
+            <View style={[styles.settingIcon, { backgroundColor: 'rgba(255, 215, 0, 0.12)' }]}>
+              <Bell size={18} color="#FFD700" />
             </View>
             <Text style={styles.settingText}>{t('menuSettings.notifications')}</Text>
             <Switch
               value={notifications}
               onValueChange={handleToggleNotifications}
-              trackColor={{ false: 'rgba(255,255,255,0.1)', true: GOLD_PRIMARY }}
+              trackColor={{ false: 'rgba(255,255,255,0.1)', true: '#FFD700' }}
               thumbColor="#FFFFFF"
             />
           </View>
@@ -95,7 +95,7 @@ export default function SettingsScreen() {
 
           <View style={styles.settingRow}>
             <View style={[styles.settingIcon, { backgroundColor: 'rgba(245,158,11,0.12)' }]}>
-              <Bell size={18} color="#F59E0B" />
+              <Bell size={18} color="#F5B800" />
             </View>
             <Text style={styles.settingText}>{t('menuSettings.sound')}</Text>
             <Switch
@@ -106,7 +106,7 @@ export default function SettingsScreen() {
                   await triggerVibration();
                 }
               }}
-              trackColor={{ false: 'rgba(255,255,255,0.1)', true: GOLD_PRIMARY }}
+              trackColor={{ false: 'rgba(255,255,255,0.1)', true: '#FFD700' }}
               thumbColor="#FFFFFF"
             />
           </View>
@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     zIndex: 50,
-    backgroundColor: BG_DARK,
+    backgroundColor: '#050505',
     paddingTop: 56,
     paddingBottom: 12,
     alignItems: 'center',
@@ -224,16 +224,16 @@ const styles = StyleSheet.create({
   sectionLabel: {
     fontSize: 11,
     fontFamily: 'Inter-SemiBold',
-    color: 'rgba(255,255,255,0.3)',
+    color: '#A0A0A0',
     letterSpacing: 1,
     textTransform: 'uppercase',
     marginBottom: 10,
   },
   settingsCard: {
-    backgroundColor: 'rgba(255,255,255,0.06)',
+    backgroundColor: '#151515',
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
+    borderColor: '#333333',
     overflow: 'hidden',
   },
   settingRow: {
@@ -250,7 +250,7 @@ const styles = StyleSheet.create({
     marginRight: 14,
   },
   settingText: { flex: 1, fontSize: 15, fontFamily: 'Inter-SemiBold', color: '#FFFFFF' },
-  settingValue: { fontSize: 14, fontFamily: 'Inter-Regular', color: 'rgba(255,255,255,0.4)' },
+  settingValue: { fontSize: 14, fontFamily: 'Inter-Regular', color: '#A0A0A0' },
   rowDivider: { height: 1, backgroundColor: 'rgba(255,255,255,0.06)', marginLeft: 68 },
   themeExpandedArea: {
     paddingLeft: 68,
@@ -268,12 +268,12 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255,255,255,0.08)',
   },
   themeOptionActive: {
-    backgroundColor: GOLD_MEDIUM_FILL,
-    borderColor: GOLD_MEDIUM_BORDER,
+    backgroundColor: '#F5B800',
+    borderColor: '#FFD700',
   },
   themeOptionText: {
     fontFamily: 'Inter-SemiBold',
-    color: '#FFFFFF',
+    color: '#000000',
   },
   chevUp: {
     transform: [{ rotate: '180deg' }],

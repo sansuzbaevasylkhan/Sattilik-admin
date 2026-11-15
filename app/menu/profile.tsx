@@ -67,7 +67,7 @@ export default function ProfileScreen() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient colors={BG_GRADIENT} style={styles.bg} />
+      <LinearGradient colors={['#050505', '#151515']} style={styles.bg} />
 
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7}>
@@ -105,8 +105,8 @@ export default function ProfileScreen() {
                 <Star
                   key={i}
                   size={22}
-                  color={filled ? '#EAB308' : 'rgba(255,255,255,0.2)'}
-                  fill={filled ? '#F59E0B' : 'rgba(255,255,255,0.1)'}
+                  color={filled ? '#FFD700' : 'rgba(255,255,255,0.2)'}
+                  fill={filled ? '#F5B800' : 'rgba(255,255,255,0.1)'}
                 />
               );
             })}
@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
   },
   avatarImg: { width: '100%', height: '100%' },
   name: { fontSize: 22, fontFamily: 'Inter-Bold', color: '#FFFFFF', marginBottom: 4 },
-  roleLabel: { fontSize: 14, fontFamily: 'Inter-Regular', color: 'rgba(255,255,255,0.5)', marginBottom: 12 },
+  roleLabel: { fontSize: 14, fontFamily: 'Inter-Regular', color: '#A0A0A0', marginBottom: 12 },
   starsRow: { flexDirection: 'row', gap: 6, marginBottom: 6 },
   ratingText: { fontSize: 13, fontFamily: 'Inter-Regular', color: 'rgba(255,255,255,0.3)' },
   editButton: {
@@ -229,11 +229,11 @@ const styles = StyleSheet.create({
   },
 
   infoCard: {
-    backgroundColor: 'rgba(255,255,255,0.06)',
+    backgroundColor: '#151515',
     borderRadius: 20,
     padding: 20,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
+    borderColor: '#333333',
     marginBottom: 16,
   },
   infoRow: { flexDirection: 'row', alignItems: 'center' },
