@@ -231,6 +231,27 @@ Deno.serve(async (req: Request) => {
   }
 
   // 3) users.telegram_chat_id бағанын жаңарту.
+  // users.telegram_chat_id уникалды — бір Telegram чат тек бір жазбаға
+  // байланысады. Егер осы чат бұрын басқа телефонға (мыс. жолаушы аккаунты)
+  // байланысқан болса, алдымен оны босатамыз, әйтпесе PATCH 23505 береді.
+  const unlinkRes = await fetch(
+    `${SUPABASE_URL}/rest/v1/users?telegram_chat_id=eq.${
+      encodeURIComponent(String(chatId))
+    }&id=neq.${user.id}`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        apikey: SUPABASE_SERVICE_ROLE_KEY,
+        Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+      },
+      body: JSON.stringify({ telegram_chat_id: null }),
+    },
+  );
+  if (!unlinkRes.ok) {
+    console.error("users unlink failed:", await unlinkRes.text());
+  }
+
   const patchRes = await fetch(
     `${SUPABASE_URL}/rest/v1/users?id=eq.${user.id}`,
     {
@@ -245,6 +266,10 @@ Deno.serve(async (req: Request) => {
   );
   if (!patchRes.ok) {
     console.error("users update failed:", await patchRes.text());
+    await sendTelegramMessage(
+      chatId,
+      `Кешіріңіз, тіркелу кезінде қате шықты. Қосымшада "Код жіберу" батырмасын қайта басып көріңіз.`,
+    );
     return jsonResponse({ error: "db update failed" }, 500);
   }
 
