@@ -19,6 +19,8 @@ import {
 import { NetworkProvider } from '@/hooks/useNetwork';
 import { getUser, subscribeUser } from '@/store/userStore';
 import { GlobalErrorBoundary } from '@/components/GlobalErrorBoundary';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -95,9 +97,11 @@ export default function RootLayout() {
   }
 
   return (
-    <GlobalErrorBoundary>
-      <NetworkProvider>
-        <Stack screenOptions={{ headerShown: false }}>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaProvider>
+        <GlobalErrorBoundary>
+          <NetworkProvider>
+            <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="onboarding" />
           <Stack.Screen name="home" />
           <Stack.Screen name="register" />
@@ -117,10 +121,12 @@ export default function RootLayout() {
           <Stack.Screen name="menu/pay-driver" />
           <Stack.Screen name="menu/driver-earnings" />
           <Stack.Screen name="+not-found" />
-        </Stack>
-        <StatusBar style="dark" />
-      </NetworkProvider>
-    </GlobalErrorBoundary>
+            </Stack>
+            <StatusBar style="dark" />
+          </NetworkProvider>
+        </GlobalErrorBoundary>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 }
 

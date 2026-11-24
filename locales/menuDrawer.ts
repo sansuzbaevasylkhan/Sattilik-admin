@@ -10,7 +10,7 @@ export const menuDrawer = {
     socialLabel: 'Біздің әлеуметтік желілеріміз!',
     socialInstagram: 'Instagram',
     socialTelegram: 'Telegram',
-    socialAskdrv: 'Sattilik',
+    socialSattilik: 'Sattilik',
   },
   ru: {
     defaultUserName: 'Пользователь',
@@ -23,6 +23,6 @@ export const menuDrawer = {
     socialLabel: 'Наши социальные сети!',
     socialInstagram: 'Instagram',
     socialTelegram: 'Telegram',
-    socialAskdrv: 'Sattilik',
+    socialSattilik: 'Sattilik',
   },
 };

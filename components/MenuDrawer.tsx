@@ -227,7 +227,7 @@ export default function MenuDrawer({ visible, onClose }: MenuDrawerProps) {
                   style={styles.socialLogo}
                 />
               </View>
-              <Text style={styles.socialName}>{t('menuDrawer.socialAskdrv')}</Text>
+              <Text style={styles.socialName}>{t('menuDrawer.socialSattilik')}</Text>
             </TouchableOpacity>
           </View>
         </View>

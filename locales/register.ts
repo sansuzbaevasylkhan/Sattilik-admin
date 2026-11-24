@@ -1,6 +1,6 @@
 export const register = {
   kk: {
-    welcome: 'Қош келдіңіз! Askdrv Taxi қосымшасына',
+    welcome: 'Қош келдіңіз! Sattilik Taxi қосымшасына',
     stepTitleRole: 'Өз рөліңізді таңдаңыз',
     stepTitlePhone: 'Тіркелу',
     stepTitleTelegram: 'Telegram-қа қосылу',
@@ -46,7 +46,7 @@ export const register = {
     errorSaveDriverProfileFailed: 'Деректерді сақтау сәтсіз аяқталды',
   },
   ru: {
-    welcome: 'Добро пожаловать в Askdrv Taxi',
+    welcome: 'Добро пожаловать в Sattilik Taxi',
     stepTitleRole: 'Выберите свою роль',
     stepTitlePhone: 'Регистрация',
     stepTitleTelegram: 'Подключение Telegram',

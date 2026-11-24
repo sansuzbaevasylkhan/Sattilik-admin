@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
+import { Animated, Image, StyleSheet, View, TouchableOpacity } from 'react-native';
 import {
   Map as MapLibreMap,
   Camera,
@@ -8,9 +8,9 @@ import {
   Layer,
   CameraRef,
 } from '@maplibre/maplibre-react-native';
-import { Car, Map as MapIcon, Layers } from 'lucide-react-native';
+import { Layers, LocateFixed, Minus, Plus } from 'lucide-react-native';
 import { MAP_STYLES, QAZALY_CENTER, MapStyleId } from '@/lib/maptiler';
-import { ROUTE_LINE_COLOR, BG_DARK } from '@/lib/theme';
+import { ROUTE_LINE_COLOR } from '@/lib/theme';
 
 interface RouteMapPreviewProps {
   pickup?: { lng: number; lat: number } | null;
@@ -21,6 +21,12 @@ interface RouteMapPreviewProps {
   height?: number;
   /** true болса — карта контейнерінің толық фонын алады (борамка/margin жоқ). */
   fill?: boolean;
+  /** Автокамераны жүргізушінің артынан жылжытады. */
+  followDriver?: boolean;
+  /** Нүктелер өзгерген сайын камераны маршрутқа автоматты fit етеді. */
+  fitRoute?: boolean;
+  /** Driver icon size in layout pixels; defaults to 64. */
+  taxiIconSize?: number;
 }
 
 /** Тек көрсету үшін (интерактивті емес) кіші карта — сапар мәртебесі экрандарында. */
@@ -31,9 +37,16 @@ export default function RouteMapPreview({
   routeCoordinates,
   height = 220,
   fill = false,
+  followDriver = true,
+  fitRoute = true,
+  taxiIconSize = 64,
 }: RouteMapPreviewProps) {
   const cameraRef = useRef<CameraRef>(null);
   const [mapStyle, setMapStyle] = useState<MapStyleId>('hybrid');
+  const [zoom, setZoom] = useState(13);
+  const centeredOnDriver = useRef(false);
+  const driverLat = driver?.lat ?? null;
+  const driverLng = driver?.lng ?? null;
 
   const center = driver ?? pickup ?? dropoff ?? { lng: QAZALY_CENTER[0], lat: QAZALY_CENTER[1] };
 
@@ -64,16 +77,23 @@ export default function RouteMapPreview({
     });
   };
 
-  useEffect(() => {
-    fitToRoute();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pickup?.lng, pickup?.lat, dropoff?.lng, dropoff?.lat, routeCoordinates]);
+  const changeZoom = (delta: number) => {
+    const nextZoom = Math.max(4, Math.min(19, zoom + delta));
+    setZoom(nextZoom);
+    cameraRef.current?.zoomTo(nextZoom, { duration: 250 });
+  };
 
   useEffect(() => {
-    if (driver) {
-      cameraRef.current?.easeTo({ center: [driver.lng, driver.lat], duration: 500 });
+    if (fitRoute) fitToRoute();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fitRoute, pickup?.lng, pickup?.lat, dropoff?.lng, dropoff?.lat, routeCoordinates]);
+
+  useEffect(() => {
+    if (driverLat !== null && driverLng !== null && (followDriver || !centeredOnDriver.current)) {
+      cameraRef.current?.easeTo({ center: [driverLng, driverLat], zoom, duration: 500 });
+      centeredOnDriver.current = true;
     }
-  }, [driver]);
+  }, [driverLat, driverLng, followDriver, zoom]);
 
   return (
     <View style={fill ? styles.containerFill : [styles.container, { height }]}>
@@ -127,14 +147,110 @@ export default function RouteMapPreview({
         )}
 
         {driver && (
-          <Marker lngLat={[driver.lng, driver.lat]} anchor="center">
-            <View style={[styles.driverMarker, { transform: [{ rotate: `${driver.bearing || 0}deg` }] }]}>
-              <Car size={16} color="#000000" />
-            </View>
-          </Marker>
+          <SmoothTaxiMarker driver={driver} size={taxiIconSize} />
         )}
       </MapLibreMap>
+
+      <View pointerEvents="box-none" style={styles.controls}>
+        <TouchableOpacity
+          accessibilityLabel="Map layers"
+          style={styles.controlButton}
+          onPress={() => setMapStyle((current) => current === 'hybrid' ? 'streets' : 'hybrid')}
+        >
+          <Layers size={19} color="#FFD700" />
+        </TouchableOpacity>
+        <TouchableOpacity accessibilityLabel="Zoom in" style={styles.controlButton} onPress={() => changeZoom(1)}>
+          <Plus size={20} color="#FFFFFF" />
+        </TouchableOpacity>
+        <TouchableOpacity accessibilityLabel="Zoom out" style={styles.controlButton} onPress={() => changeZoom(-1)}>
+          <Minus size={20} color="#FFFFFF" />
+        </TouchableOpacity>
+        <TouchableOpacity
+          accessibilityLabel="Center on driver"
+          style={styles.controlButton}
+          onPress={() => {
+            const point = driver ?? pickup ?? dropoff;
+            if (point) cameraRef.current?.easeTo({ center: [point.lng, point.lat], zoom, duration: 350 });
+          }}
+        >
+          <LocateFixed size={19} color="#FFD700" />
+        </TouchableOpacity>
+      </View>
     </View>
+  );
+}
+
+interface SmoothTaxiMarkerProps {
+  driver: { lng: number; lat: number; bearing?: number };
+  size: number;
+}
+
+function SmoothTaxiMarker({ driver, size }: SmoothTaxiMarkerProps) {
+  const [coordinate, setCoordinate] = useState({ lng: driver.lng, lat: driver.lat });
+  const coordinateRef = useRef(coordinate);
+  const [animatedBearing] = useState(() => new Animated.Value(driver.bearing ?? 0));
+
+  useEffect(() => {
+    const from = coordinateRef.current;
+    const to = { lng: driver.lng, lat: driver.lat };
+    const startedAt = Date.now();
+    const duration = 1100;
+    let frame = 0;
+
+    const animate = () => {
+      const progress = Math.min(1, (Date.now() - startedAt) / duration);
+      const eased = progress * (2 - progress);
+      const next = {
+        lng: from.lng + (to.lng - from.lng) * eased,
+        lat: from.lat + (to.lat - from.lat) * eased,
+      };
+      coordinateRef.current = next;
+      setCoordinate(next);
+      if (progress < 1) frame = requestAnimationFrame(animate);
+    };
+
+    frame = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(frame);
+  }, [driver.lat, driver.lng]);
+
+  useEffect(() => {
+    const desired = ((driver.bearing ?? 0) % 360 + 360) % 360;
+    animatedBearing.stopAnimation((current) => {
+      const delta = ((desired - (current % 360) + 540) % 360) - 180;
+      const nextTarget = current + delta;
+      Animated.timing(animatedBearing, {
+          toValue: nextTarget,
+          duration: 420,
+          useNativeDriver: true,
+        }).start();
+    });
+  }, [animatedBearing, driver.bearing]);
+
+  const rotation = animatedBearing.interpolate({
+    inputRange: [-1080, 0, 1080],
+    outputRange: ['-1080deg', '0deg', '1080deg'],
+    extrapolate: 'extend',
+  });
+
+  return (
+    <Marker lngLat={[coordinate.lng, coordinate.lat]} anchor="center">
+      <Animated.View
+        pointerEvents="none"
+        style={{
+          width: size,
+          height: size * 1.42,
+          alignItems: 'center',
+          justifyContent: 'center',
+          transform: [{ rotate: rotation }],
+        }}
+      >
+        <Image
+          source={require('../assets/icons/taxi-map-icon.png')}
+          resizeMode="contain"
+          style={{ width: size, height: size * 1.42 }}
+        />
+      </Animated.View>
+    </Marker>
   );
 }
 
@@ -153,9 +269,19 @@ const styles = StyleSheet.create({
   },
   controls: {
     position: 'absolute',
-    top: 12,
-    right: 12,
-    gap: 8,
+    top: 108,
+    right: 14,
+    gap: 9,
+  },
+  controlButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(18,18,18,0.88)',
+    borderWidth: 1,
+    borderColor: 'rgba(255,215,0,0.32)',
   },
   styleButton: {
     flexDirection: 'row',
@@ -190,16 +316,6 @@ const styles = StyleSheet.create({
     width: 12,
     height: 12,
     borderRadius: 6,
-    borderWidth: 2,
-    borderColor: '#D4AF37',
-  },
-  driverMarker: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    backgroundColor: '#FFD700',
-    justifyContent: 'center',
-    alignItems: 'center',
     borderWidth: 2,
     borderColor: '#D4AF37',
   },
