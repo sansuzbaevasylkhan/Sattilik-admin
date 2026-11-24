@@ -147,7 +147,7 @@ export async function getActiveOrders(): Promise<Order[]> {
 
 export async function getDashboardStats(period: 'today' | 'weekly' | 'monthly' | 'total' = 'today') {
   let from = startOfDay().toISOString()
-  let to = endOfDay().toISOString()
+  const to = endOfDay().toISOString()
 
   if (period === 'weekly') {
     const d = new Date()
@@ -282,7 +282,14 @@ export async function getPayments(): Promise<Payment[]> {
     logTableError('orders', error)
     return []
   }
-  const payments = (data ?? []) as any[]
+  interface PaidOrder {
+    id: string
+    driver_phone: string
+    driver_paid_amount: number | null
+    driver_withdrawn: boolean | null
+    updated_at: string
+  }
+  const payments = (data ?? []) as unknown as PaidOrder[]
   if (payments.length === 0) return []
 
   const driverPhones = Array.from(new Set(payments.map((p) => p.driver_phone)))

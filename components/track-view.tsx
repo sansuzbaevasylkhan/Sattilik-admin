@@ -2,32 +2,37 @@
 
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
-import { MapContainer, TileLayer, Marker, Polyline, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 
 // Fix for default marker icon in Leaflet
-delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png',
   iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
   shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
 });
 
+interface TripStatus {
+  order: { dropoff_address: string };
+  driver: { first_name: string; last_name: string };
+  location: { lat: number; lng: number } | null;
+}
+
 export default function TrackTrip({ token }: { token: string }) {
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<TripStatus | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchStatus = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/get-trip-status?token=${token}`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/get-trip-status?token=${encodeURIComponent(token)}`);
         if (!res.ok) throw new Error('Сілтеме жарамсыз немесе мерзімі өткен');
-        const json = await res.json();
+        const json = await res.json() as TripStatus;
         setData(json);
-      } catch (e: any) {
-        setError(e.message);
+      } catch (error: unknown) {
+        setError(error instanceof Error ? error.message : 'Сапар мәліметін жүктеу мүмкін болмады');
       } finally {
         setLoading(false);
       }

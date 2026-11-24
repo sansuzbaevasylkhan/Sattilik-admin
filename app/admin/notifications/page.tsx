@@ -1,19 +1,17 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Bell, BellRing, BellOff, Send } from 'lucide-react';
 import { toast } from 'sonner'; // Assuming sonner or a similar toast library is used
 
 export default function NotificationsPage() {
-  const [permission, setPermission] = useState<'granted' | 'denied' | 'default'>('default');
-
-  useEffect(() => {
-    if ('Notification' in window) {
-      setPermission(Notification.permission);
-    }
-  }, []);
+  const [permission, setPermission] = useState<NotificationPermission>(() =>
+    typeof window !== 'undefined' && 'Notification' in window
+      ? Notification.permission
+      : 'default',
+  );
 
   const requestPermission = async () => {
     if (!('Notification' in window)) {
@@ -98,9 +96,9 @@ export default function NotificationsPage() {
         <Card className="p-6 space-y-4">
           <h3 className="font-semibold text-lg">Нұсқаулық</h3>
           <ul className="text-sm text-muted-foreground space-y-2 list-disc pl-4">
-            <li>"Хабарламаларды қосу" батырмасын басыңыз.</li>
-            <li>Браузердің жоғарғы бөлігіндегі рұқсат сұранысына "Allow" (Рұқсат беру) деп жауап беріңіз.</li>
-            <li>"Тест жіберу" батырмасы арқылы жұмыс істейтінін тексеріңіз.</li>
+            <li>&quot;Хабарламаларды қосу&quot; батырмасын басыңыз.</li>
+            <li>Браузердің жоғарғы бөлігіндегі рұқсат сұранысына &quot;Allow&quot; (Рұқсат беру) деп жауап беріңіз.</li>
+            <li>&quot;Тест жіберу&quot; батырмасы арқылы жұмыс істейтінін тексеріңіз.</li>
           </ul>
         </Card>
       </div>

@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { MessageSquare, UserCircle } from 'lucide-react';
+import { MessageSquare } from 'lucide-react';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
 
@@ -15,6 +15,15 @@ interface RecentChat {
   last_msg: string;
   last_msg_time: string;
   unread_count: number;
+}
+
+interface RecentMessageRow {
+  sender_id: string;
+  text: string;
+  created_at: string;
+  is_read: boolean;
+  sender_role: 'client' | 'admin';
+  users: { full_name: string | null } | null;
 }
 
 export function RecentChats() {
@@ -48,7 +57,8 @@ export function RecentChats() {
           return;
         }
 
-        const grouped = data.reduce((acc: Record<string, RecentChat>, msg: any) => {
+        const rows = data as unknown as RecentMessageRow[];
+        const grouped = rows.reduce<Record<string, RecentChat>>((acc, msg) => {
           const userId = msg.sender_id;
           if (!acc[userId]) {
             acc[userId] = {
@@ -63,15 +73,15 @@ export function RecentChats() {
         }, {});
 
         for (const userId in grouped) {
-          const unread = data.filter((m: any) =>
+          const unread = rows.filter((m) =>
             m.sender_id === userId && m.sender_role === 'client' && !m.is_read
           ).length;
           grouped[userId].unread_count = unread;
         }
 
         setChats(Object.values(grouped).slice(0, 5) as RecentChat[]);
-      } catch (err: any) {
-        console.error('Fetch chats error:', err);
+      } catch (error: unknown) {
+        console.error('Fetch chats error:', error);
       } finally {
         setIsLoading(false);
       }

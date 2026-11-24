@@ -13,17 +13,25 @@ const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+interface Complaint {
+  id: string;
+  order_id: string | null;
+  passenger_id: string;
+  driver_id: string;
+  text: string;
+  status: 'new' | 'reviewing' | 'resolved';
+  admin_response: string | null;
+  created_at: string;
+  users: { first_name: string; last_name: string; phone: string } | null;
+}
+
 export default function ComplaintsPage() {
-  const [complaints, setComplaints] = useState<any[]>([]);
+  const [complaints, setComplaints] = useState<Complaint[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedComplaint, setSelectedComplaint] = useState<any>(null);
+  const [selectedComplaint, setSelectedComplaint] = useState<Complaint | null>(null);
   const [response, setResponse] = useState('');
 
-  useEffect(() => {
-    fetchComplaints();
-  }, []);
-
-  const fetchComplaints = async () => {
+  async function fetchComplaints() {
     setLoading(true);
     try {
       const { data, error } = await supabase
@@ -38,7 +46,12 @@ export default function ComplaintsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }
+
+  useEffect(() => {
+    const load = setTimeout(() => { void fetchComplaints(); }, 0);
+    return () => clearTimeout(load);
+  }, []);
 
   const handleResolve = async () => {
     if (!selectedComplaint) return;

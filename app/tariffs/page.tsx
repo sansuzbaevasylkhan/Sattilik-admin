@@ -13,17 +13,33 @@ const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+interface Tariff {
+  id: string;
+  name: string;
+  base_price: number;
+  price_per_km: number;
+  price_per_minute: number;
+  night_multiplier: number;
+  surge_multiplier: number;
+  night_start: string;
+  night_end: string;
+  is_active: boolean;
+  updated_at: string;
+}
+
+type TariffForm = Omit<Tariff, 'id' | 'updated_at'> & { id?: string };
+
 export default function TariffsPage() {
-  const [tariffs, setTariffs] = useState<any[]>([]);
+  const [tariffs, setTariffs] = useState<Tariff[]>([]);
   const [loading, setLoading] = useState(true);
-  const [editingTariff, setEditingTariff] = useState<any>(null);
-  const [formData, setFormData] = useState<any>({});
+  const [editingTariff, setEditingTariff] = useState<TariffForm | null>(null);
+  const [formData, setFormData] = useState<TariffForm>({
+    name: '', base_price: 0, price_per_km: 0, price_per_minute: 0,
+    night_multiplier: 1, surge_multiplier: 1, night_start: '22:00',
+    night_end: '06:00', is_active: true,
+  });
 
-  useEffect(() => {
-    fetchTariffs();
-  }, []);
-
-  const fetchTariffs = async () => {
+  async function fetchTariffs() {
     setLoading(true);
     try {
       const { data, error } = await supabase
@@ -43,9 +59,14 @@ export default function TariffsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }
 
-  const handleEdit = (tariff: any) => {
+  useEffect(() => {
+    const load = setTimeout(() => { void fetchTariffs(); }, 0);
+    return () => clearTimeout(load);
+  }, []);
+
+  const handleEdit = (tariff: Tariff) => {
     setEditingTariff(tariff);
     setFormData({ ...tariff });
   };
@@ -76,8 +97,9 @@ export default function TariffsPage() {
           <h1 className="text-3xl font-bold">Тарифтерді басқару</h1>
           <Button
             onClick={() => {
-              setEditingTariff({ name: '' });
-              setFormData({ name: '', base_price: 0, price_per_km: 0, price_per_minute: 0, night_multiplier: 1, surge_multiplier: 1, night_start: '22:00', night_end: '06:00', is_active: true });
+              const blankTariff = { name: '', base_price: 0, price_per_km: 0, price_per_minute: 0, night_multiplier: 1, surge_multiplier: 1, night_start: '22:00', night_end: '06:00', is_active: true };
+              setEditingTariff(blankTariff);
+              setFormData(blankTariff);
             }}
             className="bg-primary text-primary-foreground hover:bg-primary/90 font-bold"
           >

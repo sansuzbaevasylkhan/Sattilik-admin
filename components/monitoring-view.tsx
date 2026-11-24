@@ -15,9 +15,6 @@ import { createClient } from '@supabase/supabase-js';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 
-// Leaflet marker icon fix
-delete (L.Icon.Default.prototype as any)._getIconUrl;
-
 L.Icon.Default.mergeOptions({
   iconRetinaUrl:
     'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png',

@@ -28,6 +28,15 @@ interface Contact {
   role: string;
 }
 
+interface ChatRow {
+  sender_id: string;
+  text: string;
+  created_at: string;
+  is_read: boolean;
+  sender_role: 'client' | 'admin';
+  users: { full_name: string | null; phone: string | null; role: string | null } | null;
+}
+
 export default function ChatPage() {
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
@@ -43,8 +52,8 @@ export default function ChatPage() {
       const { data, error } = await supabase
         .from('messages')
         .select(`
-          user_id,
-          content,
+          sender_id,
+          text,
           created_at,
           is_read,
           users (
@@ -58,7 +67,8 @@ export default function ChatPage() {
 
       if (error) throw error;
 
-      const grouped = data.reduce((acc: any, msg: any) => {
+      const rows = (data ?? []) as unknown as ChatRow[];
+      const grouped = rows.reduce<Record<string, Contact>>((acc, msg) => {
         const userId = msg.sender_id;
         const user = msg.users;
         if (!acc[userId]) {
@@ -81,7 +91,7 @@ export default function ChatPage() {
 
       // Оқылмаған хаттар санын есептеу
       for (const userId in grouped) {
-        const unread = data.filter((m: any) =>
+        const unread = rows.filter((m) =>
           m.sender_id === userId && m.sender_role === 'client' && !m.is_read
         ).length;
         grouped[userId].unread_count = unread;
@@ -119,7 +129,7 @@ export default function ChatPage() {
 
   // 3. Realtime Subscription (Supabase Postgres Changes)
   useEffect(() => {
-    fetchContacts();
+    const initialLoad = setTimeout(() => { void fetchContacts(); }, 0);
 
     const channel = supabase
       .channel('admin-chat-realtime')
@@ -130,7 +140,7 @@ export default function ChatPage() {
           const newMessage = payload.new as Message;
 
           // Тізімді жаңарту (соңғы хабарлама және оқылмаған саны үшін)
-          fetchContacts();
+          void fetchContacts();
 
           // Егер осы чат ашық болса, хабарламаны тізімге қосу
           if (selectedContact && newMessage.sender_id === selectedContact.id) {
@@ -141,14 +151,15 @@ export default function ChatPage() {
       .subscribe();
 
     return () => {
+      clearTimeout(initialLoad);
       supabase.removeChannel(channel);
     };
   }, [selectedContact]);
 
   useEffect(() => {
-    if (selectedContact) {
-      fetchMessages(selectedContact.id);
-    }
+    if (!selectedContact) return;
+    const loadMessages = setTimeout(() => { void fetchMessages(selectedContact.id); }, 0);
+    return () => clearTimeout(loadMessages);
   }, [selectedContact]);
 
   useEffect(() => {
