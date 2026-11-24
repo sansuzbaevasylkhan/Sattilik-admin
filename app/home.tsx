@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -23,8 +23,8 @@ export default function HomeScreen() {
   const { t, lang, setLang } = useTranslation();
   const [langMenuOpen, setLangMenuOpen] = useState(false);
 
-  const rotateAnim = useRef(new Animated.Value(0)).current;
-  const floatAnim = useRef(new Animated.Value(0)).current;
+  const [rotateAnim] = useState(() => new Animated.Value(0));
+  const [floatAnim] = useState(() => new Animated.Value(0));
 
   useEffect(() => {
     Animated.loop(

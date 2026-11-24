@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -59,9 +59,9 @@ export default function RegisterScreen() {
 
   const isDriver = selectedRole === 'driver';
 
-  const passengerScale = useRef(new Animated.Value(1)).current;
-  const driverScale = useRef(new Animated.Value(1)).current;
-  const contentOpacity = useRef(new Animated.Value(1)).current;
+  const [passengerScale] = useState(() => new Animated.Value(1));
+  const [driverScale] = useState(() => new Animated.Value(1));
+  const [contentOpacity] = useState(() => new Animated.Value(1));
 
   const animateTransition = (callback: () => void) => {
     Animated.timing(contentOpacity, {

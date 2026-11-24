@@ -22,8 +22,8 @@ export function useDriverLocation(driverPhone: string | null) {
 
   useEffect(() => {
     if (!driverPhone) {
-      setLocation(null);
-      return;
+      const clear = setTimeout(() => setLocation(null), 0);
+      return () => clearTimeout(clear);
     }
 
     // 1. Алдымен соңғы белгілі орнын алу (Initial state)

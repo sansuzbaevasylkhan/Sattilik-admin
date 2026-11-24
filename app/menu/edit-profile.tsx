@@ -100,7 +100,8 @@ export default function EditProfileScreen() {
   };
 
   useEffect(() => {
-    fetchDriverProfile();
+    const load = setTimeout(() => { void fetchDriverProfile(); }, 0);
+    return () => clearTimeout(load);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

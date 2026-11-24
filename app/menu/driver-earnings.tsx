@@ -63,7 +63,8 @@ export default function DriverEarningsScreen() {
   };
 
   useEffect(() => {
-    fetchStats();
+    const load = setTimeout(() => { void fetchStats(); }, 0);
+    return () => clearTimeout(load);
   }, [period]);
 
   const renderChart = () => {

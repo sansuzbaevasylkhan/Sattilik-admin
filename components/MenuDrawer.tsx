@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -65,8 +65,8 @@ const MENU_ITEMS = [
 
 export default function MenuDrawer({ visible, onClose }: MenuDrawerProps) {
   const { t, lang, setLang } = useTranslation();
-  const slideAnim = useRef(new Animated.Value(-DRAWER_WIDTH)).current;
-  const overlayAnim = useRef(new Animated.Value(0)).current;
+  const [slideAnim] = useState(() => new Animated.Value(-DRAWER_WIDTH));
+  const [overlayAnim] = useState(() => new Animated.Value(0));
   const [user, setUser] = useState(getUser());
   const [mounted, setMounted] = useState(false);
 
@@ -76,8 +76,9 @@ export default function MenuDrawer({ visible, onClose }: MenuDrawerProps) {
   }, []);
 
   useEffect(() => {
+    let mountFrame: number | null = null;
     if (visible) {
-      setMounted(true);
+      mountFrame = requestAnimationFrame(() => setMounted(true));
       Animated.parallel([
         Animated.spring(slideAnim, {
           toValue: 0,
@@ -105,6 +106,9 @@ export default function MenuDrawer({ visible, onClose }: MenuDrawerProps) {
         }),
       ]).start(() => setMounted(false));
     }
+    return () => {
+      if (mountFrame !== null) cancelAnimationFrame(mountFrame);
+    };
   }, [visible]);
 
   if (!mounted && !visible) return null;

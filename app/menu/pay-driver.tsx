@@ -35,13 +35,15 @@ export default function PayDriverScreen() {
 
   useEffect(() => {
     if (driverIdInput.length < DRIVER_ID_LENGTH) {
-      setLookupState('idle');
-      setMatchedOrder(null);
-      return;
+      const reset = setTimeout(() => {
+        setLookupState('idle');
+        setMatchedOrder(null);
+      }, 0);
+      return () => clearTimeout(reset);
     }
 
     let cancelled = false;
-    setLookupState('loading');
+    const loadingTimer = setTimeout(() => setLookupState('loading'), 0);
 
     (async () => {
       try {
@@ -97,6 +99,7 @@ export default function PayDriverScreen() {
 
     return () => {
       cancelled = true;
+      clearTimeout(loadingTimer);
     };
   }, [driverIdInput]);
 

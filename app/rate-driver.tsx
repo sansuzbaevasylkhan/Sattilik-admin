@@ -36,7 +36,7 @@ export default function RateDriverScreen() {
   const { submitReview } = useRatings();
   const { t } = useTranslation();
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(() => Boolean(orderId));
   const [driver, setDriver] = useState<{ phone: string; firstName: string; lastName: string } | null>(null);
 
   const [stars, setStars] = useState(0);
@@ -48,7 +48,6 @@ export default function RateDriverScreen() {
 
   useEffect(() => {
     if (!orderId) {
-      setLoading(false);
       return;
     }
 

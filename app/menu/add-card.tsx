@@ -10,6 +10,7 @@ import {
   Alert,
   ScrollView,
   ActivityIndicator,
+  type KeyboardTypeOptions,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ChevronLeft, CreditCard, Plus } from 'lucide-react-native';
@@ -19,6 +20,40 @@ import { getUser } from '@/store/userStore';
 
 const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL!;
 const SUPABASE_ANON_KEY = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY!;
+
+function Field({
+  label,
+  value,
+  onChangeText,
+  placeholder,
+  keyboardType,
+  maxLength,
+}: {
+  label: string;
+  value: string;
+  onChangeText: (value: string) => void;
+  placeholder: string;
+  keyboardType?: KeyboardTypeOptions;
+  maxLength?: number;
+}) {
+  return (
+    <View style={styles.fieldBlock}>
+      <Text style={styles.label}>{label}</Text>
+      <View style={styles.inputWrap}>
+        <TextInput
+          value={value}
+          onChangeText={onChangeText}
+          placeholder={placeholder}
+          placeholderTextColor="rgba(0, 0, 0, 0.55)"
+          style={styles.input}
+          keyboardType={keyboardType}
+          maxLength={maxLength}
+          autoCapitalize="words"
+        />
+      </View>
+    </View>
+  );
+}
 
 export default function AddCardScreen() {
   const { t } = useTranslation();
@@ -82,38 +117,6 @@ export default function AddCardScreen() {
       setSaving(false);
     }
   };
-
-  const Field = ({
-    label,
-    value,
-    onChangeText,
-    placeholder,
-    keyboardType,
-    maxLength,
-  }: {
-    label: string;
-    value: string;
-    onChangeText: (t: string) => void;
-    placeholder: string;
-    keyboardType?: any;
-    maxLength?: number;
-  }) => (
-    <View style={styles.fieldBlock}>
-      <Text style={styles.label}>{label}</Text>
-      <View style={styles.inputWrap}>
-        <TextInput
-          value={value}
-          onChangeText={onChangeText}
-          placeholder={placeholder}
-          placeholderTextColor="rgba(0, 0, 0, 0.55)"
-          style={styles.input}
-          keyboardType={keyboardType}
-          maxLength={maxLength}
-          autoCapitalize="words"
-        />
-      </View>
-    </View>
-  );
 
   return (
     <KeyboardAvoidingView

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import {
   View,
@@ -19,31 +19,20 @@ const pushAny = (path: string) => router.push(path as any);
 export default function ProfileScreen() {
   const { t } = useTranslation();
   const [user, setUser] = useState(getUser());
+  const [avgRating, setAvgRating] = useState<number | null>(null);
+  const [reviewsCount, setReviewsCount] = useState<number>(0);
+  const [driverId, setDriverId] = useState<string | null>(null);
+  const [ratingPhone, setRatingPhone] = useState<string | null>(null);
 
   useEffect(() => {
     const unsub = subscribeUser(() => setUser(getUser()));
     return unsub;
   }, []);
 
-  useEffect(() => {
-    if (user.role !== 'driver') {
-      setAvgRating(null);
-      setReviewsCount(0);
-      return;
-    }
-    if (!user.phone) return;
-    refreshDriverRating(user.phone);
-  }, [user.role, user.phone]);
-
-
   const fullName = [user.firstName, user.lastName].filter(Boolean).join(' ') || t('menuProfile.defaultUserName');
   const roleLabel = user.role === 'driver' ? t('menuProfile.roleDriver') : t('menuProfile.rolePassenger');
 
-  const [avgRating, setAvgRating] = useState<number | null>(null);
-  const [reviewsCount, setReviewsCount] = useState<number>(0);
-  const [driverId, setDriverId] = useState<string | null>(null);
-
-  const refreshDriverRating = async (driverPhone: string) => {
+  const refreshDriverRating = useCallback(async (driverPhone: string) => {
     const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL!;
     const SUPABASE_ANON_KEY = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY!;
 
@@ -60,10 +49,21 @@ export default function ProfileScreen() {
     if (!res.ok) return;
     const rows = (await res.json()) as any[];
     const row = rows?.[0];
+    setRatingPhone(driverPhone);
     setAvgRating(row?.average_rating ?? null);
     setReviewsCount(row?.reviews_count ?? 0);
     setDriverId(row?.driver_id ?? null);
-  };
+  }, []);
+
+  useEffect(() => {
+    if (user.role !== 'driver' || !user.phone) return;
+    const load = setTimeout(() => { void refreshDriverRating(user.phone); }, 0);
+    return () => clearTimeout(load);
+  }, [refreshDriverRating, user.phone, user.role]);
+
+  const currentAvgRating = user.role === 'driver' && ratingPhone === user.phone ? avgRating : null;
+  const currentReviewsCount = ratingPhone === user.phone ? reviewsCount : 0;
+  const currentDriverId = ratingPhone === user.phone ? driverId : null;
 
   return (
     <View style={styles.container}>
@@ -100,7 +100,7 @@ export default function ProfileScreen() {
           )}
           <View style={styles.starsRow}>
             {[1, 2, 3, 4, 5].map((i) => {
-              const filled = typeof avgRating === 'number' ? i <= avgRating : false;
+              const filled = typeof currentAvgRating === 'number' ? i <= currentAvgRating : false;
               return (
                 <Star
                   key={i}
@@ -112,8 +112,8 @@ export default function ProfileScreen() {
             })}
           </View>
           <Text style={styles.ratingText}>
-            {typeof avgRating === 'number'
-              ? `${avgRating.toFixed(1)} • ${reviewsCount} ${t('menuProfile.reviewsSuffix')}`
+            {typeof currentAvgRating === 'number'
+              ? `${currentAvgRating.toFixed(1)} • ${currentReviewsCount} ${t('menuProfile.reviewsSuffix')}`
               : `0 ${t('menuProfile.reviewsSuffix')}`}
           </Text>
 
@@ -146,7 +146,7 @@ export default function ProfileScreen() {
             </View>
           </View>
 
-          {user.role === 'driver' && driverId && (
+          {user.role === 'driver' && currentDriverId && (
             <>
               <View style={styles.infoRowDivider} />
               <View style={styles.infoRow}>
@@ -155,7 +155,7 @@ export default function ProfileScreen() {
                 </View>
                 <View style={styles.infoContent}>
                   <Text style={styles.infoLabel}>{t('menuProfile.driverIdLabel')}</Text>
-                  <Text style={styles.infoValue}>{driverId}</Text>
+                  <Text style={styles.infoValue}>{currentDriverId}</Text>
                 </View>
               </View>
             </>

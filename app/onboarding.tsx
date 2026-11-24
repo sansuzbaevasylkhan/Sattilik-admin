@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -22,8 +22,8 @@ export default function OnboardingScreen() {
     { icon: ICONS[2], title: t('onboarding.title3'), description: t('onboarding.desc3') },
   ];
   const [currentIndex, setCurrentIndex] = useState(0);
-  const fadeAnim = useRef(new Animated.Value(1)).current;
-  const iconScale = useRef(new Animated.Value(1)).current;
+  const [fadeAnim] = useState(() => new Animated.Value(1));
+  const [iconScale] = useState(() => new Animated.Value(1));
 
   const skipToEnd = () => {
     router.replace('/home');

@@ -71,8 +71,8 @@ export default function OrderScreen() {
   const [driver, setDriver] = useState<Driver | null>(null);
   const [menuVisible, setMenuVisible] = useState(false);
 
-  const buttonScale = useRef(new Animated.Value(1)).current;
-  const searchPulse = useRef(new Animated.Value(0.5)).current;
+  const [buttonScale] = useState(() => new Animated.Value(1));
+  const [searchPulse] = useState(() => new Animated.Value(0.5));
 
   const alreadyRoutedRef = useRef(false);
   const lastRoutedOrderIdRef = useRef<string | null>(null);
@@ -127,9 +127,11 @@ export default function OrderScreen() {
 
   useEffect(() => {
     if (!pickupCoords || !dropoffCoords) {
-      setRouteInfo(null);
-      setRouteCoordinates(null);
-      return;
+      const reset = setTimeout(() => {
+        setRouteInfo(null);
+        setRouteCoordinates(null);
+      }, 0);
+      return () => clearTimeout(reset);
     }
     let cancelled = false;
     getRoute(pickupCoords.lng, pickupCoords.lat, dropoffCoords.lng, dropoffCoords.lat).then((route) => {
