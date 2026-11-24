@@ -22,6 +22,7 @@ import {
 import { StatusBadge } from '@/components/status-badge'
 import { formatCurrency, formatDate } from '@/lib/format'
 import type { Order, OrderStatus } from '@/lib/types'
+import { supabase } from '@/lib/supabase'
 
 interface Props {
   initialOrders: Order[]
@@ -37,7 +38,7 @@ const STATUS_OPTIONS: { value: 'all' | OrderStatus; label: string }[] = [
 ]
 
 export function OrdersTable({ initialOrders }: Props) {
-  const [orders] = useState(initialOrders)
+  const [orders, setOrders] = useState(initialOrders)
   const [status, setStatus] = useState<'all' | OrderStatus>('all')
   const [from, setFrom] = useState('')
   const [to, setTo] = useState('')
@@ -46,6 +47,27 @@ export function OrdersTable({ initialOrders }: Props) {
     from: string
     to: string
   }>({ status: 'all', from: '', to: '' })
+
+  useEffect(() => {
+    const channel = supabase
+      .channel('admin-orders-table')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, (payload) => {
+        setOrders((current) => {
+          if (payload.eventType === 'DELETE') {
+            const deletedId = (payload.old as Partial<Order>).id
+            return current.filter((order) => order.id !== deletedId)
+          }
+
+          const nextOrder = payload.new as Order
+          if (!nextOrder.id) return current
+          return [nextOrder, ...current.filter((order) => order.id !== nextOrder.id)]
+            .sort((a, b) => String(b.created_at).localeCompare(String(a.created_at)))
+        })
+      })
+      .subscribe()
+
+    return () => { void supabase.removeChannel(channel) }
+  }, [])
 
   const filtered = useMemo(() => {
     return orders.filter((o) => {

@@ -45,9 +45,9 @@ realtime on `orders`.
 ## Deploy to Vercel
 
 1. Push this repository to GitHub (already configured as
-   `https://github.com/sansuzbaevasylkhan/askdrv-admin.git`).
+   `https://github.com/sansuzbaevasylkhan/sattilik-admin.git`).
 2. In [Vercel](https://vercel.com/new), click **"Add New Project"** and
-   import the `askdrv-admin` repository.
+   import the `sattilik-admin` repository.
 3. In **Environment Variables**, add:
 
    | Name                              | Value                                  |

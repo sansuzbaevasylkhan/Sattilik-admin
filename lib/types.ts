@@ -1,5 +1,5 @@
 // Types mirror the real Supabase schema shared with the Sattilik mobile app
-// (see askdrv-taxi-app/supabase/migrations). Both driver and passenger
+// (see the mobile app's supabase/migrations). Both driver and passenger
 // accounts live in one `users` table, distinguished by `role`.
 
 export type UserRole = 'passenger' | 'driver'
