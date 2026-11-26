@@ -30,23 +30,29 @@ export function useDriverLocation(driverPhone: string | null) {
     const fetchInitialLocation = async () => {
       const { data, error } = await supabase
         .from('driver_locations')
-        .select('lat, lng, bearing, updated_at')
+        .select('lat, lng, updated_at')
         .eq('phone', driverPhone)
         .order('updated_at', { ascending: false })
         .limit(1)
         .single();
 
-      if (data && !error) {
-        setLocation({
-          lng: data.lng,
-          lat: data.lat,
-          bearing: data.bearing,
-          updated_at: data.updated_at,
-        });
+      if (error || !data) {
+        setLocation(null);
+        return;
       }
+      if (Date.now() - new Date(data.updated_at).getTime() > 120_000) {
+        setLocation(null);
+        return;
+      }
+      setLocation({
+        lng: data.lng,
+        lat: data.lat,
+        updated_at: data.updated_at,
+      });
     };
 
-    fetchInitialLocation();
+    void fetchInitialLocation();
+    const refreshInterval = setInterval(() => void fetchInitialLocation(), 5000);
 
     // 2. Realtime жазылу (Realtime subscription)
     const channel = supabase
@@ -54,7 +60,7 @@ export function useDriverLocation(driverPhone: string | null) {
       .on(
         'postgres_changes',
         {
-          event: 'UPDATE',
+          event: '*',
           schema: 'public',
           table: 'driver_locations',
           filter: `phone=eq.${driverPhone}`,
@@ -72,6 +78,7 @@ export function useDriverLocation(driverPhone: string | null) {
       .subscribe();
 
     return () => {
+      clearInterval(refreshInterval);
       supabase.removeChannel(channel);
     };
   }, [driverPhone]);

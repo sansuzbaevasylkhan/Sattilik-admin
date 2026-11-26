@@ -8,7 +8,8 @@
     "scheme": "myapp",
     "userInterfaceStyle": "light",
     "updates": {
-      "enabled": false
+      "enabled": false,
+      "url": "https://u.expo.dev/e80f62ae-a1b7-4b07-8048-f5adc8af34d3"
     },
     "runtimeVersion": {
       "policy": "appVersion"

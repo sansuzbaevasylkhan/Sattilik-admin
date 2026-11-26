@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/immutability -- Reanimated shared values are intentionally mutated inside gesture worklets. */
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import { router } from 'expo-router';
 import {
   View,
   Text,
@@ -45,6 +46,7 @@ import {
   ChevronDown,
   ChevronUp,
   X,
+  MessageCircle,
 } from 'lucide-react-native';
 import MenuDrawer from '@/components/MenuDrawer';
 import { getUser } from '@/store/userStore';
@@ -169,7 +171,7 @@ export default function DriverOrderScreen() {
 
   useLocationBroadcast(
     getUser().phone || null,
-    true,
+    mode === 'active' && !!activeOrder && activeOrderStatus !== 'completed',
   );
 
   const acceptButtonScale = useMemo(() => new Animated.Value(1), []);
@@ -936,6 +938,22 @@ export default function DriverOrderScreen() {
               <Text style={styles.passengerCardLabel}>{t('driverOrder.passengerLabel')}</Text>
             </View>
             <TouchableOpacity
+              style={styles.chatButton}
+              onPress={() => router.push({
+                pathname: '/trip-chat',
+                params: {
+                  orderId: activeOrder.id,
+                  peerName: abbrev(activeOrder.passenger_first_name, activeOrder.passenger_last_name),
+                  peerPhone: activeOrder.passenger_phone,
+                },
+              })}
+              activeOpacity={0.7}
+              accessibilityRole="button"
+              accessibilityLabel={t('tripChat.openChat')}
+            >
+              <MessageCircle size={20} color="#FFD700" />
+            </TouchableOpacity>
+            <TouchableOpacity
               style={styles.callButton}
               onPress={() => handleCallPassenger(activeOrder.passenger_phone)}
               activeOpacity={0.7}
@@ -1369,6 +1387,15 @@ const styles = StyleSheet.create({
   passengerCardName: { fontSize: 18, fontFamily: 'Inter-SemiBold', color: '#FFFFFF', marginBottom: 2 },
   passengerCardLabel: { fontSize: 13, fontFamily: 'Inter-Regular', color: '#A0A0A0' },
   callButton: { padding: 4 },
+  chatButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#292929',
+    marginRight: 6,
+  },
   callButtonInner: {
     width: 46,
     height: 46,

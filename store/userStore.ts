@@ -5,6 +5,7 @@ interface UserState {
   firstName: string;
   lastName: string;
   phone: string;
+  chatAccessToken: string;
   role: 'passenger' | 'driver' | null;
   driverId: string | null;
 }
@@ -16,6 +17,7 @@ const state: UserState = {
   firstName: '',
   lastName: '',
   phone: '',
+  chatAccessToken: '',
   role: null,
   driverId: null,
 };
@@ -78,6 +80,7 @@ export function clearUser() {
     firstName: '',
     lastName: '',
     phone: '',
+    chatAccessToken: '',
     role: null,
     driverId: null,
   });

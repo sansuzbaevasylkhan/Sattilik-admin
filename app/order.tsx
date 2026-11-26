@@ -13,9 +13,10 @@ import {
   ActivityIndicator,
   Linking,
   ScrollView,
+  Image,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { MapPin, Navigation, Menu, DollarSign, Clock, CheckCircle, Share2 } from 'lucide-react-native';
+import { MapPin, Navigation, Menu, DollarSign, Clock, CheckCircle, Share2, MessageCircle, Phone, Star, CarFront } from 'lucide-react-native';
 import { router } from 'expo-router';
 import MenuDrawer from '@/components/MenuDrawer';
 import { getUser } from '@/store/userStore';
@@ -42,6 +43,12 @@ interface Driver {
   first_name: string;
   last_name: string;
   phone: string;
+  avatar_url?: string | null;
+  car_name?: string | null;
+  car_number?: string | null;
+  car_color?: string | null;
+  average_rating?: number | null;
+  reviews_count?: number | null;
 }
 
 interface Order {
@@ -111,6 +118,25 @@ export default function OrderScreen() {
   const [routeInfo, setRouteInfo] = useState<{ distanceKm: number; durationMin: number } | null>(null);
   const [routeCoordinates, setRouteCoordinates] = useState<[number, number][] | null>(null);
   const liveDriverLocation = useDriverLocation(driver?.phone ?? null);
+
+  useEffect(() => {
+    if (!driver?.phone) return;
+    let cancelled = false;
+    const query = new URLSearchParams({
+      select: 'avatar_url,car_name,car_number,car_color,average_rating,reviews_count',
+      phone: `eq.${driver.phone}`,
+    });
+    fetch(`${SUPABASE_URL}/rest/v1/users?${query}`, {
+      headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` },
+    })
+      .then(async (response) => response.ok ? response.json() : [])
+      .then((rows: Partial<Driver>[]) => {
+        if (cancelled || !rows[0]) return;
+        setDriver((current) => current?.phone === driver.phone ? { ...current, ...rows[0] } : current);
+      })
+      .catch((error) => console.warn('Driver profile lookup failed:', error));
+    return () => { cancelled = true; };
+  }, [driver?.phone]);
 
   useEffect(() => {
     const unsub = subscribeMapPick((result) => {
@@ -324,6 +350,8 @@ export default function OrderScreen() {
     setOrderStatus('form');
   };
 
+  const isLiveTrip = orderStatus === 'accepted' || orderStatus === 'in_progress';
+
   return (
     <KeyboardAvoidingView
       style={styles.container}
@@ -345,17 +373,157 @@ export default function OrderScreen() {
         </View>
       )}
 
-      <View style={orderStatus === 'form' ? styles.floatingHeader : styles.header}>
+      {isLiveTrip && (
+        <View style={styles.liveMapScreen}>
+          <RouteMapPreview
+            fill
+            pickup={pickupCoords}
+            dropoff={dropoffCoords}
+            routeCoordinates={routeCoordinates}
+            driver={liveDriverLocation}
+          />
+
+          <View style={styles.liveTripStatus}>
+            <Text style={styles.liveTripStatusText}>{getStatusText()}</Text>
+          </View>
+
+          <View style={styles.liveTripPanel}>
+            <View style={styles.liveTripPanelHandle} />
+            <ScrollView
+              contentContainerStyle={styles.liveTripPanelContent}
+              showsVerticalScrollIndicator={false}
+            >
+              {driver && (
+                <View style={styles.liveDriverCard}>
+                  <View style={styles.liveDriverTopRow}>
+                    {driver.avatar_url ? (
+                      <Image source={{ uri: driver.avatar_url }} style={styles.liveDriverAvatar} />
+                    ) : (
+                      <View style={[styles.liveDriverAvatar, styles.liveDriverAvatarFallback]}>
+                        <Text style={styles.liveDriverAvatarText}>{driver.first_name?.[0] || '?'}</Text>
+                      </View>
+                    )}
+                    <View style={styles.liveDriverIdentity}>
+                      <View style={styles.liveDriverNameRow}>
+                        <Text style={styles.liveDriverName} numberOfLines={1}>{abbrev(driver.first_name, driver.last_name)}</Text>
+                        <View style={styles.liveDriverRating}>
+                          <Star size={16} color="#D99B00" fill="#D99B00" />
+                          <Text style={styles.liveDriverRatingText}>
+                            {driver.average_rating && driver.average_rating > 0 ? Number(driver.average_rating).toFixed(1) : t('tripChat.newDriver')}
+                          </Text>
+                        </View>
+                      </View>
+                      <Text style={styles.liveDriverCar} numberOfLines={1}>
+                        {[driver.car_color, driver.car_name].filter(Boolean).join(' ') || t('tripChat.carInfoPending')}
+                      </Text>
+                    </View>
+                    <View style={styles.liveCarIcon}>
+                      <CarFront size={36} color="#536273" />
+                    </View>
+                  </View>
+
+                  {driver.car_number ? (
+                    <View style={styles.livePlate}>
+                      <View style={styles.livePlateCountry}>
+                        <Text style={styles.livePlateCountryText}>KZ</Text>
+                      </View>
+                      <Text style={styles.livePlateNumber}>{driver.car_number}</Text>
+                    </View>
+                  ) : null}
+
+                  <View style={styles.liveDriverActions}>
+                    <TouchableOpacity
+                      style={[styles.liveActionButton, styles.liveChatButton]}
+                      onPress={() => {
+                        if (!currentOrder?.id) return;
+                        router.push({
+                          pathname: '/trip-chat',
+                          params: {
+                            orderId: currentOrder.id,
+                            peerName: abbrev(driver.first_name, driver.last_name),
+                            peerPhone: driver.phone,
+                          },
+                        });
+                      }}
+                      activeOpacity={0.7}
+                      accessibilityRole="button"
+                      accessibilityLabel={t('tripChat.openChat')}
+                    >
+                      <MessageCircle size={19} color="#FFFFFF" />
+                      <Text style={styles.liveActionText}>{t('tripChat.chat')}</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={[styles.liveActionButton, styles.liveCallButton]}
+                      onPress={() => {
+                        if (!driver.phone) {
+                          Alert.alert(t('common.info'), t('order.errorNoDriverPhone'));
+                          return;
+                        }
+                        Linking.openURL(`tel:${driver.phone}`);
+                      }}
+                      activeOpacity={0.7}
+                    >
+                      <Phone size={18} color="#FFFFFF" />
+                      <Text style={styles.liveActionText}>{t('tripChat.call')}</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.liveShareButton}
+                      onPress={async () => {
+                        if (!currentOrder?.id) return;
+                        try {
+                          await shareTrip(currentOrder.id);
+                        } catch {
+                          Alert.alert(t('common.error'), t('order.errorShareFailed'));
+                        }
+                      }}
+                      activeOpacity={0.7}
+                      accessibilityLabel={t('tripChat.shareTrip')}
+                    >
+                      <Share2 size={19} color="#25364B" />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              )}
+
+              {currentOrder && (
+                <View style={styles.liveOrderDetailsCard}>
+                  <View style={styles.orderRouteRow}>
+                    <View style={styles.orderRouteDot} />
+                    <Text style={styles.orderRouteText} numberOfLines={2}>{currentOrder.pickup_address}</Text>
+                  </View>
+                  <View style={styles.orderRouteConnector} />
+                  <View style={styles.orderRouteRow}>
+                    <View style={[styles.orderRouteDot, styles.orderRouteDotRed]} />
+                    <Text style={styles.orderRouteText} numberOfLines={2}>{currentOrder.dropoff_address}</Text>
+                  </View>
+                  <View style={styles.orderPriceRow}>
+                    <Text style={styles.orderPriceLabel}>{t('order.priceLabel')}</Text>
+                    <Text style={styles.orderPriceValue}>{currentOrder.price} ₸</Text>
+                  </View>
+                </View>
+              )}
+            </ScrollView>
+          </View>
+        </View>
+      )}
+
+      <View style={
+        orderStatus === 'form'
+          ? styles.floatingHeader
+          : isLiveTrip
+            ? styles.liveMapHeader
+            : styles.header
+      }>
         <TouchableOpacity
           onPress={() => setMenuVisible(true)}
           activeOpacity={0.7}
-          style={orderStatus === 'form' ? styles.floatingMenuButton : undefined}
+          style={orderStatus === 'form' ? styles.floatingMenuButton : isLiveTrip ? styles.liveMapMenuButton : undefined}
         >
-          <Menu size={orderStatus === 'form' ? 22 : 28} color="#000000" />
+          <Menu size={orderStatus === 'form' ? 22 : 28} color={isLiveTrip ? '#FFFFFF' : '#000000'} />
         </TouchableOpacity>
         {orderStatus !== 'form' && (
           <>
-            <Text style={styles.headerTitle}>{t('order.headerTitleActive')}</Text>
+            <Text style={isLiveTrip ? styles.liveMapHeaderTitle : styles.headerTitle}>{t('order.headerTitleActive')}</Text>
             <View style={{ width: 28 }} />
           </>
         )}
@@ -540,7 +708,7 @@ export default function OrderScreen() {
         </View>
       )}
 
-      {(orderStatus === 'searching' || orderStatus === 'accepted' || orderStatus === 'in_progress' || orderStatus === 'completed') && (
+      {(orderStatus === 'searching' || orderStatus === 'completed') && (
       <ScrollView
         style={styles.content}
         contentContainerStyle={styles.contentScroll}
@@ -565,9 +733,6 @@ export default function OrderScreen() {
                 pickup={pickupCoords}
                 dropoff={dropoffCoords}
                 routeCoordinates={routeCoordinates}
-                driver={
-                  orderStatus === 'accepted' || orderStatus === 'in_progress' ? liveDriverLocation : null
-                }
               />
             )}
 
@@ -585,47 +750,6 @@ export default function OrderScreen() {
                 <View style={styles.orderPriceRow}>
                   <Text style={styles.orderPriceLabel}>{t('order.priceLabel')}</Text>
                   <Text style={styles.orderPriceValue}>{currentOrder.price} ₸</Text>
-                </View>
-              </View>
-            )}
-
-            {driver && (orderStatus === 'accepted' || orderStatus === 'in_progress') && (
-              <View style={styles.driverCard}>
-                <View style={styles.driverAvatar}>
-                  <Text style={styles.driverAvatarText}>{driver.first_name?.[0] || '?'}</Text>
-                </View>
-                <View style={styles.driverInfo}>
-                  <Text style={styles.driverName}>{abbrev(driver.first_name, driver.last_name)}</Text>
-                  <Text style={styles.driverLabel}>{t('order.driverLabel')}</Text>
-                </View>
-                <View style={styles.driverActions}>
-                  <TouchableOpacity
-                    style={styles.shareTripBtn}
-                    onPress={async () => {
-                      if (!currentOrder?.id) return;
-                      try {
-                        await shareTrip(currentOrder.id);
-                      } catch (e) {
-                        Alert.alert(t('common.error'), t('order.errorShareFailed'));
-                      }
-                    }}
-                    activeOpacity={0.7}
-                  >
-                    <Share2 size={20} color="#000000" />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={styles.callDriverButton}
-                    onPress={() => {
-                      if (!driver.phone) {
-                        Alert.alert(t('common.info'), t('order.errorNoDriverPhone'));
-                        return;
-                      }
-                      Linking.openURL(`tel:${driver.phone}`);
-                    }}
-                    activeOpacity={0.7}
-                  >
-                    <Text style={styles.callDriverText}>{t('order.callButton')}</Text>
-                  </TouchableOpacity>
                 </View>
               </View>
             )}
@@ -685,6 +809,233 @@ const styles = StyleSheet.create({
   },
   background: {
     ...StyleSheet.absoluteFill,
+  },
+  liveMapScreen: {
+    ...StyleSheet.absoluteFill,
+    zIndex: 1,
+  },
+  liveMapHeader: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 5,
+    paddingTop: 54,
+    paddingHorizontal: 24,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  liveMapMenuButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(17,17,17,0.82)',
+    borderWidth: 1,
+    borderColor: 'rgba(255,215,0,0.35)',
+  },
+  liveMapHeaderTitle: {
+    fontSize: 20,
+    fontFamily: 'Inter-SemiBold',
+    color: '#FFFFFF',
+    textShadowColor: 'rgba(0,0,0,0.75)',
+    textShadowRadius: 6,
+  },
+  liveTripStatus: {
+    position: 'absolute',
+    top: 112,
+    left: 20,
+    zIndex: 4,
+    maxWidth: '72%',
+    backgroundColor: 'rgba(17,17,17,0.88)',
+    borderRadius: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 11,
+    borderWidth: 1,
+    borderColor: 'rgba(255,215,0,0.35)',
+  },
+  liveTripStatusText: {
+    color: '#FFD700',
+    fontSize: 15,
+    fontFamily: 'Inter-SemiBold',
+  },
+  liveTripPanel: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 4,
+    height: '52%',
+    backgroundColor: '#FFD700',
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    borderTopWidth: 1,
+    borderColor: '#D4AF37',
+    paddingTop: 10,
+    paddingBottom: Platform.OS === 'web' ? 12 : 28,
+  },
+  liveTripPanelHandle: {
+    width: 40,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: '#B8860B',
+    alignSelf: 'center',
+    marginBottom: 12,
+  },
+  liveTripPanelContent: {
+    paddingHorizontal: 16,
+    paddingBottom: 8,
+    gap: 10,
+  },
+  liveDriverCard: {
+    width: '100%',
+    backgroundColor: '#FFE45C',
+    borderRadius: 20,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: '#D4AF37',
+    gap: 12,
+    shadowColor: '#142033',
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 3 },
+    elevation: 3,
+  },
+  liveDriverTopRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  liveDriverAvatar: {
+    width: 54,
+    height: 54,
+    borderRadius: 27,
+    borderWidth: 1,
+    borderColor: '#D4AF37',
+  },
+  liveDriverAvatarFallback: {
+    backgroundColor: '#FFEFA3',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  liveDriverAvatarText: {
+    color: '#000000',
+    fontSize: 22,
+    fontFamily: 'Inter-Bold',
+  },
+  liveDriverIdentity: {
+    flex: 1,
+    minWidth: 0,
+  },
+  liveDriverNameRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  liveDriverName: {
+    flexShrink: 1,
+    color: '#000000',
+    fontSize: 20,
+    fontFamily: 'Inter-Bold',
+  },
+  liveDriverRating: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 3,
+  },
+  liveDriverRatingText: {
+    color: '#000000',
+    fontSize: 16,
+    fontFamily: 'Inter-Bold',
+  },
+  liveDriverCar: {
+    color: '#000000',
+    fontSize: 15,
+    fontFamily: 'Inter-Regular',
+    marginTop: 4,
+  },
+  liveCarIcon: {
+    width: 58,
+    height: 48,
+    borderRadius: 14,
+    backgroundColor: '#FFEFA3',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  livePlate: {
+    minHeight: 48,
+    alignSelf: 'flex-start',
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderWidth: 2,
+    borderColor: '#1F2937',
+    borderRadius: 9,
+    overflow: 'hidden',
+  },
+  livePlateCountry: {
+    alignSelf: 'stretch',
+    minWidth: 38,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#EAF2FA',
+    borderRightWidth: 1,
+    borderRightColor: '#CBD5E1',
+  },
+  livePlateCountryText: {
+    color: '#0F4C81',
+    fontSize: 13,
+    fontFamily: 'Inter-Bold',
+  },
+  livePlateNumber: {
+    color: '#111827',
+    paddingHorizontal: 12,
+    fontSize: 21,
+    letterSpacing: 1,
+    fontFamily: 'Inter-Bold',
+  },
+  liveDriverActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  liveActionButton: {
+    flex: 1,
+    minHeight: 46,
+    borderRadius: 14,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+  },
+  liveChatButton: {
+    backgroundColor: '#1769E0',
+  },
+  liveCallButton: {
+    backgroundColor: '#0F5BC5',
+  },
+  liveActionText: {
+    color: '#FFFFFF',
+    fontSize: 15,
+    fontFamily: 'Inter-SemiBold',
+  },
+  liveShareButton: {
+    width: 46,
+    height: 46,
+    borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#FFEFA3',
+  },
+  liveOrderDetailsCard: {
+    width: '100%',
+    backgroundColor: '#FFC800',
+    borderRadius: 18,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: '#D4AF37',
   },
   header: {
     paddingTop: 60,

@@ -18,6 +18,7 @@ import { menuDrawer } from './menuDrawer';
 import { menuPayDriver } from './menuPayDriver';
 import { menuDriverEarnings } from './menuDriverEarnings';
 import { mapPicker } from './mapPicker';
+import { tripChat } from './tripChat';
 
 export const resources = {
   kk: {
@@ -41,6 +42,7 @@ export const resources = {
     menuPayDriver: menuPayDriver.kk,
     menuDriverEarnings: menuDriverEarnings.kk,
     mapPicker: mapPicker.kk,
+    tripChat: tripChat.kk,
   },
   ru: {
     common: common.ru,
@@ -63,5 +65,6 @@ export const resources = {
     menuPayDriver: menuPayDriver.ru,
     menuDriverEarnings: menuDriverEarnings.ru,
     mapPicker: mapPicker.ru,
+    tripChat: tripChat.ru,
   },
 };

@@ -108,13 +108,6 @@ Deno.serve(async (req: Request) => {
             ? "Кодтың жарамдылық мерзімі аяқталды, қайта жіберіңіз"
             : "Код дұрыс емес немесе жарамсыз",
           reason: isExpired ? "expired" : "invalid",
-          debug: {
-            phone,
-            normalizedPhone,
-            code,
-            role,
-            rowsFound: rows?.length ?? 0,
-          },
         }),
         {
           status: 400,
@@ -205,6 +198,27 @@ Deno.serve(async (req: Request) => {
       );
     }
 
+    const tokenBytes = crypto.getRandomValues(new Uint8Array(32));
+    const chatAccessToken = Array.from(tokenBytes, (byte) => byte.toString(16).padStart(2, "0")).join("");
+    const tokenDigest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(chatAccessToken));
+    const tokenHash = Array.from(new Uint8Array(tokenDigest), (byte) => byte.toString(16).padStart(2, "0")).join("");
+    const sessionRes = await fetch(`${supabaseUrl}/rest/v1/trip_chat_sessions`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        apikey: supabaseKey,
+        Authorization: `Bearer ${supabaseKey}`,
+        Prefer: "return=minimal",
+      },
+      body: JSON.stringify({ phone: record.phone, token_hash: tokenHash, expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() }),
+    });
+    if (!sessionRes.ok) {
+      return new Response(JSON.stringify({ error: "Failed to create chat session" }), {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     return new Response(
       JSON.stringify({
         success: true,
@@ -212,6 +226,7 @@ Deno.serve(async (req: Request) => {
         first_name: record.first_name,
         last_name: record.last_name,
         phone: record.phone,
+        chat_access_token: chatAccessToken,
       }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );

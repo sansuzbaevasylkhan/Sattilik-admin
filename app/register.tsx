@@ -249,7 +249,7 @@ export default function RegisterScreen() {
       if (!response.ok) {
         const debug = data?.debug;
         const debugText = debug
-          ? `\nphone: ${debug.phone}\nnormalizedPhone: ${debug.normalizedPhone}\ncode: ${debug.code}\nrowsFound: ${debug.rowsFound}`
+          ? `\nphone: ${debug.phone}\nnormalizedPhone: ${debug.normalizedPhone}\nrowsFound: ${debug.rowsFound}`
           : '';
         setCodeError((data.error || t('register.errorCodeInvalid')) + debugText);
         return;
@@ -259,6 +259,7 @@ export default function RegisterScreen() {
         firstName: data.first_name || firstName,
         lastName: data.last_name || lastName,
         phone: `+7${rawDigits}`,
+        chatAccessToken: data.chat_access_token || '',
         role: data.role || selectedRole,
       });
 

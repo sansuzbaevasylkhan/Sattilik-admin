@@ -106,6 +106,7 @@ export default function RootLayout() {
           <Stack.Screen name="home" />
           <Stack.Screen name="register" />
           <Stack.Screen name="order" />
+          <Stack.Screen name="trip-chat" />
           <Stack.Screen name="driver-order" />
           <Stack.Screen name="rate-driver" />
           <Stack.Screen name="menu/profile" />
